@@ -26,8 +26,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        serif: ["var(--font-editorial)", "Georgia", "serif"],
-        sans: ["var(--font-body)", "Helvetica", "Arial", "sans-serif"],
+        serif: ["var(--font-editorial)", "Didot", "Didot LT STD", "Bodoni MT", "Georgia", "serif"],
+        sans: ["var(--font-body)", "Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
       },
       letterSpacing: {
         widest2: "0.35em",

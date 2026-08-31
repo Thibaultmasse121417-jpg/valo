@@ -1,20 +1,26 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Inter } from "next/font/google";
+import { Bodoni_Moda, Archivo } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/lib/LanguageContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-const editorial = Cormorant_Garamond({
+// Serif éditoriale à fort contraste (haute couture / presse architecture)
+// pour les grands titres — plus affirmée et impactante que les serifs
+// "romantiques" génériquement associées aux sites IA (Cormorant, Playfair…).
+const editorial = Bodoni_Moda({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
   variable: "--font-editorial",
   display: "swap",
 });
 
-const body = Inter({
+// Grotesque contemporaine, plus construite et professionnelle qu'Inter,
+// pour le texte courant, la navigation et les labels.
+const body = Archivo({
   subsets: ["latin"],
-  weight: ["200", "300", "400", "500"],
+  weight: ["300", "400", "500", "600"],
   variable: "--font-body",
   display: "swap",
 });
