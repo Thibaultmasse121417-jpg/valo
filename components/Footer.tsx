@@ -20,6 +20,18 @@ export default function Footer() {
           </div>
 
           <nav className="flex flex-col gap-3">
+            {t.footer.universes.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="w-fit font-sans text-sm text-ivoire/60 transition-colors duration-300 hover:text-bronze"
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+
+          <nav className="flex flex-col gap-3">
             {t.footer.nav.map((link) => (
               <a
                 key={link.href}
@@ -44,25 +56,24 @@ export default function Footer() {
             >
               {siteConfig.contact.phoneDisplay}
             </a>
-          </div>
-
-          <div className="flex flex-col gap-3 font-sans text-sm text-ivoire/60">
-            <a
-              href={siteConfig.social.instagram}
-              target="_blank"
-              rel="noreferrer"
-              className="w-fit transition-colors duration-300 hover:text-bronze"
-            >
-              Instagram
-            </a>
-            <a
-              href={siteConfig.social.linkedin}
-              target="_blank"
-              rel="noreferrer"
-              className="w-fit transition-colors duration-300 hover:text-bronze"
-            >
-              LinkedIn
-            </a>
+            <div className="mt-2 flex gap-4">
+              <a
+                href={siteConfig.social.instagram}
+                target="_blank"
+                rel="noreferrer"
+                className="w-fit transition-colors duration-300 hover:text-bronze"
+              >
+                Instagram
+              </a>
+              <a
+                href={siteConfig.social.linkedin}
+                target="_blank"
+                rel="noreferrer"
+                className="w-fit transition-colors duration-300 hover:text-bronze"
+              >
+                LinkedIn
+              </a>
+            </div>
           </div>
         </div>
 

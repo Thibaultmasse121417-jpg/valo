@@ -4,6 +4,8 @@ import MediaPlaceholder from "./MediaPlaceholder";
 type HeroMediaProps = {
   hasVideo: boolean;
   hasPoster: boolean;
+  videoSrc?: string;
+  posterSrc?: string;
 };
 
 /**
@@ -15,7 +17,12 @@ type HeroMediaProps = {
  * (poster) > placeholder éditorial. Une image fixe de qualité vaut
  * largement mieux qu'une plaque vide en attendant le tournage.
  */
-export default function HeroMedia({ hasVideo, hasPoster }: HeroMediaProps) {
+export default function HeroMedia({
+  hasVideo,
+  hasPoster,
+  videoSrc = "/videos/hero.mp4",
+  posterSrc = "/images/hero-poster.jpg",
+}: HeroMediaProps) {
   if (hasVideo) {
     return (
       <video
@@ -25,10 +32,10 @@ export default function HeroMedia({ hasVideo, hasPoster }: HeroMediaProps) {
         loop
         playsInline
         preload="auto"
-        poster={hasPoster ? "/images/hero-poster.jpg" : undefined}
+        poster={hasPoster ? posterSrc : undefined}
         aria-hidden
       >
-        <source src="/videos/hero.mp4" type="video/mp4" />
+        <source src={videoSrc} type="video/mp4" />
       </video>
     );
   }
@@ -36,14 +43,7 @@ export default function HeroMedia({ hasVideo, hasPoster }: HeroMediaProps) {
   if (hasPoster) {
     return (
       <div className="absolute inset-0 animate-[kenburns_24s_ease-in-out_infinite_alternate]">
-        <Image
-          src="/images/hero-poster.jpg"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
+        <Image src={posterSrc} alt="" fill priority sizes="100vw" className="object-cover" />
       </div>
     );
   }

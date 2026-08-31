@@ -35,7 +35,7 @@ export default function Header() {
       }`}
     >
       <div className="mx-auto flex max-w-content items-center justify-between px-6 py-5 sm:px-10 lg:px-16">
-        <a href="#top" aria-label={locale === "fr" ? "Estalia Studio — Accueil" : "Estalia Studio — Home"}>
+        <a href="/" aria-label={`Estalia Studio — ${t.nav.homeLabel}`}>
           <Logo tone={darkText ? "dark" : "light"} />
         </a>
 

@@ -7,7 +7,7 @@ import TitleWipe from "./TitleWipe";
 import MediaPlaceholder from "./MediaPlaceholder";
 import VideoModal from "./VideoModal";
 import { useLanguage } from "@/lib/LanguageContext";
-import { projects, type Project } from "@/data/projects";
+import { projects as allProjects, type Project } from "@/data/projects";
 
 type MediaStatus = Record<string, { video: boolean; poster: boolean }>;
 
@@ -136,7 +136,7 @@ function FilmTile({
 }
 
 /** Bandeau défilant discret des projets — vitesse constante, en pause au survol. */
-function FilmsMarquee() {
+function FilmsMarquee({ projects }: { projects: Project[] }) {
   const items = [...projects, ...projects];
   return (
     <div
@@ -158,28 +158,43 @@ function FilmsMarquee() {
   );
 }
 
-export default function SelectedFilms({ mediaStatus }: { mediaStatus: MediaStatus }) {
+type FilmsContent = { kicker: string; title: string; subtitle: string; cta: string };
+
+type SelectedFilmsProps = {
+  mediaStatus: MediaStatus;
+  /** Sous-ensemble à afficher — par défaut, tous les projets (portfolio mixte de la homepage). */
+  projects?: Project[];
+  /** Par défaut : copie homepage (t.films). Passez la copie d'un univers pour une landing dédiée. */
+  content?: FilmsContent;
+  ctaHref?: string;
+  id?: string;
+};
+
+export default function SelectedFilms({
+  mediaStatus,
+  projects = allProjects,
+  content,
+  ctaHref = "#contact",
+  id = "films",
+}: SelectedFilmsProps) {
   const { t } = useLanguage();
+  const c = content ?? t.films;
   const [active, setActive] = useState<Project | null>(null);
 
   return (
-    <section id="films" className="bg-ivoire px-6 py-24 sm:px-10 sm:py-32 lg:px-16">
+    <section id={id} className="bg-ivoire px-6 py-24 sm:px-10 sm:py-32 lg:px-16">
       <div className="mx-auto max-w-content">
         <ScrollReveal>
-          <p className="mb-4 font-sans text-xs uppercase tracking-widest2 text-bronze">
-            {t.films.kicker}
-          </p>
+          <p className="mb-4 font-sans text-xs uppercase tracking-widest2 text-bronze">{c.kicker}</p>
         </ScrollReveal>
         <h2 className="font-serif text-4xl uppercase tracking-tight text-noir sm:text-5xl lg:text-6xl">
-          <TitleWipe delay={0.05}>{t.films.title}</TitleWipe>
+          <TitleWipe delay={0.05}>{c.title}</TitleWipe>
         </h2>
         <ScrollReveal delay={0.1}>
-          <p className="mt-5 max-w-xl font-sans text-base text-noir/60 sm:text-lg">
-            {t.films.subtitle}
-          </p>
+          <p className="mt-5 max-w-xl font-sans text-base text-noir/60 sm:text-lg">{c.subtitle}</p>
         </ScrollReveal>
 
-        <FilmsMarquee />
+        <FilmsMarquee projects={projects} />
 
         <div className="mt-16 flex flex-col gap-16 sm:mt-20 sm:gap-24 lg:gap-32">
           {projects.map((project, index) => (
@@ -201,10 +216,10 @@ export default function SelectedFilms({ mediaStatus }: { mediaStatus: MediaStatu
 
         <ScrollReveal delay={0.1}>
           <a
-            href="#contact-proprietaire"
+            href={ctaHref}
             className="group mt-16 inline-flex w-fit items-center gap-2 border-b border-noir/30 pb-1 font-sans text-xs uppercase tracking-widest2 text-noir/70 transition-colors duration-300 hover:border-bronze hover:text-bronze sm:mt-20"
           >
-            {t.films.cta}
+            {c.cta}
             <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
               →
             </span>

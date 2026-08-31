@@ -1,14 +1,15 @@
 import { mediaExists } from "@/lib/media";
 import { projects } from "@/data/projects";
+import { universes } from "@/data/universes";
 import Hero from "@/components/Hero";
+import UniverseChooser from "@/components/UniverseChooser";
 import Manifesto from "@/components/Manifesto";
 import SelectedFilms from "@/components/SelectedFilms";
 import Approach from "@/components/Approach";
-import PropertyStyles from "@/components/PropertyStyles";
-import ForAgencies from "@/components/ForAgencies";
+import Offers from "@/components/Offers";
 import Trust from "@/components/Trust";
 import About from "@/components/About";
-import Contact from "@/components/Contact";
+import ContactForm from "@/components/ContactForm";
 import StickyCta from "@/components/StickyCta";
 
 export default function Home() {
@@ -19,24 +20,25 @@ export default function Home() {
   const mediaStatus = Object.fromEntries(
     projects.map((project) => [
       project.id,
-      {
-        video: mediaExists(project.video),
-        poster: mediaExists(project.poster),
-      },
+      { video: mediaExists(project.video), poster: mediaExists(project.poster) },
     ])
+  );
+
+  const imageStatus = Object.fromEntries(
+    universes.map((u) => [u.id, u.hero.poster ? mediaExists(u.hero.poster) : false])
   );
 
   return (
     <main>
       <Hero hasVideo={hasHeroVideo} hasPoster={hasHeroPoster} />
+      <UniverseChooser imageStatus={imageStatus} />
       <Manifesto />
       <SelectedFilms mediaStatus={mediaStatus} />
       <Approach />
-      <PropertyStyles />
-      <ForAgencies />
+      <Offers />
       <Trust />
       <About hasFounderPhoto={hasFounderPhoto} />
-      <Contact />
+      <ContactForm />
       <StickyCta />
     </main>
   );

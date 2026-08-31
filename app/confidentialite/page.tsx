@@ -26,8 +26,8 @@ export default function ConfidentialitePage() {
             <h2 className="mb-3 font-serif text-xl text-noir">Données collectées</h2>
             <p>
               Le formulaire de contact du site collecte les informations que vous transmettez
-              volontairement (nom, agence, email, téléphone, lien de l&apos;annonce, message) afin
-              de traiter votre demande.
+              volontairement (nom, entreprise, email, téléphone, secteur, lien du bien ou de
+              l&apos;établissement, message) afin de traiter votre demande.
             </p>
           </section>
 

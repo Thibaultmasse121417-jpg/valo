@@ -15,7 +15,7 @@ export const siteConfig = {
   brand: {
     name: "ESTALIA",
     sub: "STUDIO",
-    signature: "CINEMATIC REAL ESTATE",
+    signature: "CINEMATIC EXPERIENCES",
   },
 
   // Coordonnées de contact — PLACEHOLDERS, à remplacer.

@@ -26,12 +26,12 @@ const body = Archivo({
 });
 
 const siteUrl = "https://estalia-studio.vercel.app";
-const title = "Estalia Studio — Films immobiliers cinématographiques";
+const title = "Estalia Studio — Films cinématographiques pour lieux d'exception";
 const description =
-  "Films cinématographiques et contenus premium pour propriétés d'exception et agences immobilières de prestige.";
-const titleEn = "Estalia Studio — Cinematic Real Estate Films";
+  "Studio de création de films cinématiques pour l'immobilier de prestige, les domaines de mariage, l'hôtellerie-restauration et les commerces premium.";
+const titleEn = "Estalia Studio — Cinematic Films for Exceptional Places";
 const descriptionEn =
-  "Cinematic films and premium content for exceptional properties and prestige real estate agencies.";
+  "A creative studio producing cinematic films for luxury real estate, wedding venues, hospitality and premium businesses.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -39,9 +39,10 @@ export const metadata: Metadata = {
   description,
   keywords: [
     "film immobilier",
-    "vidéo immobilier prestige",
+    "film cinématique lieu d'exception",
     "cinematic real estate",
-    "luxury real estate video",
+    "wedding venue film",
+    "hospitality film studio",
     "estalia studio",
   ],
   authors: [{ name: "Estalia Studio" }],
