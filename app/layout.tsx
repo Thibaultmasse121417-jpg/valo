@@ -58,17 +58,8 @@ export const metadata: Metadata = {
     // Métadonnées anglaises exposées via og:locale:alternate — le
     // contenu anglais complet est servi côté client par le sélecteur
     // FR / EN (voir lib/LanguageContext.tsx et data/content.ts).
-    images: [
-      {
-        // Placeholder éditorial généré automatiquement — remplacez par
-        // un vrai visuel 1200×630 (jpg/png) pour un meilleur rendu sur
-        // certains réseaux (voir /public/og-image.svg).
-        url: "/og-image.svg",
-        width: 1200,
-        height: 630,
-        alt: `${title} / ${titleEn}`,
-      },
-    ],
+    // Le visuel de partage (og:image) est généré automatiquement par
+    // app/opengraph-image.tsx — pas besoin de le déclarer ici.
   },
   twitter: {
     card: "summary_large_image",
