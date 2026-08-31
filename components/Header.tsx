@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLanguage } from "@/lib/LanguageContext";
 import Logo from "./Logo";
@@ -9,6 +10,15 @@ export default function Header() {
   const { t, locale, toggleLocale } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+  // Sur une landing page d'univers, on masque les liens vers LES AUTRES
+  // univers : un visiteur qui arrive sur /real-estate via une pub ne doit
+  // pas repartir avec l'impression qu'Estalia fait "un peu de tout" — la
+  // page doit se sentir dédiée à son secteur. Le sélecteur complet reste
+  // sur la homepage, où l'exploration inter-secteurs est justement le but.
+  const isHome = pathname === "/";
+  const universeLinks = t.nav.links.filter((link) => link.href !== "#contact");
+  const contactLink = t.nav.links.find((link) => link.href === "#contact");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -44,15 +54,22 @@ export default function Header() {
             darkText ? "text-noir/70" : "text-ivoire/85"
           }`}
         >
-          {t.nav.links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="relative pb-1 transition-colors duration-300 hover:text-bronze"
-            >
-              {link.label}
+          {isHome
+            ? universeLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="relative pb-1 transition-colors duration-300 hover:text-bronze"
+                >
+                  {link.label}
+                </a>
+              ))
+            : null}
+          {contactLink ? (
+            <a href={contactLink.href} className="relative pb-1 transition-colors duration-300 hover:text-bronze">
+              {contactLink.label}
             </a>
-          ))}
+          ) : null}
           <button
             type="button"
             onClick={toggleLocale}
@@ -103,7 +120,7 @@ export default function Header() {
             className="fixed inset-x-0 top-[72px] z-40 flex h-[calc(100dvh-72px)] flex-col justify-between overflow-y-auto bg-ivoire px-6 pb-10 pt-6 sm:px-10 lg:hidden"
           >
             <nav className="flex flex-col gap-1">
-              {t.nav.links.map((link, i) => (
+              {(isHome ? t.nav.links : contactLink ? [contactLink] : []).map((link, i) => (
                 <motion.a
                   key={link.href}
                   href={link.href}

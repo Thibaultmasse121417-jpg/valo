@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useLanguage } from "@/lib/LanguageContext";
 import { siteConfig } from "@/data/config";
 import Logo from "./Logo";
@@ -7,11 +8,16 @@ import Logo from "./Logo";
 export default function Footer() {
   const { t } = useLanguage();
   const year = new Date().getFullYear();
+  const pathname = usePathname();
+  // Même logique que le header : sur une landing page d'univers, on
+  // n'affiche pas la liste des AUTRES secteurs — la page doit rester
+  // dédiée. Ce lien n'existe que sur la homepage.
+  const isHome = pathname === "/";
 
   return (
     <footer className="grain relative overflow-hidden bg-noir px-6 pb-10 pt-20 text-ivoire sm:px-10 lg:px-16">
       <div className="relative z-10 mx-auto max-w-content">
-        <div className="grid gap-12 border-b border-ivoire/12 pb-14 sm:grid-cols-2 lg:grid-cols-4">
+        <div className={`grid gap-12 border-b border-ivoire/12 pb-14 sm:grid-cols-2 ${isHome ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
           <div>
             <Logo tone="light" />
             <p className="mt-4 font-sans text-xs uppercase tracking-widest2 text-bronze">
@@ -19,17 +25,19 @@ export default function Footer() {
             </p>
           </div>
 
-          <nav className="flex flex-col gap-3">
-            {t.footer.universes.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="w-fit font-sans text-sm text-ivoire/60 transition-colors duration-300 hover:text-bronze"
-              >
-                {link.label}
-              </a>
-            ))}
-          </nav>
+          {isHome ? (
+            <nav className="flex flex-col gap-3">
+              {t.footer.universes.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="w-fit font-sans text-sm text-ivoire/60 transition-colors duration-300 hover:text-bronze"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+          ) : null}
 
           <nav className="flex flex-col gap-3">
             {t.footer.nav.map((link) => (
