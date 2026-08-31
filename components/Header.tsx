@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLanguage } from "@/lib/LanguageContext";
-import { siteConfig } from "@/data/config";
+import Logo from "./Logo";
 
 export default function Header() {
   const { t, locale, toggleLocale } = useLanguage();
@@ -35,22 +35,8 @@ export default function Header() {
       }`}
     >
       <div className="mx-auto flex max-w-content items-center justify-between px-6 py-5 sm:px-10 lg:px-16">
-        <a
-          href="#top"
-          className={`flex items-baseline gap-2 font-serif transition-colors duration-500 ${
-            darkText ? "text-noir" : "text-ivoire"
-          }`}
-        >
-          <span className="text-xl tracking-widest2 sm:text-2xl">
-            {siteConfig.brand.name}
-          </span>
-          <span
-            className={`text-[10px] font-sans uppercase tracking-widest2 transition-colors duration-500 ${
-              darkText ? "text-noir/50" : "text-ivoire/60"
-            }`}
-          >
-            {siteConfig.brand.sub}
-          </span>
+        <a href="#top" aria-label={locale === "fr" ? "Estalia Studio — Accueil" : "Estalia Studio — Home"}>
+          <Logo tone={darkText ? "dark" : "light"} />
         </a>
 
         <nav

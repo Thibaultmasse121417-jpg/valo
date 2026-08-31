@@ -68,6 +68,7 @@ export interface ContentShape {
     fork: {
       prompt: string;
       capacity: string;
+      responseTime: string;
       agency: { label: string; title: string; text: string; cta: string };
       owner: { label: string; title: string; text: string; cta: string };
     };
@@ -95,6 +96,7 @@ export interface ContentShape {
       phone: string;
       message: string;
       next: string;
+      privacyNote: string;
     };
     submitting: string;
     success: string;
@@ -227,6 +229,7 @@ export const content: Record<Locale, ContentShape> = {
       paragraphs: [
         "Estalia accompagne les agences souhaitant proposer à leurs propriétaires une présentation visuelle à la hauteur de leurs mandats.",
         "Une réalisation peut être commandée pour une propriété particulière ou intégrée à une collaboration régulière pour accompagner vos nouvelles entrées.",
+        "Un bien filmé retient l'attention bien plus longtemps qu'une simple galerie photo : il touche des acquéreurs plus qualifiés, et aide à défendre un prix à la hauteur du bien — plutôt qu'à le négocier à la baisse.",
       ],
       tiers: [
         {
@@ -288,6 +291,8 @@ export const content: Record<Locale, ContentShape> = {
         prompt: "Pour commencer, dites-nous qui vous êtes.",
         capacity:
           "Afin de préserver la qualité de chaque réalisation, nous limitons volontairement le nombre de productions menées en parallèle.",
+        responseTime:
+          "Réponse personnelle sous 48h ouvrées — vous échangez directement avec le fondateur, jamais avec un centre d'appels.",
         agency: {
           label: "Agence immobilière",
           title: "Je représente une agence",
@@ -335,6 +340,8 @@ export const content: Record<Locale, ContentShape> = {
         phone: "Téléphone (facultatif)",
         message: "Message (facultatif)",
         next: "Continuer",
+        privacyNote:
+          "Vos coordonnées restent strictement confidentielles : elles ne servent qu'à étudier votre demande, et ne sont jamais partagées.",
       },
       submitting: "Envoi en cours…",
       success: "Merci. Votre demande a bien été transmise.",
@@ -486,6 +493,7 @@ export const content: Record<Locale, ContentShape> = {
       paragraphs: [
         "Estalia supports agencies who want to offer their owners a visual presentation worthy of their listings.",
         "A film can be commissioned for a single property or built into an ongoing collaboration to support your new listings.",
+        "A filmed property holds attention far longer than a plain photo gallery: it reaches more qualified buyers, and helps defend a price that matches the property — rather than negotiate it down.",
       ],
       tiers: [
         {
@@ -547,6 +555,8 @@ export const content: Record<Locale, ContentShape> = {
         prompt: "To begin, tell us who you are.",
         capacity:
           "To preserve the quality of every film, we deliberately limit how many productions we run in parallel.",
+        responseTime:
+          "A personal reply within 48 working hours — you deal directly with the founder, never a call centre.",
         agency: {
           label: "Real estate agency",
           title: "I represent an agency",
@@ -594,6 +604,8 @@ export const content: Record<Locale, ContentShape> = {
         phone: "Phone (optional)",
         message: "Message (optional)",
         next: "Continue",
+        privacyNote:
+          "Your details stay strictly confidential: used only to review your request, and never shared.",
       },
       submitting: "Sending…",
       success: "Thank you. Your request has been sent.",

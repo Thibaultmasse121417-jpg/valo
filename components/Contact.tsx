@@ -39,6 +39,16 @@ const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const urlPattern = /^https?:\/\/.+\..+/i;
 const easing = [0.19, 1, 0.22, 1] as const;
 
+/** Petit repère visuel de confidentialité — pas une icône de marque, juste un signal d'usage. */
+function LockIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" className={className} aria-hidden="true">
+      <rect x="3.5" y="7" width="9" height="6.5" rx="1" stroke="currentColor" strokeWidth="1.1" />
+      <path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 const stepOrder: Stage[] = ["step1", "step2", "step3"];
 
 export default function Contact() {
@@ -268,6 +278,10 @@ export default function Contact() {
                     </div>
                     <p className="max-w-md font-sans text-xs leading-relaxed text-ivoire/35">
                       {f.fork.capacity}
+                    </p>
+                    <p className="flex max-w-md items-start gap-2 font-sans text-xs leading-relaxed text-ivoire/45">
+                      <LockIcon className="mt-0.5 h-3 w-3 shrink-0 text-bronze/70" />
+                      {f.fork.responseTime}
                     </p>
                   </motion.div>
                 ) : null}
@@ -499,6 +513,11 @@ export default function Contact() {
                         onChange={(e) => update("message", e.target.value)}
                       />
                     </div>
+
+                    <p className="flex items-start gap-2 font-sans text-xs leading-relaxed text-ivoire/40">
+                      <LockIcon className="mt-0.5 h-3 w-3 shrink-0 text-bronze/70" />
+                      {f.shared.privacyNote}
+                    </p>
 
                     <div className="mt-2 flex flex-wrap items-center gap-6">
                       <button
