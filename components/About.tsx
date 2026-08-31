@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import ScrollReveal from "./ScrollReveal";
+import TitleWipe from "./TitleWipe";
 import { useLanguage } from "@/lib/LanguageContext";
 import { siteConfig } from "@/data/config";
 
@@ -19,11 +20,9 @@ export default function About({ hasFounderPhoto }: { hasFounderPhoto: boolean })
                 {t.about.kicker}
               </p>
             </ScrollReveal>
-            <ScrollReveal delay={0.05}>
-              <h2 className="font-serif text-4xl uppercase tracking-tight text-noir sm:text-5xl">
-                {t.about.title}
-              </h2>
-            </ScrollReveal>
+            <h2 className="font-serif text-4xl uppercase tracking-tight text-noir sm:text-5xl">
+              <TitleWipe delay={0.05}>{t.about.title}</TitleWipe>
+            </h2>
             <div className="mt-8 flex flex-col gap-5">
               {t.about.paragraphs.map((p, i) => (
                 <ScrollReveal key={p} delay={0.08 + i * 0.06}>

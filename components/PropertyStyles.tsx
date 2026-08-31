@@ -1,6 +1,7 @@
 "use client";
 
 import ScrollReveal from "./ScrollReveal";
+import TitleWipe from "./TitleWipe";
 import { useLanguage } from "@/lib/LanguageContext";
 
 export default function PropertyStyles() {
@@ -15,15 +16,13 @@ export default function PropertyStyles() {
               {t.styles.kicker}
             </p>
           </ScrollReveal>
-          <ScrollReveal delay={0.05}>
-            <h2 className="font-serif text-4xl uppercase leading-[1.1] tracking-tight text-noir sm:text-5xl">
-              {t.styles.title.map((line) => (
-                <span key={line} className="block">
-                  {line}
-                </span>
-              ))}
-            </h2>
-          </ScrollReveal>
+          <h2 className="font-serif text-4xl uppercase leading-[1.1] tracking-tight text-noir sm:text-5xl">
+            {t.styles.title.map((line, i) => (
+              <TitleWipe key={line} delay={0.05 + i * 0.12}>
+                {line}
+              </TitleWipe>
+            ))}
+          </h2>
         </div>
 
         <div className="mt-16 grid gap-14 sm:mt-20 lg:grid-cols-3 lg:gap-10">

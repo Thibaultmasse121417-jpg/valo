@@ -58,6 +58,105 @@ body {
   opacity: 0.05;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grainShift 8s steps(8) infinite;
+}
+
+/* léger scintillement du grain — jamais un vrai film sans un peu de vie */
+@keyframes grainShift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(-2%, -1%);
+  }
+  20% {
+    transform: translate(1%, 2%);
+  }
+  30% {
+    transform: translate(-1%, 1%);
+  }
+  40% {
+    transform: translate(2%, -2%);
+  }
+  50% {
+    transform: translate(-2%, 2%);
+  }
+  60% {
+    transform: translate(1%, -1%);
+  }
+  70% {
+    transform: translate(-1%, -2%);
+  }
+  80% {
+    transform: translate(2%, 1%);
+  }
+  90% {
+    transform: translate(-1%, -1%);
+  }
+}
+
+/*
+ * Cadre "viewfinder" tracé au survol des vignettes du portfolio —
+ * les quatre coins se dessinent comme un cadrage caméra qui se
+ * verrouille sur le plan. Remplace un simple changement de couleur
+ * par un geste qui évoque directement le métier du studio.
+ */
+.frame-corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-color: theme("colors.ivoire.DEFAULT");
+  opacity: 0;
+  transition:
+    opacity 0.4s ease,
+    width 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+    height 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.group:hover .frame-corner {
+  opacity: 1;
+  width: 32px;
+  height: 32px;
+}
+.frame-corner--tl {
+  top: 14px;
+  left: 14px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+.frame-corner--tr {
+  top: 14px;
+  right: 14px;
+  border-top: 1px solid;
+  border-right: 1px solid;
+}
+.frame-corner--bl {
+  bottom: 14px;
+  left: 14px;
+  border-bottom: 1px solid;
+  border-left: 1px solid;
+}
+.frame-corner--br {
+  bottom: 14px;
+  right: 14px;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+/* Bandeau défilant discret (noms de projets) — vitesse constante, en pause au survol. */
+.marquee-track {
+  animation: marquee 32s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

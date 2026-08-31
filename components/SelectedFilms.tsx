@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import ScrollReveal from "./ScrollReveal";
+import TitleWipe from "./TitleWipe";
 import MediaPlaceholder from "./MediaPlaceholder";
 import VideoModal from "./VideoModal";
 import { useLanguage } from "@/lib/LanguageContext";
@@ -46,7 +48,7 @@ function FilmTile({
       >
         {status.video ? (
           <video
-            className="h-full w-full object-cover transition-transform duration-[1600ms] ease-editorial group-hover:scale-[1.045]"
+            className="h-full w-full object-cover transition-transform duration-[1600ms] ease-editorial group-hover:scale-[1.06]"
             muted
             loop
             playsInline
@@ -55,6 +57,16 @@ function FilmTile({
           >
             <source src={project.video} type="video/mp4" />
           </video>
+        ) : status.poster ? (
+          <div className="relative h-full w-full overflow-hidden">
+            <Image
+              src={project.poster}
+              alt={`${project.title} — ${project.location}`}
+              fill
+              sizes="(min-width: 768px) 66vw, 100vw"
+              className="object-cover transition-transform duration-[1600ms] ease-editorial group-hover:scale-[1.06]"
+            />
+          </div>
         ) : (
           <div className="h-full w-full transition-transform duration-[1600ms] ease-editorial group-hover:scale-[1.045]">
             <MediaPlaceholder
@@ -66,6 +78,12 @@ function FilmTile({
         )}
 
         <div className="pointer-events-none absolute inset-0 bg-noir/0 transition-colors duration-500 group-hover:bg-noir/35" />
+
+        {/* cadre "viewfinder" qui se verrouille sur le plan au survol */}
+        <span className="frame-corner frame-corner--tl" aria-hidden />
+        <span className="frame-corner frame-corner--tr" aria-hidden />
+        <span className="frame-corner frame-corner--bl" aria-hidden />
+        <span className="frame-corner frame-corner--br" aria-hidden />
 
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-3 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
           <span className="flex h-16 w-16 items-center justify-center rounded-full border border-ivoire/60">
@@ -117,6 +135,29 @@ function FilmTile({
   );
 }
 
+/** Bandeau défilant discret des projets — vitesse constante, en pause au survol. */
+function FilmsMarquee() {
+  const items = [...projects, ...projects];
+  return (
+    <div
+      className="mt-10 overflow-hidden border-y border-noir/10 py-4 sm:mt-12"
+      aria-hidden
+    >
+      <div className="marquee-track flex w-max gap-10">
+        {items.map((p, i) => (
+          <span
+            key={`${p.id}-${i}`}
+            className="flex items-center gap-3 font-sans text-xs uppercase tracking-widest2 text-noir/35"
+          >
+            {p.title} — {p.location}
+            <span className="text-bronze/50">✦</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function SelectedFilms({ mediaStatus }: { mediaStatus: MediaStatus }) {
   const { t } = useLanguage();
   const [active, setActive] = useState<Project | null>(null);
@@ -129,16 +170,16 @@ export default function SelectedFilms({ mediaStatus }: { mediaStatus: MediaStatu
             {t.films.kicker}
           </p>
         </ScrollReveal>
-        <ScrollReveal delay={0.05}>
-          <h2 className="font-serif text-4xl uppercase tracking-tight text-noir sm:text-5xl lg:text-6xl">
-            {t.films.title}
-          </h2>
-        </ScrollReveal>
+        <h2 className="font-serif text-4xl uppercase tracking-tight text-noir sm:text-5xl lg:text-6xl">
+          <TitleWipe delay={0.05}>{t.films.title}</TitleWipe>
+        </h2>
         <ScrollReveal delay={0.1}>
           <p className="mt-5 max-w-xl font-sans text-base text-noir/60 sm:text-lg">
             {t.films.subtitle}
           </p>
         </ScrollReveal>
+
+        <FilmsMarquee />
 
         <div className="mt-16 flex flex-col gap-16 sm:mt-20 sm:gap-24 lg:gap-32">
           {projects.map((project, index) => (
@@ -176,6 +217,8 @@ export default function SelectedFilms({ mediaStatus }: { mediaStatus: MediaStatu
         onClose={() => setActive(null)}
         src={active?.video}
         hasVideo={Boolean(active && mediaStatus[active.id]?.video)}
+        poster={active?.poster}
+        hasPoster={Boolean(active && mediaStatus[active.id]?.poster)}
         title={active ? `${active.title} — ${active.location}` : ""}
         subtitle={active?.tags.join(" / ")}
         comingSoonLabel={t.films.comingSoon}

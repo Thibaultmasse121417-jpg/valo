@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import MediaPlaceholder from "./MediaPlaceholder";
 
@@ -9,6 +10,8 @@ type VideoModalProps = {
   onClose: () => void;
   src?: string;
   hasVideo: boolean;
+  poster?: string;
+  hasPoster?: boolean;
   title: string;
   subtitle?: string;
   comingSoonLabel: string;
@@ -26,6 +29,8 @@ export default function VideoModal({
   onClose,
   src,
   hasVideo,
+  poster,
+  hasPoster,
   title,
   subtitle,
   comingSoonLabel,
@@ -102,6 +107,24 @@ export default function VideoModal({
               >
                 <track kind="captions" />
               </video>
+            ) : hasPoster && poster ? (
+              <div className="relative h-full w-full overflow-hidden bg-noir">
+                <Image src={poster} alt={title} fill sizes="100vw" className="object-cover" />
+                <div className="absolute inset-0 bg-noir/25" />
+                <div className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-2 bg-gradient-to-t from-noir/85 to-transparent px-6 pb-8 pt-16 text-center">
+                  <p className="font-serif text-2xl uppercase tracking-tight text-ivoire sm:text-3xl">
+                    {title}
+                  </p>
+                  {subtitle ? (
+                    <p className="font-sans text-[11px] uppercase tracking-widest2 text-ivoire/60">
+                      {subtitle}
+                    </p>
+                  ) : null}
+                  <span className="mt-2 border border-ivoire/25 px-3 py-1.5 font-sans text-[10px] uppercase tracking-widest2 text-ivoire/60">
+                    {comingSoonLabel}
+                  </span>
+                </div>
+              </div>
             ) : (
               <MediaPlaceholder
                 title={title}

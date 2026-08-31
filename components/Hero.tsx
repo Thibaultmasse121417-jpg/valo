@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import HeroMedia from "./HeroMedia";
 import { useLanguage } from "@/lib/LanguageContext";
 
@@ -14,16 +15,27 @@ export default function Hero({
   hasPoster: boolean;
 }) {
   const { t } = useLanguage();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Parallax très léger : le fond dérive plus lentement que le premier
+  // plan pendant le scroll de sortie du Hero — profondeur de champ,
+  // pas d'effet gadget.
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  const mediaY = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
 
   return (
     <section
+      ref={sectionRef}
       id="top"
       className="grain relative flex h-[100svh] min-h-[640px] w-full items-end overflow-hidden bg-noir"
     >
-      <div className="absolute inset-0">
+      <motion.div className="absolute inset-0" style={{ y: mediaY }}>
         <HeroMedia hasVideo={hasVideo} hasPoster={hasPoster} />
         <div className="absolute inset-0 bg-gradient-to-b from-noir/55 via-noir/25 to-noir/80" />
-      </div>
+      </motion.div>
 
       <div className="relative z-10 w-full px-6 pb-16 sm:px-10 sm:pb-20 lg:px-16 lg:pb-24">
         <div className="mx-auto max-w-content">
@@ -38,15 +50,16 @@ export default function Hero({
 
           <h1 className="max-w-4xl font-serif text-[2.6rem] uppercase leading-[1.05] tracking-tight text-ivoire sm:text-6xl lg:text-7xl">
             {t.hero.title.map((line, i) => (
-              <motion.span
-                key={line}
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, ease: easing, delay: 0.35 + i * 0.12 }}
-                className="block"
-              >
-                {line}
-              </motion.span>
+              <span key={line} className="block overflow-hidden">
+                <motion.span
+                  initial={{ clipPath: "inset(0 100% 0 0)", opacity: 0, y: 8 }}
+                  animate={{ clipPath: "inset(0 0% 0 0)", opacity: 1, y: 0 }}
+                  transition={{ duration: 1.1, ease: easing, delay: 0.35 + i * 0.16 }}
+                  className="block"
+                >
+                  {line}
+                </motion.span>
+              </span>
             ))}
           </h1>
 

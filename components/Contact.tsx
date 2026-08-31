@@ -3,6 +3,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import ScrollReveal from "./ScrollReveal";
+import TitleWipe from "./TitleWipe";
 import { useLanguage } from "@/lib/LanguageContext";
 import { siteConfig } from "@/data/config";
 
@@ -180,15 +181,13 @@ export default function Contact() {
                 {f.kicker}
               </p>
             </ScrollReveal>
-            <ScrollReveal delay={0.05}>
-              <h2 className="font-serif text-4xl uppercase leading-[1.1] tracking-tight sm:text-5xl">
-                {f.title.map((line) => (
-                  <span key={line} className="block">
-                    {line}
-                  </span>
-                ))}
-              </h2>
-            </ScrollReveal>
+            <h2 className="font-serif text-4xl uppercase leading-[1.1] tracking-tight sm:text-5xl">
+              {f.title.map((line, i) => (
+                <TitleWipe key={line} delay={0.05 + i * 0.12}>
+                  {line}
+                </TitleWipe>
+              ))}
+            </h2>
             <ScrollReveal delay={0.1}>
               <p className="mt-6 max-w-sm font-sans text-base leading-relaxed text-ivoire/60">
                 {f.subtitle}

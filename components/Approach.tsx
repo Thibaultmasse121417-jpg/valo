@@ -1,6 +1,7 @@
 "use client";
 
 import ScrollReveal from "./ScrollReveal";
+import TitleWipe from "./TitleWipe";
 import { useLanguage } from "@/lib/LanguageContext";
 
 export default function Approach() {
@@ -17,15 +18,13 @@ export default function Approach() {
             {t.approach.kicker}
           </p>
         </ScrollReveal>
-        <ScrollReveal delay={0.05}>
-          <h2 className="max-w-2xl font-serif text-4xl uppercase leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
-            {t.approach.title.map((line) => (
-              <span key={line} className="block">
-                {line}
-              </span>
-            ))}
-          </h2>
-        </ScrollReveal>
+        <h2 className="max-w-2xl font-serif text-4xl uppercase leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
+          {t.approach.title.map((line, i) => (
+            <TitleWipe key={line} delay={0.05 + i * 0.12}>
+              {line}
+            </TitleWipe>
+          ))}
+        </h2>
 
         <div className="mt-20 grid gap-0 border-t border-ivoire/15 sm:mt-24 lg:grid-cols-4">
           {t.approach.steps.map((step, i) => (
