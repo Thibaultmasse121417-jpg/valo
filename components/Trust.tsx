@@ -13,7 +13,7 @@ export default function Trust() {
           {t.trust.items.map((item, i) => (
             <ScrollReveal key={item.title} delay={i * 0.06}>
               <div className="flex flex-col gap-3">
-                <h3 className="font-serif text-lg uppercase tracking-wide text-noir">
+                <h3 className="font-serif text-lg uppercase tracking-tight text-noir">
                   {item.title}
                 </h3>
                 <p className="font-sans text-sm leading-relaxed text-noir/55">
@@ -27,9 +27,12 @@ export default function Trust() {
         <ScrollReveal delay={0.2}>
           <a
             href="#contact"
-            className="mt-14 inline-block w-fit border-b border-noir/30 pb-1 font-sans text-xs uppercase tracking-widest2 text-noir/70 transition-colors duration-300 hover:border-bronze hover:text-bronze sm:mt-16"
+            className="group mt-14 inline-flex w-fit items-center gap-2 border-b border-noir/30 pb-1 font-sans text-xs uppercase tracking-widest2 text-noir/70 transition-colors duration-300 hover:border-bronze hover:text-bronze sm:mt-16"
           >
-            {t.trust.cta} →
+            {t.trust.cta}
+            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
+              →
+            </span>
           </a>
         </ScrollReveal>
       </div>

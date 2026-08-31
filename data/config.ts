@@ -46,6 +46,14 @@ export const siteConfig = {
   // un vrai service d'envoi (Resend, Formspree, Supabase, etc.)
   contactEndpoint: "/api/contact",
 
+  // Réservation directe d'un créneau (Calendly, Cal.com, SavvyCal…),
+  // proposée sur l'écran de confirmation du funnel. Laissez `url` vide
+  // ("") pour masquer complètement le bouton tant que vous n'avez pas
+  // de vrai lien de réservation.
+  booking: {
+    url: "",
+  },
+
   legal: {
     company: "Estalia Studio",
   },

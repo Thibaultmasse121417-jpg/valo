@@ -152,13 +152,27 @@ export default function Contact() {
   const stepIndex = stepOrder.indexOf(stage); // -1 hors funnel numéroté
   const options = segment === "agency" ? f.agencyFlow.options : f.ownerFlow.options;
 
+  // Message de confirmation personnalisé avec la réponse de qualification
+  // (type de bien / palier choisi) — retombe sur le texte générique si,
+  // pour une raison quelconque, la sélection est introuvable.
+  const successHeadline = (() => {
+    const chosen = options.find((o) => o.value === fields.qualification)?.label;
+    if (!chosen) return f.success;
+    return segment === "agency"
+      ? f.successAgency.replace("{tier}", chosen)
+      : f.successOwner.replace("{type}", chosen);
+  })();
+
   return (
-    <section id="contact" className="bg-noir px-6 py-28 text-ivoire sm:px-10 sm:py-36 lg:px-16">
+    <section
+      id="contact"
+      className="grain relative overflow-hidden bg-noir px-6 py-28 text-ivoire sm:px-10 sm:py-36 lg:px-16"
+    >
       {/* cibles d'ancrage pour les CTA contextuels du site */}
       <span id="contact-agence" className="block h-0 scroll-mt-24" aria-hidden />
       <span id="contact-proprietaire" className="block h-0 scroll-mt-24" aria-hidden />
 
-      <div className="mx-auto max-w-content">
+      <div className="relative z-10 mx-auto max-w-content">
         <div className="grid gap-14 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-5">
             <ScrollReveal>
@@ -167,7 +181,7 @@ export default function Contact() {
               </p>
             </ScrollReveal>
             <ScrollReveal delay={0.05}>
-              <h2 className="font-serif text-4xl uppercase leading-[1.1] tracking-wide sm:text-5xl">
+              <h2 className="font-serif text-4xl uppercase leading-[1.1] tracking-tight sm:text-5xl">
                 {f.title.map((line) => (
                   <span key={line} className="block">
                     {line}
@@ -227,19 +241,25 @@ export default function Contact() {
                             <span className="font-sans text-[10px] uppercase tracking-widest2 text-bronze">
                               {copy.label}
                             </span>
-                            <span className="font-serif text-xl uppercase tracking-wide text-ivoire">
+                            <span className="font-serif text-xl uppercase tracking-tight text-ivoire">
                               {copy.title}
                             </span>
                             <span className="font-sans text-sm leading-relaxed text-ivoire/55">
                               {copy.text}
                             </span>
-                            <span className="mt-2 font-sans text-xs uppercase tracking-widest2 text-ivoire/70 transition-colors duration-300 group-hover:text-bronze">
-                              {copy.cta} →
+                            <span className="mt-2 inline-flex items-center gap-2 font-sans text-xs uppercase tracking-widest2 text-ivoire/70 transition-colors duration-300 group-hover:text-bronze">
+                              {copy.cta}
+                              <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
+                                →
+                              </span>
                             </span>
                           </button>
                         );
                       })}
                     </div>
+                    <p className="max-w-md font-sans text-xs leading-relaxed text-ivoire/35">
+                      {f.fork.capacity}
+                    </p>
                   </motion.div>
                 ) : null}
 
@@ -253,7 +273,7 @@ export default function Contact() {
                     transition={{ duration: 0.5, ease: easing }}
                     className="flex flex-col gap-6"
                   >
-                    <h3 className="font-serif text-2xl uppercase tracking-wide text-ivoire sm:text-3xl">
+                    <h3 className="font-serif text-2xl uppercase tracking-tight text-ivoire sm:text-3xl">
                       {segment === "agency" ? f.agencyFlow.step1Title : f.ownerFlow.step1Title}
                     </h3>
                     <div className="flex flex-col gap-3">
@@ -308,7 +328,7 @@ export default function Contact() {
                     transition={{ duration: 0.5, ease: easing }}
                     className="flex flex-col gap-7"
                   >
-                    <h3 className="font-serif text-2xl uppercase tracking-wide text-ivoire sm:text-3xl">
+                    <h3 className="font-serif text-2xl uppercase tracking-tight text-ivoire sm:text-3xl">
                       {segment === "agency" ? f.agencyFlow.step2Title : f.ownerFlow.step2Title}
                     </h3>
 
@@ -409,7 +429,7 @@ export default function Contact() {
                     transition={{ duration: 0.5, ease: easing }}
                     className="flex flex-col gap-7"
                   >
-                    <h3 className="font-serif text-2xl uppercase tracking-wide text-ivoire sm:text-3xl">
+                    <h3 className="font-serif text-2xl uppercase tracking-tight text-ivoire sm:text-3xl">
                       {segment === "agency" ? f.agencyFlow.step3Title : f.ownerFlow.step3Title}
                     </h3>
 
@@ -509,10 +529,29 @@ export default function Contact() {
                     role="status"
                     className="flex flex-col gap-3 border-t border-ivoire/15 pt-8"
                   >
-                    <p className="font-serif text-2xl uppercase tracking-wide text-ivoire sm:text-3xl">
-                      {f.success}
+                    <p className="font-serif text-2xl uppercase tracking-tight text-ivoire sm:text-3xl">
+                      {successHeadline}
                     </p>
                     <p className="font-sans text-sm text-ivoire/55">{f.successNote}</p>
+
+                    {siteConfig.booking.url ? (
+                      <div className="mt-4 flex flex-col gap-3 border-t border-ivoire/15 pt-6">
+                        <p className="font-sans text-xs uppercase tracking-widest2 text-ivoire/40">
+                          {f.booking.title}
+                        </p>
+                        <a
+                          href={siteConfig.booking.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="group inline-flex w-fit items-center gap-2 border border-ivoire px-7 py-4 font-sans text-xs uppercase tracking-widest2 text-ivoire transition-colors duration-300 hover:bg-ivoire hover:text-noir"
+                        >
+                          {f.booking.cta}
+                          <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
+                            →
+                          </span>
+                        </a>
+                      </div>
+                    ) : null}
                   </motion.div>
                 ) : null}
               </AnimatePresence>

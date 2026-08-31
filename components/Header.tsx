@@ -125,7 +125,7 @@ export default function Header() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.05 * i, duration: 0.5 }}
-                  className="border-b border-noir/10 py-5 font-serif text-2xl uppercase tracking-wide text-noir"
+                  className="border-b border-noir/10 py-5 font-serif text-2xl uppercase tracking-tight text-noir"
                 >
                   {link.label}
                 </motion.a>

@@ -67,6 +67,7 @@ export interface ContentShape {
     back: string;
     fork: {
       prompt: string;
+      capacity: string;
       agency: { label: string; title: string; text: string; cta: string };
       owner: { label: string; title: string; text: string; cta: string };
     };
@@ -97,7 +98,10 @@ export interface ContentShape {
     };
     submitting: string;
     success: string;
+    successOwner: string; // contient {type} — remplacé par le type de bien choisi
+    successAgency: string; // contient {tier} — remplacé par le palier choisi
     successNote: string;
+    booking: { title: string; cta: string };
     error: string;
     errors: { required: string; email: string; url: string };
   };
@@ -282,6 +286,8 @@ export const content: Record<Locale, ContentShape> = {
       back: "Retour",
       fork: {
         prompt: "Pour commencer, dites-nous qui vous êtes.",
+        capacity:
+          "Afin de préserver la qualité de chaque réalisation, nous limitons volontairement le nombre de productions menées en parallèle.",
         agency: {
           label: "Agence immobilière",
           title: "Je représente une agence",
@@ -332,7 +338,13 @@ export const content: Record<Locale, ContentShape> = {
       },
       submitting: "Envoi en cours…",
       success: "Merci. Votre demande a bien été transmise.",
+      successOwner: "Merci. Nous préparons votre lecture du bien — {type}.",
+      successAgency: "Merci. Nous revenons vers vous au sujet de votre collaboration — {tier}.",
       successNote: "Nous revenons vers vous sous 48h ouvrées.",
+      booking: {
+        title: "Vous préférez échanger directement ?",
+        cta: "Réserver un créneau de 15 minutes",
+      },
       error: "Une erreur est survenue. Merci de réessayer ou de nous écrire directement.",
       errors: {
         required: "Ce champ est requis.",
@@ -533,6 +545,8 @@ export const content: Record<Locale, ContentShape> = {
       back: "Back",
       fork: {
         prompt: "To begin, tell us who you are.",
+        capacity:
+          "To preserve the quality of every film, we deliberately limit how many productions we run in parallel.",
         agency: {
           label: "Real estate agency",
           title: "I represent an agency",
@@ -583,7 +597,13 @@ export const content: Record<Locale, ContentShape> = {
       },
       submitting: "Sending…",
       success: "Thank you. Your request has been sent.",
+      successOwner: "Thank you. We're already thinking about your property — {type}.",
+      successAgency: "Thank you. We'll be in touch about your collaboration — {tier}.",
       successNote: "We'll be in touch within 48 working hours.",
+      booking: {
+        title: "Prefer to talk directly?",
+        cta: "Book a 15-minute call",
+      },
       error: "Something went wrong. Please try again or email us directly.",
       errors: {
         required: "This field is required.",

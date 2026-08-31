@@ -41,6 +41,25 @@ body {
   }
 }
 
+/*
+ * Grain de pellicule très discret sur les sections sombres (Hero,
+ * Approche, Agences, Contact, Footer) — renforce le caractère
+ * "cinéma" de l'identité sans jamais devenir un effet gadget.
+ * L'élément porteur doit être `relative overflow-hidden`, et son
+ * contenu doit être placé dans un enfant `relative z-10` pour rester
+ * lisible au-dessus du grain.
+ */
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

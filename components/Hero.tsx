@@ -18,7 +18,7 @@ export default function Hero({
   return (
     <section
       id="top"
-      className="relative flex h-[100svh] min-h-[640px] w-full items-end overflow-hidden bg-noir"
+      className="grain relative flex h-[100svh] min-h-[640px] w-full items-end overflow-hidden bg-noir"
     >
       <div className="absolute inset-0">
         <HeroMedia hasVideo={hasVideo} hasPoster={hasPoster} />
@@ -36,7 +36,7 @@ export default function Hero({
             {t.hero.kicker}
           </motion.p>
 
-          <h1 className="max-w-4xl font-serif text-[2.6rem] uppercase leading-[1.05] tracking-wide text-ivoire sm:text-6xl lg:text-7xl">
+          <h1 className="max-w-4xl font-serif text-[2.6rem] uppercase leading-[1.05] tracking-tight text-ivoire sm:text-6xl lg:text-7xl">
             {t.hero.title.map((line, i) => (
               <motion.span
                 key={line}
@@ -67,15 +67,21 @@ export default function Hero({
           >
             <a
               href="#films"
-              className="border border-ivoire px-7 py-4 text-center font-sans text-xs uppercase tracking-widest2 text-ivoire transition-colors duration-300 hover:bg-ivoire hover:text-noir"
+              className="group inline-flex items-center justify-center gap-2 border border-ivoire px-7 py-4 text-center font-sans text-xs uppercase tracking-widest2 text-ivoire transition-colors duration-300 hover:bg-ivoire hover:text-noir"
             >
               {t.hero.ctaPrimary}
+              <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
+                →
+              </span>
             </a>
             <a
               href="#contact"
-              className="border border-ivoire/35 px-7 py-4 text-center font-sans text-xs uppercase tracking-widest2 text-ivoire/85 transition-colors duration-300 hover:border-ivoire hover:text-ivoire"
+              className="group inline-flex items-center justify-center gap-2 border border-ivoire/35 px-7 py-4 text-center font-sans text-xs uppercase tracking-widest2 text-ivoire/85 transition-colors duration-300 hover:border-ivoire hover:text-ivoire"
             >
               {t.hero.ctaSecondary}
+              <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
+                →
+              </span>
             </a>
           </motion.div>
         </div>

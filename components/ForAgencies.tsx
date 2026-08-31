@@ -7,8 +7,11 @@ export default function ForAgencies() {
   const { t } = useLanguage();
 
   return (
-    <section id="agences" className="bg-noir px-6 py-28 text-ivoire sm:px-10 sm:py-36 lg:px-16">
-      <div className="mx-auto max-w-content">
+    <section
+      id="agences"
+      className="grain relative overflow-hidden bg-noir px-6 py-28 text-ivoire sm:px-10 sm:py-36 lg:px-16"
+    >
+      <div className="relative z-10 mx-auto max-w-content">
         <div className="grid gap-14 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-5">
             <ScrollReveal>
@@ -17,7 +20,7 @@ export default function ForAgencies() {
               </p>
             </ScrollReveal>
             <ScrollReveal delay={0.05}>
-              <h2 className="font-serif text-4xl uppercase leading-[1.1] tracking-wide sm:text-5xl">
+              <h2 className="font-serif text-4xl uppercase leading-[1.1] tracking-tight sm:text-5xl">
                 {t.agencies.title.map((line) => (
                   <span key={line} className="block">
                     {line}
@@ -46,7 +49,7 @@ export default function ForAgencies() {
                   i === t.agencies.tiers.length - 1 ? "lg:border-r-0" : ""
                 }`}
               >
-                <h3 className="font-serif text-xl uppercase tracking-wide text-bronze">
+                <h3 className="font-serif text-xl uppercase tracking-tight text-bronze">
                   {tier.title}
                 </h3>
                 <p className="font-sans text-sm leading-relaxed text-ivoire/60">

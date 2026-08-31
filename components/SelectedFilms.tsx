@@ -80,7 +80,7 @@ function FilmTile({
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-noir/70 to-transparent p-5 sm:p-6 md:hidden">
-          <p className="font-serif text-lg uppercase tracking-wide text-ivoire">
+          <p className="font-serif text-lg uppercase tracking-tight text-ivoire">
             {project.title} — {project.location}
           </p>
         </div>
@@ -91,7 +91,7 @@ function FilmTile({
           isRight ? "md:order-1" : "md:order-2"
         }`}
       >
-        <p className="hidden font-serif text-2xl uppercase tracking-wide text-noir md:block lg:text-3xl">
+        <p className="hidden font-serif text-2xl uppercase tracking-tight text-noir md:block lg:text-3xl">
           {project.title}
           <span className="block text-bronze">{project.location}</span>
         </p>
@@ -130,7 +130,7 @@ export default function SelectedFilms({ mediaStatus }: { mediaStatus: MediaStatu
           </p>
         </ScrollReveal>
         <ScrollReveal delay={0.05}>
-          <h2 className="font-serif text-4xl uppercase tracking-wide text-noir sm:text-5xl lg:text-6xl">
+          <h2 className="font-serif text-4xl uppercase tracking-tight text-noir sm:text-5xl lg:text-6xl">
             {t.films.title}
           </h2>
         </ScrollReveal>
@@ -161,9 +161,12 @@ export default function SelectedFilms({ mediaStatus }: { mediaStatus: MediaStatu
         <ScrollReveal delay={0.1}>
           <a
             href="#contact-proprietaire"
-            className="mt-16 inline-block w-fit border-b border-noir/30 pb-1 font-sans text-xs uppercase tracking-widest2 text-noir/70 transition-colors duration-300 hover:border-bronze hover:text-bronze sm:mt-20"
+            className="group mt-16 inline-flex w-fit items-center gap-2 border-b border-noir/30 pb-1 font-sans text-xs uppercase tracking-widest2 text-noir/70 transition-colors duration-300 hover:border-bronze hover:text-bronze sm:mt-20"
           >
-            {t.films.cta} →
+            {t.films.cta}
+            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
+              →
+            </span>
           </a>
         </ScrollReveal>
       </div>

@@ -8,8 +8,8 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-noir px-6 pb-10 pt-20 text-ivoire sm:px-10 lg:px-16">
-      <div className="mx-auto max-w-content">
+    <footer className="grain relative overflow-hidden bg-noir px-6 pb-10 pt-20 text-ivoire sm:px-10 lg:px-16">
+      <div className="relative z-10 mx-auto max-w-content">
         <div className="grid gap-12 border-b border-ivoire/12 pb-14 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <p className="font-serif text-xl tracking-widest2">

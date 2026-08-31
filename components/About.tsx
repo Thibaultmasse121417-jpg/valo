@@ -20,7 +20,7 @@ export default function About({ hasFounderPhoto }: { hasFounderPhoto: boolean })
               </p>
             </ScrollReveal>
             <ScrollReveal delay={0.05}>
-              <h2 className="font-serif text-4xl uppercase tracking-wide text-noir sm:text-5xl">
+              <h2 className="font-serif text-4xl uppercase tracking-tight text-noir sm:text-5xl">
                 {t.about.title}
               </h2>
             </ScrollReveal>
@@ -51,7 +51,7 @@ export default function About({ hasFounderPhoto }: { hasFounderPhoto: boolean })
                     <span className="font-serif text-4xl text-bronze/70" aria-hidden>
                       E
                     </span>
-                    <p className="font-serif text-xl uppercase tracking-wide text-ivoire">
+                    <p className="font-serif text-xl uppercase tracking-tight text-ivoire">
                       {founder.name}
                     </p>
                   </div>

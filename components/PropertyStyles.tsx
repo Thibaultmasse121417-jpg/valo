@@ -16,7 +16,7 @@ export default function PropertyStyles() {
             </p>
           </ScrollReveal>
           <ScrollReveal delay={0.05}>
-            <h2 className="font-serif text-4xl uppercase leading-[1.1] tracking-wide text-noir sm:text-5xl">
+            <h2 className="font-serif text-4xl uppercase leading-[1.1] tracking-tight text-noir sm:text-5xl">
               {t.styles.title.map((line) => (
                 <span key={line} className="block">
                   {line}
@@ -30,7 +30,7 @@ export default function PropertyStyles() {
           {t.styles.columns.map((column, i) => (
             <ScrollReveal key={column.title} delay={i * 0.08}>
               <div className="flex h-full flex-col border-t border-noir/15 pt-7">
-                <h3 className="font-serif text-2xl uppercase tracking-wide text-noir">
+                <h3 className="font-serif text-2xl uppercase tracking-tight text-noir">
                   {column.title}
                 </h3>
                 <ol className="mt-7 flex flex-col gap-4">
@@ -49,9 +49,17 @@ export default function PropertyStyles() {
         </div>
 
         <ScrollReveal delay={0.1}>
-          <p className="mx-auto mt-20 max-w-2xl text-center font-serif text-xl italic text-noir/70 sm:mt-24 sm:text-2xl">
-            &ldquo;{t.styles.note}&rdquo;
-          </p>
+          <figure className="relative mx-auto mt-24 max-w-2xl border-t border-noir/15 pt-10 text-center sm:mt-28">
+            <span
+              aria-hidden
+              className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 -translate-y-[58%] font-serif text-6xl leading-none text-bronze/35 sm:text-7xl"
+            >
+              &ldquo;
+            </span>
+            <blockquote className="font-serif text-xl italic leading-snug tracking-tight text-noir sm:text-3xl">
+              {t.styles.note}
+            </blockquote>
+          </figure>
         </ScrollReveal>
       </div>
     </section>
