@@ -42,9 +42,11 @@ export const siteConfig = {
     linkedin: "https://linkedin.com/company/estalia-studio",
   },
 
-  // Formulaire de contact — voir app/api/contact/route.ts pour brancher
-  // un vrai service d'envoi (Resend, Formspree, Supabase, etc.)
-  contactEndpoint: "/api/contact",
+  // Formulaire de contact — branché sur Formspree (voir components/Contact.tsx
+  // pour la requête). Pour changer de service plus tard, il suffit de
+  // remplacer cette URL (Resend/Supabase nécessitent de repasser par une
+  // route API interne — voir l'historique de app/api/contact/route.ts).
+  contactEndpoint: "https://formspree.io/f/myeykand",
 
   // Réservation directe d'un créneau (Calendly, Cal.com, SavvyCal…),
   // proposée sur l'écran de confirmation du funnel. Laissez `url` vide

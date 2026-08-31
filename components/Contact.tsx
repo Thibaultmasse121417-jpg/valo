@@ -121,9 +121,14 @@ export default function Contact() {
 
     setStatus("submitting");
     try {
+      // Formspree : l'en-tête Accept garantit une réponse JSON (plutôt
+      // qu'une redirection HTML pensée pour un <form> natif), et les
+      // champs préfixés par un underscore configurent l'email reçu
+      // (sujet, destinataire "reply-to") sans changer le payload visible
+      // dans le tableau de bord Formspree.
       const res = await fetch(siteConfig.contactEndpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
           segment,
           qualification: fields.qualification,
@@ -135,6 +140,11 @@ export default function Contact() {
           agencyLink: segment === "agency" ? fields.agencyLink : undefined,
           location: segment === "owner" ? fields.location : undefined,
           listingUrl: segment === "owner" ? fields.listingUrl : undefined,
+          _subject:
+            segment === "agency"
+              ? `Estalia Studio — nouvelle demande agence (${fields.name})`
+              : `Estalia Studio — nouvelle demande propriétaire (${fields.name})`,
+          _replyto: fields.email,
         }),
       });
       if (!res.ok) throw new Error("request_failed");
