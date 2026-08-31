@@ -299,7 +299,7 @@ export const content: Record<Locale, ContentShape> = {
       ],
       founder: {
         title: "Fondateur — Estalia Studio",
-        text: "Votre interlocuteur direct pour vos projets, quel que soit votre secteur.",
+        text: "Thibault Masse a fondé Estalia Studio avec une conviction simple : chaque lieu d'exception mérite mieux qu'une photo. Passionné par l'image et l'architecture, il apporte une approche de réalisateur à chaque projet — et reste votre interlocuteur direct, quel que soit votre secteur.",
       },
     },
     universes: {
@@ -754,7 +754,7 @@ export const content: Record<Locale, ContentShape> = {
       ],
       founder: {
         title: "Founder — Estalia Studio",
-        text: "Your direct contact for your project, whatever your sector.",
+        text: "Thibault Masse founded Estalia Studio on a simple conviction: every exceptional place deserves more than a photo. Driven by a passion for image and architecture, he brings a director's eye to every project — and stays your direct contact, whatever your sector.",
       },
     },
     universes: {
