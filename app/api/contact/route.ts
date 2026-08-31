@@ -36,24 +36,39 @@ import { NextResponse } from "next/server";
  * ------------------------------------------------------------------
  */
 
+/**
+ * Payload envoyé par le funnel de qualification en 3 étapes
+ * (voir components/Contact.tsx). `segment` détermine quels champs
+ * qualifiants sont renseignés :
+ * - "agency"  → qualification = tier ("unite" | "collaboration" | "surmesure"),
+ *               agencyName, agencyLink
+ * - "owner"   → qualification = type de bien ("chateau" | "villa" | …),
+ *               location, listingUrl
+ */
 type ContactPayload = {
+  segment: "agency" | "owner";
+  qualification: string;
   name: string;
-  agency: string;
   email: string;
   phone?: string;
-  listingUrl: string;
-  message: string;
-  collaboration: boolean;
+  message?: string;
+  agencyName?: string;
+  agencyLink?: string;
+  location?: string;
+  listingUrl?: string;
 };
 
 function isValid(body: Partial<ContactPayload>): body is ContactPayload {
-  return Boolean(
-    body.name?.trim() &&
-      body.agency?.trim() &&
-      body.email?.trim() &&
-      body.listingUrl?.trim() &&
-      body.message?.trim()
-  );
+  if (!body.segment || !body.qualification || !body.name?.trim() || !body.email?.trim()) {
+    return false;
+  }
+  if (body.segment === "agency") {
+    return Boolean(body.agencyName?.trim() && body.agencyLink?.trim());
+  }
+  if (body.segment === "owner") {
+    return Boolean(body.location?.trim());
+  }
+  return false;
 }
 
 export async function POST(request: Request) {

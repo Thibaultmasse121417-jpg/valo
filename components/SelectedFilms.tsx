@@ -157,6 +157,15 @@ export default function SelectedFilms({ mediaStatus }: { mediaStatus: MediaStatu
             </ScrollReveal>
           ))}
         </div>
+
+        <ScrollReveal delay={0.1}>
+          <a
+            href="#contact-proprietaire"
+            className="mt-16 inline-block w-fit border-b border-noir/30 pb-1 font-sans text-xs uppercase tracking-widest2 text-noir/70 transition-colors duration-300 hover:border-bronze hover:text-bronze sm:mt-20"
+          >
+            {t.films.cta} →
+          </a>
+        </ScrollReveal>
       </div>
 
       <VideoModal

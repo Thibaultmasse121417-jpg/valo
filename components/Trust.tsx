@@ -23,6 +23,15 @@ export default function Trust() {
             </ScrollReveal>
           ))}
         </div>
+
+        <ScrollReveal delay={0.2}>
+          <a
+            href="#contact"
+            className="mt-14 inline-block w-fit border-b border-noir/30 pb-1 font-sans text-xs uppercase tracking-widest2 text-noir/70 transition-colors duration-300 hover:border-bronze hover:text-bronze sm:mt-16"
+          >
+            {t.trust.cta} →
+          </a>
+        </ScrollReveal>
       </div>
     </section>
   );

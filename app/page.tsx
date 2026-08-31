@@ -9,6 +9,7 @@ import ForAgencies from "@/components/ForAgencies";
 import Trust from "@/components/Trust";
 import About from "@/components/About";
 import Contact from "@/components/Contact";
+import StickyCta from "@/components/StickyCta";
 
 export default function Home() {
   const hasHeroVideo = mediaExists("/videos/hero.mp4");
@@ -36,6 +37,7 @@ export default function Home() {
       <Trust />
       <About hasFounderPhoto={hasFounderPhoto} />
       <Contact />
+      <StickyCta />
     </main>
   );
 }

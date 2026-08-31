@@ -40,6 +40,15 @@ export default function Manifesto() {
               </p>
             </ScrollReveal>
           ))}
+
+          <ScrollReveal delay={t.manifesto.paragraphs.length * 0.07}>
+            <a
+              href="#contact-proprietaire"
+              className="mt-2 inline-block w-fit border-b border-noir/30 pb-1 font-sans text-xs uppercase tracking-widest2 text-noir/70 transition-colors duration-300 hover:border-bronze hover:text-bronze"
+            >
+              {t.manifesto.cta} →
+            </a>
+          </ScrollReveal>
         </div>
       </div>
     </section>

@@ -24,7 +24,7 @@ export interface ContentShape {
     ctaSecondary: string;
     scroll: string;
   };
-  manifesto: { kicker: string; title: string[]; paragraphs: string[] };
+  manifesto: { kicker: string; title: string[]; paragraphs: string[]; cta: string };
   films: {
     kicker: string;
     title: string;
@@ -32,6 +32,7 @@ export interface ContentShape {
     watch: string;
     play: string;
     comingSoon: string;
+    cta: string;
   };
   approach: {
     kicker: string;
@@ -51,7 +52,7 @@ export interface ContentShape {
     tiers: { title: string; text: string }[];
     cta: string;
   };
-  trust: { items: { title: string; text: string }[] };
+  trust: { items: { title: string; text: string }[]; cta: string };
   about: {
     kicker: string;
     title: string;
@@ -62,22 +63,46 @@ export interface ContentShape {
     kicker: string;
     title: string[];
     subtitle: string;
-    form: {
+    stepLabel: string; // ex. "Étape {n} sur {total}" — {n}/{total} remplacés au rendu
+    back: string;
+    fork: {
+      prompt: string;
+      agency: { label: string; title: string; text: string; cta: string };
+      owner: { label: string; title: string; text: string; cta: string };
+    };
+    agencyFlow: {
+      step1Title: string;
+      options: { value: string; label: string }[];
+      step2Title: string;
+      agencyName: string;
+      agencyLink: string;
+      step3Title: string;
+      submit: string;
+    };
+    ownerFlow: {
+      step1Title: string;
+      options: { value: string; label: string }[];
+      step2Title: string;
+      location: string;
+      listingUrl: string;
+      step3Title: string;
+      submit: string;
+    };
+    shared: {
       name: string;
-      agency: string;
       email: string;
       phone: string;
-      listingUrl: string;
       message: string;
-      collaboration: string;
-      submit: string;
-      submitting: string;
-      success: string;
-      error: string;
-      errors: { required: string; email: string; url: string };
+      next: string;
     };
+    submitting: string;
+    success: string;
+    successNote: string;
+    error: string;
+    errors: { required: string; email: string; url: string };
   };
   footer: { nav: NavLink[]; legal: NavLink[]; rights: string };
+  stickyCta: { label: string; dismiss: string };
   langToggle: string;
 }
 
@@ -115,6 +140,7 @@ export const content: Record<Locale, ContentShape> = {
         "Un penthouse parisien ne se présente pas comme un domaine viticole.",
         "Chaque réalisation est pensée autour du lieu.",
       ],
+      cta: "Discuter de votre bien",
     },
     films: {
       kicker: "Selected Films",
@@ -123,6 +149,7 @@ export const content: Record<Locale, ContentShape> = {
       watch: "Voir le film",
       play: "Lecture",
       comingSoon: "Film à venir",
+      cta: "Vous avez un bien à mettre en scène ?",
     },
     approach: {
       kicker: "Notre approche",
@@ -232,6 +259,7 @@ export const content: Record<Locale, ContentShape> = {
           text: "Chaque propriété fait l'objet d'une direction artistique spécifique.",
         },
       ],
+      cta: "Nous contacter en toute confidentialité",
     },
     about: {
       kicker: "À propos",
@@ -248,24 +276,68 @@ export const content: Record<Locale, ContentShape> = {
     contact: {
       kicker: "Contact",
       title: ["Vous avez un", "mandat exceptionnel ?"],
-      subtitle: "Transmettez-nous simplement l'annonce ou quelques informations sur la propriété.",
-      form: {
+      subtitle:
+        "Un premier échange de 15 minutes suffit pour évaluer la direction artistique adaptée à votre bien.",
+      stepLabel: "Étape {n} sur {total}",
+      back: "Retour",
+      fork: {
+        prompt: "Pour commencer, dites-nous qui vous êtes.",
+        agency: {
+          label: "Agence immobilière",
+          title: "Je représente une agence",
+          text: "Vous souhaitez proposer à vos mandants une présentation filmée à la hauteur de leurs biens.",
+          cta: "Je suis une agence",
+        },
+        owner: {
+          label: "Propriétaire",
+          title: "Je suis propriétaire",
+          text: "Vous souhaitez mettre en valeur un bien d'exception que vous possédez ou représentez.",
+          cta: "Je suis propriétaire",
+        },
+      },
+      agencyFlow: {
+        step1Title: "Quel est votre volume de mandats premium ?",
+        options: [
+          { value: "unite", label: "Un mandat ponctuel exceptionnel" },
+          { value: "collaboration", label: "Plusieurs biens chaque mois" },
+          { value: "surmesure", label: "Un volume important de biens premium" },
+        ],
+        step2Title: "Parlez-nous de votre agence",
+        agencyName: "Nom de l'agence",
+        agencyLink: "Lien vers l'agence ou une annonce",
+        step3Title: "Vos coordonnées",
+        submit: "Confier vos mandats",
+      },
+      ownerFlow: {
+        step1Title: "Quel type de bien souhaitez-vous mettre en valeur ?",
+        options: [
+          { value: "chateau", label: "Château" },
+          { value: "villa", label: "Villa" },
+          { value: "appartement", label: "Appartement de prestige" },
+          { value: "domaine", label: "Domaine" },
+          { value: "autre", label: "Autre bien d'exception" },
+        ],
+        step2Title: "Parlez-nous de votre propriété",
+        location: "Localisation du bien",
+        listingUrl: "Lien de l'annonce (si disponible)",
+        step3Title: "Vos coordonnées",
+        submit: "Confier la propriété",
+      },
+      shared: {
         name: "Nom",
-        agency: "Agence",
         email: "Email",
         phone: "Téléphone (facultatif)",
-        listingUrl: "Lien de l'annonce",
-        message: "Message",
-        collaboration: "Je souhaite discuter d'une collaboration régulière.",
-        submit: "Confier la propriété",
-        submitting: "Envoi en cours…",
-        success: "Merci. Votre demande a bien été transmise — nous revenons vers vous rapidement.",
-        error: "Une erreur est survenue. Merci de réessayer ou de nous écrire directement.",
-        errors: {
-          required: "Ce champ est requis.",
-          email: "Merci de renseigner un email valide.",
-          url: "Merci de renseigner un lien valide.",
-        },
+        message: "Message (facultatif)",
+        next: "Continuer",
+      },
+      submitting: "Envoi en cours…",
+      success: "Merci. Votre demande a bien été transmise.",
+      successNote: "Nous revenons vers vous sous 48h ouvrées.",
+      error: "Une erreur est survenue. Merci de réessayer ou de nous écrire directement.",
+      errors: {
+        required: "Ce champ est requis.",
+        email: "Merci de renseigner un email valide.",
+        url: "Merci de renseigner un lien valide.",
       },
     },
     footer: {
@@ -282,6 +354,7 @@ export const content: Record<Locale, ContentShape> = {
       ],
       rights: "Tous droits réservés.",
     },
+    stickyCta: { label: "Discuter d'un projet", dismiss: "Masquer" },
     langToggle: "EN",
   },
 
@@ -318,6 +391,7 @@ export const content: Record<Locale, ContentShape> = {
         "A Parisian penthouse is not presented the way a vineyard estate is.",
         "Every film is conceived around the place itself.",
       ],
+      cta: "Discuss your property",
     },
     films: {
       kicker: "Selected Films",
@@ -326,6 +400,7 @@ export const content: Record<Locale, ContentShape> = {
       watch: "Watch the film",
       play: "Play",
       comingSoon: "Film coming soon",
+      cta: "Have a property to put on screen?",
     },
     approach: {
       kicker: "Our approach",
@@ -435,6 +510,7 @@ export const content: Record<Locale, ContentShape> = {
           text: "Every property receives its own dedicated creative direction.",
         },
       ],
+      cta: "Contact us in complete confidentiality",
     },
     about: {
       kicker: "About",
@@ -451,24 +527,68 @@ export const content: Record<Locale, ContentShape> = {
     contact: {
       kicker: "Contact",
       title: ["Have an exceptional", "listing?"],
-      subtitle: "Simply send us the listing or a few details about the property.",
-      form: {
+      subtitle:
+        "A first 15-minute conversation is enough to assess the right creative direction for your property.",
+      stepLabel: "Step {n} of {total}",
+      back: "Back",
+      fork: {
+        prompt: "To begin, tell us who you are.",
+        agency: {
+          label: "Real estate agency",
+          title: "I represent an agency",
+          text: "You want to offer your principals a filmed presentation worthy of their listings.",
+          cta: "I'm an agency",
+        },
+        owner: {
+          label: "Property owner",
+          title: "I'm a property owner",
+          text: "You want to showcase an exceptional property you own or represent.",
+          cta: "I'm a property owner",
+        },
+      },
+      agencyFlow: {
+        step1Title: "What is your volume of premium listings?",
+        options: [
+          { value: "unite", label: "A single exceptional listing" },
+          { value: "collaboration", label: "Several properties every month" },
+          { value: "surmesure", label: "A significant volume of premium properties" },
+        ],
+        step2Title: "Tell us about your agency",
+        agencyName: "Agency name",
+        agencyLink: "Link to your agency or a listing",
+        step3Title: "Your details",
+        submit: "Submit your listings",
+      },
+      ownerFlow: {
+        step1Title: "What kind of property would you like to showcase?",
+        options: [
+          { value: "chateau", label: "Château" },
+          { value: "villa", label: "Villa" },
+          { value: "appartement", label: "Prestige apartment" },
+          { value: "domaine", label: "Estate" },
+          { value: "autre", label: "Other exceptional property" },
+        ],
+        step2Title: "Tell us about your property",
+        location: "Property location",
+        listingUrl: "Listing link (if available)",
+        step3Title: "Your details",
+        submit: "Submit the property",
+      },
+      shared: {
         name: "Name",
-        agency: "Agency",
         email: "Email",
         phone: "Phone (optional)",
-        listingUrl: "Listing link",
-        message: "Message",
-        collaboration: "I'd like to discuss an ongoing collaboration.",
-        submit: "Submit the property",
-        submitting: "Sending…",
-        success: "Thank you. Your request has been sent — we'll be in touch shortly.",
-        error: "Something went wrong. Please try again or email us directly.",
-        errors: {
-          required: "This field is required.",
-          email: "Please enter a valid email address.",
-          url: "Please enter a valid link.",
-        },
+        message: "Message (optional)",
+        next: "Continue",
+      },
+      submitting: "Sending…",
+      success: "Thank you. Your request has been sent.",
+      successNote: "We'll be in touch within 48 working hours.",
+      error: "Something went wrong. Please try again or email us directly.",
+      errors: {
+        required: "This field is required.",
+        email: "Please enter a valid email address.",
+        url: "Please enter a valid link.",
       },
     },
     footer: {
@@ -485,6 +605,7 @@ export const content: Record<Locale, ContentShape> = {
       ],
       rights: "All rights reserved.",
     },
+    stickyCta: { label: "Discuss a project", dismiss: "Dismiss" },
     langToggle: "FR",
   },
 };

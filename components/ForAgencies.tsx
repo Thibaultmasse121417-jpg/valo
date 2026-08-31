@@ -59,7 +59,7 @@ export default function ForAgencies() {
 
         <ScrollReveal delay={0.1}>
           <a
-            href="#contact"
+            href="#contact-agence"
             className="mt-16 inline-block border border-ivoire px-8 py-4 font-sans text-xs uppercase tracking-widest2 text-ivoire transition-colors duration-300 hover:bg-ivoire hover:text-noir sm:mt-20"
           >
             {t.agencies.cta}
