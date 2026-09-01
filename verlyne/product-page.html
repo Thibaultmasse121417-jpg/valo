@@ -1,0 +1,360 @@
+<title>Verlyne — Collier Gravé</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&display=swap');
+
+  :root{
+    --surface:#F1ECE3; --surface-2:#E7DFD2; --surface-3:#FFFFFF;
+    --ink:#221C18; --ink-soft:#5B5049; --ink-faint:#8A7E72;
+    --brass:#8A6535; --brass-deep:#6E4F28; --brass-tint:#DCC8A6;
+    --blush:#B97C71; --blush-tint:#E9D2CC;
+    --line:#D8CFC0;
+    --warn-bg:#F4E4C6; --warn-ink:#6B4A12; --warn-line:#D9B36B;
+    --shadow: 0 18px 40px -22px rgba(34,28,24,.35);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --surface:#17130F; --surface-2:#211B14; --surface-3:#1D1712;
+      --ink:#F1E8DC; --ink-soft:#C7B9A6; --ink-faint:#8F8172;
+      --brass:#CBA05F; --brass-deep:#9B7A45; --brass-tint:#4A3B22;
+      --blush:#D9A198; --blush-tint:#3E2A26;
+      --line:#382F24;
+      --warn-bg:#3A2E15; --warn-ink:#E9C77E; --warn-line:#6B5527;
+      --shadow: 0 18px 44px -20px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --surface:#17130F; --surface-2:#211B14; --surface-3:#1D1712;
+    --ink:#F1E8DC; --ink-soft:#C7B9A6; --ink-faint:#8F8172;
+    --brass:#CBA05F; --brass-deep:#9B7A45; --brass-tint:#4A3B22;
+    --blush:#D9A198; --blush-tint:#3E2A26;
+    --line:#382F24;
+    --warn-bg:#3A2E15; --warn-ink:#E9C77E; --warn-line:#6B5527;
+    --shadow: 0 18px 44px -20px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--surface); color:var(--ink);
+    font-family:'Work Sans',ui-sans-serif,system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{ font-family:'Fraunces',Georgia,serif; font-weight:500; text-wrap:balance; margin:0; color:var(--ink); }
+  p{ margin:0; }
+  .wrap{ max-width:600px; margin:0 auto; padding:0 22px; }
+  .eyebrow{
+    font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--brass); font-weight:600;
+  }
+  section{ padding:64px 0; }
+  section + section{ border-top:1px solid var(--line); }
+
+  .chip{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:.68rem; letter-spacing:.05em; text-transform:uppercase; font-weight:600;
+    padding:5px 10px; border-radius:100px;
+    background:var(--warn-bg); color:var(--warn-ink); border:1px solid var(--warn-line);
+  }
+  .chip::before{ content:"◆"; font-size:.6rem; }
+
+  /* HERO */
+  .hero{ padding:52px 0 44px; }
+  .hero .eyebrow{ margin-bottom:14px; }
+  .hero h1{ font-size:2.1rem; line-height:1.14; }
+  .hero h1 em{ font-style:italic; color:var(--brass-deep); }
+  .hero p.sub{ margin-top:16px; color:var(--ink-soft); font-size:1.02rem; line-height:1.55; max-width:38ch; }
+  .hero-media{
+    margin-top:28px; aspect-ratio:4/5; border-radius:18px;
+    background:
+      linear-gradient(160deg, var(--surface-3) 0%, var(--surface-2) 100%);
+    border:1px solid var(--line); box-shadow:var(--shadow);
+    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px;
+    position:relative; overflow:hidden;
+  }
+  .hero-media .locket{
+    width:120px; height:150px; border-radius:50% 50% 46% 46%;
+    border:2px solid var(--brass); position:relative;
+  }
+  .hero-media .locket::after{
+    content:"Élise"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces',serif; font-style:italic; font-size:1.1rem; color:var(--brass-deep);
+  }
+  .hero-media .cap{ font-size:.72rem; color:var(--ink-faint); text-align:center; padding:0 30px; }
+  .hero-cta{ display:flex; gap:12px; margin-top:24px; }
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    padding:14px 22px; border-radius:100px; font-weight:600; font-size:.92rem;
+    text-decoration:none; border:1px solid transparent; cursor:pointer; flex:1;
+  }
+  .btn-primary{ background:var(--brass-deep); color:#FBF6EC; }
+  .btn-ghost{ background:transparent; border-color:var(--line); color:var(--ink); }
+
+  /* PERSONALIZATION */
+  .engrave-box{
+    margin-top:26px; border:1px dashed var(--brass); border-radius:14px;
+    padding:22px; background:var(--surface-2);
+  }
+  .engrave-box .label{ font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-faint); margin-bottom:8px; }
+  .engrave-box .preview{
+    font-family:'Fraunces',serif; font-style:italic; font-size:1.5rem; color:var(--brass-deep);
+    border-bottom:1px solid var(--brass-tint); padding-bottom:10px;
+  }
+  .steps{ margin-top:26px; display:flex; flex-direction:column; gap:16px; }
+  .step{ display:flex; gap:14px; align-items:flex-start; }
+  .step .n{
+    flex:none; width:30px; height:30px; border-radius:50%; background:var(--surface-3);
+    border:1px solid var(--line); display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces',serif; font-size:.85rem; color:var(--brass-deep);
+  }
+  .step .t{ font-weight:600; font-size:.95rem; }
+  .step .d{ color:var(--ink-soft); font-size:.88rem; margin-top:2px; line-height:1.5; }
+
+  /* OFFERS */
+  .offers{ display:flex; flex-direction:column; gap:14px; margin-top:26px; }
+  .offer{
+    border:1px solid var(--line); border-radius:16px; padding:20px;
+    background:var(--surface-3); display:flex; flex-direction:column; gap:10px;
+  }
+  .offer.featured{ border-color:var(--brass); box-shadow:var(--shadow); position:relative; }
+  .offer.featured::before{
+    content:"Le plus choisi"; position:absolute; top:-11px; left:20px;
+    background:var(--brass-deep); color:#FBF6EC; font-size:.66rem; letter-spacing:.06em;
+    text-transform:uppercase; padding:4px 10px; border-radius:100px; font-weight:600;
+  }
+  .offer-top{ display:flex; justify-content:space-between; align-items:baseline; }
+  .offer-name{ font-family:'Fraunces',serif; font-size:1.15rem; }
+  .offer-price{ font-family:'Fraunces',serif; font-size:1.3rem; color:var(--brass-deep); font-variant-numeric:tabular-nums; }
+  .offer ul{ margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:6px; }
+  .offer li{ font-size:.86rem; color:var(--ink-soft); display:flex; gap:8px; }
+  .offer li::before{ content:"—"; color:var(--brass); flex:none; }
+
+  /* EMOTION */
+  .emotion{ background:var(--surface-2); }
+  .emotion blockquote{
+    font-family:'Fraunces',serif; font-style:italic; font-size:1.35rem; line-height:1.45;
+    color:var(--ink); margin:0; text-wrap:balance;
+  }
+  .emotion cite{ display:block; margin-top:14px; font-style:normal; font-size:.8rem; color:var(--ink-faint); }
+
+  /* BOX CONTENTS */
+  .box-list{ display:flex; flex-direction:column; gap:0; margin-top:24px; border-top:1px solid var(--line); }
+  .box-item{ display:flex; justify-content:space-between; gap:16px; padding:14px 0; border-bottom:1px solid var(--line); }
+  .box-item .t{ font-weight:500; font-size:.92rem; }
+  .box-item .d{ color:var(--ink-soft); font-size:.82rem; margin-top:2px; }
+
+  /* MATERIAL */
+  .material-card{
+    margin-top:22px; border:1px solid var(--line); border-radius:14px; padding:20px;
+    background:var(--surface-3); display:flex; flex-direction:column; gap:12px;
+  }
+  .material-row{ display:flex; justify-content:space-between; gap:12px; align-items:flex-start; font-size:.9rem; }
+  .material-row .k{ color:var(--ink-faint); flex:none; width:40%; }
+  .material-row .v{ text-align:right; color:var(--ink); }
+
+  /* HOW TO ORDER */
+  .order-steps{ display:flex; flex-direction:column; gap:0; margin-top:24px; }
+  .order-steps .step{ padding:14px 0; border-bottom:1px solid var(--line); }
+  .order-steps .step:last-child{ border-bottom:none; }
+
+  /* SHIPPING / RETURNS */
+  .info-grid{ display:flex; flex-direction:column; gap:18px; margin-top:24px; }
+  .info-card{ border-left:2px solid var(--brass); padding-left:16px; }
+  .info-card .t{ font-weight:600; font-size:.95rem; }
+  .info-card .d{ color:var(--ink-soft); font-size:.88rem; margin-top:4px; line-height:1.55; }
+
+  /* FAQ */
+  details{ border-bottom:1px solid var(--line); padding:16px 0; }
+  details summary{
+    cursor:pointer; font-weight:500; font-size:.95rem; list-style:none;
+    display:flex; justify-content:space-between; align-items:center; gap:12px;
+  }
+  details summary::-webkit-details-marker{ display:none; }
+  details summary::after{ content:"+"; color:var(--brass); font-size:1.2rem; flex:none; }
+  details[open] summary::after{ content:"–"; }
+  details p{ margin-top:10px; color:var(--ink-soft); font-size:.88rem; line-height:1.6; }
+
+  /* FINAL CTA */
+  .final-cta{ text-align:center; background:var(--surface-2); }
+  .final-cta h2{ font-size:1.7rem; margin-bottom:12px; }
+  .final-cta p{ color:var(--ink-soft); margin-bottom:24px; max-width:36ch; margin-left:auto; margin-right:auto; }
+
+  .sticky-cta{
+    position:sticky; bottom:0; z-index:5; background:var(--surface);
+    border-top:1px solid var(--line); padding:12px 22px calc(12px + env(safe-area-inset-bottom));
+    display:flex; gap:10px; align-items:center; box-shadow:0 -12px 24px -18px rgba(0,0,0,.25);
+  }
+  .sticky-cta .price{ font-family:'Fraunces',serif; color:var(--brass-deep); font-size:1.05rem; flex:none; }
+  .sticky-cta .btn{ flex:1; padding:12px 16px; }
+
+  footer{ padding:36px 22px 100px; text-align:center; }
+  footer p{ font-size:.76rem; color:var(--ink-faint); line-height:1.7; }
+
+  @media (min-width:640px){
+    .wrap{ max-width:680px; }
+    .hero h1{ font-size:2.5rem; }
+    .offers{ flex-direction:row; }
+    .offer{ flex:1; }
+  }
+</style>
+
+<div class="wrap">
+
+  <!-- 1. HERO -->
+  <section class="hero">
+    <span class="eyebrow">Verlyne · Collier personnalisé gravé</span>
+    <h1>Le cadeau qui dit <em>ce que les mots</em> n'arrivent pas à dire.</h1>
+    <p class="sub">Un prénom, une date, un mot. Gravé pour une personne précise, livré en France.</p>
+    <div class="hero-media">
+      <div class="locket"></div>
+      <p class="cap">Aperçu de mise en page — photo produit réelle à intégrer dès réception du sample</p>
+    </div>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#offres">Créer mon collier</a>
+      <a class="btn btn-ghost" href="#matiere">Voir la matière</a>
+    </div>
+  </section>
+
+  <!-- 2. PERSONNALISATION -->
+  <section id="personnalisation">
+    <span class="eyebrow">Personnalisation</span>
+    <h2 style="font-size:1.5rem; margin-top:10px;">Votre mot, gravé pour de vrai</h2>
+    <div class="engrave-box">
+      <div class="label">Aperçu de gravure</div>
+      <div class="preview">Élise · 14.06.2019</div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="n">1</div>
+        <div><div class="t">Choisissez le texte</div><div class="d">Un prénom, une date ou un mot court — jusqu'à <span class="chip">Placeholder</span> caractères selon la surface gravable, à confirmer avec le fournisseur.</div></div>
+      </div>
+      <div class="step">
+        <div class="n">2</div>
+        <div><div class="t">On grave votre pièce</div><div class="d">Chaque collier est gravé à la commande, pas en stock générique.</div></div>
+      </div>
+      <div class="step">
+        <div class="n">3</div>
+        <div><div class="t">Livraison en France</div><div class="d">Délai précis affiché dès validation du délai fournisseur (voir section Livraison).</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. OFFRES -->
+  <section id="offres">
+    <span class="eyebrow">Offres</span>
+    <h2 style="font-size:1.5rem; margin-top:10px;">Trois façons de l'offrir</h2>
+    <div class="offers">
+      <div class="offer">
+        <div class="offer-top"><span class="offer-name">Solo</span><span class="offer-price">44,95€</span></div>
+        <ul><li>1 collier gravé</li><li>Pochette de protection</li></ul>
+      </div>
+      <div class="offer featured">
+        <div class="offer-top"><span class="offer-name">Gift</span><span class="offer-price">54,95€</span></div>
+        <ul><li>1 collier gravé</li><li>Coffret cadeau</li><li>Carte mot personnalisé</li></ul>
+      </div>
+      <div class="offer">
+        <div class="offer-top"><span class="offer-name">Premium</span><span class="offer-price">69,95€</span></div>
+        <ul><li>1 collier gravé</li><li>Coffret cadeau</li><li><span class="chip">Placeholder</span> finition supérieure</li></ul>
+      </div>
+    </div>
+    <p style="margin-top:16px; font-size:.78rem; color:var(--ink-faint);">Prix provisoires, susceptibles d'être ajustés après devis fournisseur définitif.</p>
+  </section>
+
+  <!-- 4. EMOTION -->
+  <section class="emotion">
+    <span class="eyebrow">Le moment</span>
+    <blockquote>« Il y a des choses qu'on pense tout le temps et qu'on ne dit jamais à voix haute. »</blockquote>
+    <cite>— l'idée derrière chaque collier Verlyne</cite>
+  </section>
+
+  <!-- 5. COFFRET -->
+  <section>
+    <span class="eyebrow">Le coffret</span>
+    <h2 style="font-size:1.5rem; margin-top:10px;">Ce que contient votre commande</h2>
+    <div class="box-list">
+      <div class="box-item"><div><div class="t">Collier gravé</div><div class="d">Personnalisé selon votre texte</div></div><span class="chip">Confirmé</span></div>
+      <div class="box-item"><div><div class="t">Écrin / coffret</div><div class="d">Détail exact du packaging</div></div><span class="chip">Placeholder</span></div>
+      <div class="box-item"><div><div class="t">Carte mot personnalisé</div><div class="d">Offre Gift &amp; Premium</div></div><span class="chip">Placeholder</span></div>
+      <div class="box-item"><div><div class="t">Certificat / fiche produit</div><div class="d">À confirmer selon fournisseur</div></div><span class="chip">Placeholder</span></div>
+    </div>
+  </section>
+
+  <!-- 6. MATIERE -->
+  <section id="matiere">
+    <span class="eyebrow">Matière</span>
+    <h2 style="font-size:1.5rem; margin-top:10px;">Composition</h2>
+    <p style="margin-top:10px; color:var(--ink-soft); font-size:.9rem; line-height:1.6;">Cette section reste volontairement incomplète : aucune information matière n'est publiée tant qu'elle n'est pas confirmée par le fournisseur retenu.</p>
+    <div class="material-card">
+      <div class="material-row"><span class="k">Matériau de base</span><span class="v"><span class="chip">Placeholder</span></span></div>
+      <div class="material-row"><span class="k">Placage</span><span class="v"><span class="chip">Placeholder</span></span></div>
+      <div class="material-row"><span class="k">Résistance à l'eau</span><span class="v"><span class="chip">Placeholder</span></span></div>
+      <div class="material-row"><span class="k">Nickel release</span><span class="v"><span class="chip">Placeholder</span></span></div>
+    </div>
+  </section>
+
+  <!-- 7. COMMANDER -->
+  <section>
+    <span class="eyebrow">Comment commander</span>
+    <div class="order-steps">
+      <div class="step"><div class="t">1. Choisissez votre offre</div><div class="d">Solo, Gift ou Premium.</div></div>
+      <div class="step"><div class="t">2. Écrivez votre texte</div><div class="d">Prénom, date ou mot à graver.</div></div>
+      <div class="step"><div class="t">3. Validez la commande</div><div class="d">Paiement sécurisé — moyens de paiement à confirmer à la mise en ligne Shopify.</div></div>
+    </div>
+  </section>
+
+  <!-- 8. LIVRAISON -->
+  <section>
+    <span class="eyebrow">Livraison</span>
+    <div class="info-grid">
+      <div class="info-card"><div class="t">Production &amp; gravure <span class="chip">Placeholder</span></div><div class="d">Délai affiché dès confirmation fournisseur.</div></div>
+      <div class="info-card"><div class="t">Expédition vers la France <span class="chip">Placeholder</span></div><div class="d">Transporteur et délai à confirmer.</div></div>
+      <div class="info-card"><div class="t">Suivi de commande</div><div class="d">Numéro de suivi transmis par email dès expédition (sous réserve de confirmation fournisseur).</div></div>
+    </div>
+  </section>
+
+  <!-- 9. RETOURS / GARANTIE -->
+  <section>
+    <span class="eyebrow">Retours &amp; garantie</span>
+    <div class="info-grid">
+      <div class="info-card"><div class="t">Produit personnalisé</div><div class="d">Un bijou gravé à votre demande ne peut généralement pas être retourné pour changement d'avis — la politique définitive sera précisée après confirmation fournisseur.</div></div>
+      <div class="info-card"><div class="t">Erreur de gravure ou défaut</div><div class="d">Politique de remplacement <span class="chip">Placeholder</span> — en cours de confirmation avec le fournisseur.</div></div>
+    </div>
+  </section>
+
+  <!-- 10. FAQ -->
+  <section>
+    <span class="eyebrow">FAQ</span>
+    <div>
+      <details open>
+        <summary>Combien de caractères puis-je graver ?</summary>
+        <p><span class="chip">Placeholder</span> — dépend de la surface gravable du fournisseur retenu.</p>
+      </details>
+      <details>
+        <summary>Le collier convient-il aux peaux sensibles ?</summary>
+        <p><span class="chip">Placeholder</span> — aucune allégation hypoallergénique tant qu'un test nickel n'a pas été confirmé.</p>
+      </details>
+      <details>
+        <summary>Combien de temps avant réception ?</summary>
+        <p><span class="chip">Placeholder</span> — délai réel affiché dès confirmation du fournisseur.</p>
+      </details>
+      <details>
+        <summary>Puis-je retourner le produit ?</summary>
+        <p>Un produit gravé sur demande est personnalisé — la politique de retour définitive sera publiée avec les conditions générales de vente.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- 11. CTA FINAL -->
+  <section class="final-cta">
+    <h2>Un mot. Une personne précise. Un collier.</h2>
+    <p>Créez le vôtre en quelques minutes.</p>
+    <a class="btn btn-primary" href="#offres" style="max-width:280px; margin:0 auto;">Créer mon collier</a>
+  </section>
+
+  <footer>
+    <p>Page de démonstration — brouillon interne Verlyne, non publiée.<br>Les éléments marqués <span class="chip">Placeholder</span> sont en attente de confirmation fournisseur et ne doivent pas être publiés en l'état.</p>
+  </footer>
+</div>
+
+<div class="sticky-cta">
+  <span class="price">54,95€</span>
+  <a class="btn btn-primary" href="#offres">Créer mon collier</a>
+</div>
