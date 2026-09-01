@@ -75,8 +75,8 @@ Recommandé également : chercher ces deux fournisseurs sur **Alibaba** directem
 
 | Fournisseur | Canal | Date envoi | Réponse reçue | Classification |
 |---|---|---|---|---|
-| DG Jewelry | — | — | — | EN ATTENTE |
-| 96Jewelry | — | — | — | EN ATTENTE |
+| DG Jewelry | — | 01/09/2026 | — | EN ATTENTE |
+| 96Jewelry | — | 01/09/2026 | — | EN ATTENTE |
 
 ---
 
