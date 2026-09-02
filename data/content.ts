@@ -53,6 +53,13 @@ export interface ContentShape {
     items: { id: UniverseId; label: string; text: string; cta: string }[];
   };
   manifesto: { kicker: string; title: string[]; paragraphs: string[]; cta: string };
+  immediateProof: {
+    kicker: string;
+    title: string[];
+    beforeLabel: string;
+    afterLabel: string;
+    caption: string;
+  };
   films: {
     kicker: string;
     title: string;
@@ -73,15 +80,30 @@ export interface ContentShape {
     note: string;
     columns: { title: string; beats: string[] }[];
   };
+  valueProps: {
+    kicker: string;
+    title: string[];
+    negatives: string[];
+    positives: { title: string; text: string }[];
+  };
   offers: {
     kicker: string;
     title: string[];
     intro: string;
-    tiers: { title: string; text: string }[];
+    tiers: {
+      title: string;
+      price: string;
+      period: string;
+      text: string;
+      deliverables: string[];
+      badge?: string;
+    }[];
     note: string;
     cta: string;
+    testNote: { kicker: string; title: string; text: string };
   };
   trust: { items: { title: string; text: string }[]; cta: string };
+  faq: { kicker: string; title: string[]; items: { q: string; a: string }[] };
   about: {
     kicker: string;
     title: string;
@@ -120,23 +142,23 @@ export const content: Record<Locale, ContentShape> = {
     common: { close: "Fermer" },
     nav: {
       links: [
-        { label: "Real Estate", href: "/real-estate" },
-        { label: "Wedding & Venues", href: "/wedding-venues" },
-        { label: "Hospitality", href: "/hospitality" },
-        { label: "Business", href: "/business" },
+        { label: "Portfolio", href: "#work" },
+        { label: "Comment ça marche", href: "#how-it-works" },
+        { label: "Tarifs", href: "#pricing" },
+        { label: "FAQ", href: "#faq" },
         { label: "Contact", href: "#contact" },
       ],
-      cta: "Confier un projet",
+      cta: "Commencer",
       openMenu: "Ouvrir le menu",
       closeMenu: "Fermer le menu",
       homeLabel: "Accueil",
     },
     hero: {
-      kicker: "ESTALIA STUDIO",
-      title: ["Nous transformons les lieux d'exception", "en expériences cinématographiques."],
-      subtitle: "Films sur mesure pour l'immobilier, l'hospitality et les lieux d'exception.",
-      ctaPrimary: "Découvrir nos réalisations",
-      ctaSecondary: "Nous confier un projet",
+      kicker: "ESTALIA STUDIO — HOSPITALITY",
+      title: ["Transformez les visuels que vous avez déjà", "en contenu social premium."],
+      subtitle: "Pas de nouveau tournage. Pas de déplacement. Du contenu frais chaque mois, pour votre hôtel.",
+      ctaPrimary: "Voir comment ça marche",
+      ctaSecondary: "Voir nos réalisations",
       scroll: "Défiler",
     },
     universeChooser: {
@@ -171,48 +193,48 @@ export const content: Record<Locale, ContentShape> = {
       ],
     },
     manifesto: {
-      kicker: "Manifeste",
-      title: ["Chaque lieu", "mérite sa propre mise en scène."],
+      kicker: "Le constat",
+      title: ["Vous avez déjà investi", "dans de belles photos."],
       paragraphs: [
-        "Nous ne travaillons pas à partir de modèles vidéo prédéfinis.",
-        "L'architecture, l'environnement, les volumes et les caractéristiques remarquables de chaque lieu déterminent sa direction artistique.",
-        "Un château ne se raconte pas comme un hôtel de charme. Un domaine de mariage ne se présente pas comme une concession automobile.",
-        "Chaque réalisation est pensée autour du lieu — jamais autour d'un modèle générique.",
+        "Mais les réseaux sociaux demandent du mouvement, de la fréquence et des formats renouvelés — pas seulement des photos statiques.",
+        "Estalia transforme la bibliothèque visuelle que vous possédez déjà en un moteur de contenu continu.",
       ],
-      cta: "Discuter de votre projet",
+      cta: "Voir comment ça marche",
+    },
+    immediateProof: {
+      kicker: "En une image",
+      title: ["Votre photo.", "Notre traitement. Votre contenu."],
+      beforeLabel: "Votre photo",
+      afterLabel: "Le contenu Estalia",
+      caption: "Aucun tournage. Le point de départ est toujours un visuel que vous possédez déjà.",
     },
     films: {
-      kicker: "Selected Films",
-      title: "SELECTED FILMS",
-      subtitle: "Plusieurs lieux. Plusieurs univers. Une seule exigence cinématographique.",
-      watch: "Voir le film",
+      kicker: "Portfolio",
+      title: "CE QUE NOUS CRÉONS",
+      subtitle: "Des exemples de concept, pensés pour l'hôtellerie indépendante haut de gamme.",
+      watch: "Voir le concept",
       play: "Lecture",
-      comingSoon: "Film à venir",
-      cta: "Vous avez un lieu à mettre en scène ?",
+      comingSoon: "Concept à venir",
+      cta: "Un lieu à mettre en scène ?",
     },
     approach: {
-      kicker: "Notre méthode",
-      title: ["THE ESTALIA", "APPROACH"],
+      kicker: "Comment ça marche",
+      title: ["TROIS ÉTAPES,", "AUCUN TOURNAGE."],
       steps: [
         {
           number: "01",
-          title: "Analyse",
-          text: "Architecture, environnement, volumes, lumière et éléments distinctifs du lieu.",
+          title: "Envoyez vos visuels",
+          text: "Vos photos et vidéos existantes — celles que vous avez déjà.",
         },
         {
           number: "02",
-          title: "Direction",
-          text: "Nous imaginons une narration et une direction cinématographique spécifiques.",
+          title: "Nous créons",
+          text: "Estalia les transforme en contenu cinématique et social-natif.",
         },
         {
           number: "03",
-          title: "Production",
-          text: "Nous transformons les visuels disponibles en séquences cinématiques.",
-        },
-        {
-          number: "04",
-          title: "Validation",
-          text: "Le client valide le film avant toute utilisation.",
+          title: "Vous publiez",
+          text: "Vous recevez du contenu prêt à l'emploi, dans les formats de vos canaux.",
         },
       ],
     },
@@ -256,39 +278,85 @@ export const content: Record<Locale, ContentShape> = {
         },
       ],
     },
+    valueProps: {
+      kicker: "Pourquoi Estalia",
+      title: ["Aucun tournage.", "Aucun déplacement."],
+      negatives: ["Pas de tournage", "Pas de déplacement", "Pas de journée de production", "Pas de nouvelle séance photo"],
+      positives: [
+        { title: "Production rapide", text: "Du contenu livré en jours, pas en semaines d'agenda de tournage." },
+        { title: "Contenu régulier", text: "Une cadence mensuelle fiable, sans réorganiser un shooting à chaque fois." },
+        { title: "Moins de friction", text: "Vous envoyez ce que vous avez déjà — c'est tout." },
+        { title: "Formats multiples", text: "Hero cinématique, Reels, Stories — à partir des mêmes visuels." },
+      ],
+    },
     offers: {
       kicker: "Nos formules",
       title: ["Trois façons de", "collaborer avec nous."],
-      intro:
-        "Chaque projet est unique : nous établissons un devis sur mesure selon le lieu, la durée de production et vos besoins.",
+      intro: "Des prix clairs, pas de devis à rallonge.",
       tiers: [
-        { title: "Film Signature", text: "Pour une réalisation ponctuelle et exceptionnelle." },
-        { title: "Film Prestige", text: "Pour une production plus ambitieuse, sur un lieu d'exception." },
-        { title: "Collaboration", text: "Pour les professionnels avec plusieurs besoins réguliers." },
+        {
+          title: "Estalia Test",
+          price: "290 €",
+          period: "paiement unique",
+          text: "Le point d'entrée à faible risque pour découvrir la qualité Estalia.",
+          deliverables: ["1 film Hero cinématique", "2 déclinaisons courtes", "1 tour de retouches"],
+        },
+        {
+          title: "Estalia Content",
+          price: "690 €",
+          period: "/ mois",
+          text: "Notre offre principale — un flux de contenu mensuel constant.",
+          deliverables: ["6 contenus / mois", "1 Hero + Reels + Stories", "2 tours de retouches", "Engagement 3 mois"],
+          badge: "La plus choisie",
+        },
+        {
+          title: "Estalia Pro",
+          price: "1 290 €",
+          period: "/ mois",
+          text: "Pour les établissements à volume supérieur et campagnes saisonnières.",
+          deliverables: ["12 contenus / mois", "Contenu saisonnier inclus", "2 langues", "2 tours de retouches"],
+        },
       ],
-      note: "Sur devis",
-      cta: "Demander un devis",
+      note: "Tarifs hors taxes. Sans engagement pour Estalia Test.",
+      cta: "Commencer avec Estalia",
+      testNote: {
+        kicker: "Estalia Test",
+        title: "Le moyen le plus simple de commencer",
+        text: "Envoyez-nous vos visuels. Vous recevez 1 film Hero + 2 déclinaisons courtes. Si le résultat vous convainc, passez à Content quand vous le souhaitez.",
+      },
     },
     trust: {
       items: [
         {
-          title: "Fidélité du lieu",
-          text: "Chaque réalisation fait l'objet d'une validation afin de préserver au maximum l'identité et les caractéristiques essentielles du lieu.",
+          title: "Fidélité à votre établissement",
+          text: "Nous mettons en scène ce qui existe déjà — l'architecture et l'agencement réels de vos chambres ne sont jamais modifiés.",
         },
         {
-          title: "Validation",
-          text: "Aucun contenu n'est publié sans validation.",
+          title: "Validation systématique",
+          text: "Chaque contenu est vérifié par une personne avant envoi. Rien n'est publié sans votre validation.",
         },
         {
           title: "Confidentialité",
-          text: "Les visuels et informations transmis restent utilisés uniquement dans le cadre de la réalisation.",
+          text: "Vos visuels et informations restent utilisés uniquement dans le cadre de votre projet.",
         },
         {
           title: "Sur mesure",
-          text: "Chaque lieu fait l'objet d'une direction artistique spécifique.",
+          text: "Chaque établissement fait l'objet d'une direction artistique qui lui est propre.",
         },
       ],
       cta: "Nous contacter en toute confidentialité",
+    },
+    faq: {
+      kicker: "FAQ",
+      title: ["Les questions", "les plus fréquentes."],
+      items: [
+        { q: "Devez-vous visiter notre hôtel ?", a: "Non. Tout est produit à distance, à partir des visuels que vous nous envoyez." },
+        { q: "De quels visuels avez-vous besoin ?", a: "Vos photos et vidéos existantes — celles de votre site, de votre banque d'images ou de votre dernière séance photo." },
+        { q: "Pouvez-vous travailler uniquement à partir de photos ?", a: "Oui — c'est le cas le plus fréquent. Aucune vidéo source n'est nécessaire." },
+        { q: "Nos chambres seront-elles modifiées ?", a: "Non. Chaque contenu est vérifié avant envoi — rien ne modifie l'agencement ou le mobilier réels de vos chambres." },
+        { q: "Combien de temps prend la production ?", a: "Comptez environ une semaine pour Estalia Test. Content suit un calendrier mensuel régulier." },
+        { q: "Pouvons-nous commencer par un seul projet ?", a: "Oui — c'est exactement à cela que sert Estalia Test, sans engagement." },
+      ],
     },
     about: {
       kicker: "À propos",
@@ -550,16 +618,15 @@ export const content: Record<Locale, ContentShape> = {
     },
     footer: {
       nav: [
-        { label: "Réalisations", href: "#films" },
-        { label: "Notre méthode", href: "#approche" },
-        { label: "À propos", href: "/#about" },
-        { label: "Contact", href: "#contact" },
+        { label: "Portfolio", href: "#work" },
+        { label: "Comment ça marche", href: "#how-it-works" },
+        { label: "Tarifs", href: "#pricing" },
+        { label: "FAQ", href: "#faq" },
       ],
       universes: [
         { label: "Real Estate", href: "/real-estate" },
         { label: "Wedding & Venues", href: "/wedding-venues" },
-        { label: "Hospitality", href: "/hospitality" },
-        { label: "Business", href: "/business" },
+        { label: "Vacation Rentals", href: "/business" },
       ],
       legal: [
         { label: "Mentions légales", href: "/mentions-legales" },
@@ -575,23 +642,23 @@ export const content: Record<Locale, ContentShape> = {
     common: { close: "Close" },
     nav: {
       links: [
-        { label: "Real Estate", href: "/real-estate" },
-        { label: "Wedding & Venues", href: "/wedding-venues" },
-        { label: "Hospitality", href: "/hospitality" },
-        { label: "Business", href: "/business" },
+        { label: "Work", href: "#work" },
+        { label: "How it works", href: "#how-it-works" },
+        { label: "Pricing", href: "#pricing" },
+        { label: "FAQ", href: "#faq" },
         { label: "Contact", href: "#contact" },
       ],
-      cta: "Submit a project",
+      cta: "Start",
       openMenu: "Open menu",
       closeMenu: "Close menu",
       homeLabel: "Home",
     },
     hero: {
-      kicker: "ESTALIA STUDIO",
-      title: ["We turn exceptional places", "into cinematic experiences."],
-      subtitle: "Bespoke films for real estate, hospitality and exceptional places.",
-      ctaPrimary: "Discover our films",
-      ctaSecondary: "Submit a project",
+      kicker: "ESTALIA STUDIO — HOSPITALITY",
+      title: ["Turn your existing hotel visuals", "into premium social content."],
+      subtitle: "No new shoot. No travel. Fresh content every month.",
+      ctaPrimary: "See how it works",
+      ctaSecondary: "View our work",
       scroll: "Scroll",
     },
     universeChooser: {
@@ -626,48 +693,48 @@ export const content: Record<Locale, ContentShape> = {
       ],
     },
     manifesto: {
-      kicker: "Manifesto",
-      title: ["Every place deserves", "its own story."],
+      kicker: "The problem",
+      title: ["You already invested in", "beautiful photography."],
       paragraphs: [
-        "We do not work from predefined video templates.",
-        "The architecture, the setting, the volumes and the defining features of each place shape its creative direction.",
-        "A château is not told the way a boutique hotel is. A wedding venue is not presented the way a car dealership is.",
-        "Every film is conceived around the place itself — never around a generic template.",
+        "But social platforms need movement, frequency and fresh formats — not just static photos.",
+        "Estalia turns the visual library you already have into an ongoing content engine.",
       ],
-      cta: "Discuss your project",
+      cta: "See how it works",
+    },
+    immediateProof: {
+      kicker: "In one image",
+      title: ["Your photo.", "Our treatment. Your content."],
+      beforeLabel: "Your photo",
+      afterLabel: "Estalia content",
+      caption: "No shoot. The starting point is always a visual you already own.",
     },
     films: {
-      kicker: "Selected Films",
-      title: "SELECTED FILMS",
-      subtitle: "Several places. Several worlds. One cinematic standard.",
-      watch: "Watch the film",
+      kicker: "Portfolio",
+      title: "WHAT WE CREATE",
+      subtitle: "Concept demonstrations, built for independent premium hospitality.",
+      watch: "View the concept",
       play: "Play",
-      comingSoon: "Film coming soon",
+      comingSoon: "Concept coming soon",
       cta: "Have a place to put on screen?",
     },
     approach: {
-      kicker: "Our method",
-      title: ["THE ESTALIA", "APPROACH"],
+      kicker: "How it works",
+      title: ["THREE STEPS.", "NO NEW SHOOT."],
       steps: [
         {
           number: "01",
-          title: "Analysis",
-          text: "Architecture, setting, volumes, light and the defining features of the place.",
+          title: "Send your visuals",
+          text: "Upload the photography and video you already have.",
         },
         {
           number: "02",
-          title: "Direction",
-          text: "We imagine a narrative and a cinematic direction built specifically for it.",
+          title: "We create",
+          text: "Estalia turns them into cinematic and social-native content.",
         },
         {
           number: "03",
-          title: "Production",
-          text: "We transform the available visuals into cinematic sequences.",
-        },
-        {
-          number: "04",
-          title: "Approval",
-          text: "The client approves the film before any use.",
+          title: "You publish",
+          text: "Receive ready-to-use content in the formats your channels need.",
         },
       ],
     },
@@ -711,39 +778,85 @@ export const content: Record<Locale, ContentShape> = {
         },
       ],
     },
-    offers: {
-      kicker: "Our packages",
-      title: ["Three ways to", "work with us."],
-      intro:
-        "Every project is unique: we put together a bespoke quote based on the place, the production scope and your needs.",
-      tiers: [
-        { title: "Film Signature", text: "For a single, exceptional film." },
-        { title: "Film Prestige", text: "For a more ambitious production, on an exceptional place." },
-        { title: "Collaboration", text: "For professionals with several ongoing needs." },
+    valueProps: {
+      kicker: "Why Estalia",
+      title: ["No new shoot.", "No travel."],
+      negatives: ["No shoot", "No travel", "No production day", "No new photo library required"],
+      positives: [
+        { title: "Faster production", text: "Content delivered in days, not weeks of shoot scheduling." },
+        { title: "Consistent content", text: "A reliable monthly cadence, without organising a new shoot each time." },
+        { title: "Lower friction", text: "Send what you already have — that's it." },
+        { title: "Multiple formats", text: "Cinematic hero, Reels, Stories — from the same visuals." },
       ],
-      note: "Quote on request",
-      cta: "Request a quote",
+    },
+    offers: {
+      kicker: "Pricing",
+      title: ["Three ways to", "work with us."],
+      intro: "Clear pricing. No lengthy quote process.",
+      tiers: [
+        {
+          title: "Estalia Test",
+          price: "£290",
+          period: "one-time",
+          text: "A low-risk entry point to see the Estalia quality for yourself.",
+          deliverables: ["1 cinematic Hero", "2 short variants", "1 revision round"],
+        },
+        {
+          title: "Estalia Content",
+          price: "£690",
+          period: "/ month",
+          text: "Our core offer — a steady stream of monthly content.",
+          deliverables: ["6 pieces / month", "1 Hero + Reels + Stories", "2 revision rounds", "3-month minimum"],
+          badge: "Most popular",
+        },
+        {
+          title: "Estalia Pro",
+          price: "£1,290",
+          period: "/ month",
+          text: "For higher-volume properties and seasonal campaigns.",
+          deliverables: ["12 pieces / month", "Seasonal content included", "2 languages", "2 revision rounds"],
+        },
+      ],
+      note: "Prices exclude tax. No commitment on Estalia Test.",
+      cta: "Start with Estalia",
+      testNote: {
+        kicker: "Estalia Test",
+        title: "The simplest way to start",
+        text: "Send us your visuals. You receive 1 cinematic Hero + 2 short variants. If you like the result, move to Content whenever you're ready.",
+      },
     },
     trust: {
       items: [
         {
-          title: "Fidelity to the place",
-          text: "Every film goes through an approval step designed to preserve, as closely as possible, the identity and essential character of the place.",
+          title: "Fidelity to your property",
+          text: "We stage what already exists — the real layout and furniture of your rooms is never altered.",
         },
         {
-          title: "Approval",
-          text: "No content is published without approval.",
+          title: "Always reviewed",
+          text: "Every piece is checked by a person before it's sent. Nothing is published without your approval.",
         },
         {
           title: "Confidentiality",
-          text: "Visuals and information shared with us are used solely for the purpose of the production.",
+          text: "Visuals and information you share are used solely for your project.",
         },
         {
           title: "Bespoke",
-          text: "Every place receives its own dedicated creative direction.",
+          text: "Every property receives its own dedicated creative direction.",
         },
       ],
       cta: "Contact us in complete confidentiality",
+    },
+    faq: {
+      kicker: "FAQ",
+      title: ["The questions", "we get asked most."],
+      items: [
+        { q: "Do you need to visit our hotel?", a: "No. Everything is produced remotely, from the visuals you send us." },
+        { q: "What assets do you need?", a: "Your existing photos and video — from your website, image library or last photoshoot." },
+        { q: "Can you work from photography only?", a: "Yes — that's the most common case. No source video is required." },
+        { q: "Will our rooms be altered?", a: "No. Every piece is reviewed before it's sent — nothing changes the real layout or furniture of your rooms." },
+        { q: "How long does production take?", a: "About a week for Estalia Test. Content follows a steady monthly schedule." },
+        { q: "Can we start with one project?", a: "Yes — that's exactly what Estalia Test is for, with no commitment." },
+      ],
     },
     about: {
       kicker: "About",
@@ -1003,16 +1116,15 @@ export const content: Record<Locale, ContentShape> = {
     },
     footer: {
       nav: [
-        { label: "Films", href: "#films" },
-        { label: "Our method", href: "#approche" },
-        { label: "About", href: "/#about" },
-        { label: "Contact", href: "#contact" },
+        { label: "Work", href: "#work" },
+        { label: "How it works", href: "#how-it-works" },
+        { label: "Pricing", href: "#pricing" },
+        { label: "FAQ", href: "#faq" },
       ],
       universes: [
         { label: "Real Estate", href: "/real-estate" },
         { label: "Wedding & Venues", href: "/wedding-venues" },
-        { label: "Hospitality", href: "/hospitality" },
-        { label: "Business", href: "/business" },
+        { label: "Vacation Rentals", href: "/business" },
       ],
       legal: [
         { label: "Legal notice", href: "/mentions-legales" },

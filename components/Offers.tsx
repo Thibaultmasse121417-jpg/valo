@@ -5,15 +5,16 @@ import TitleWipe from "./TitleWipe";
 import { useLanguage } from "@/lib/LanguageContext";
 
 /**
- * Formules — volontairement sans grille tarifaire agressive : trois
- * paliers nommés, chacun "sur devis". Permet de faire évoluer la
- * politique commerciale sans toucher au positionnement du site.
+ * Pricing éditorial — trois paliers avec prix réels affichés (Test /
+ * Content / Pro). Content porte un badge "most popular" et une bordure
+ * légèrement rehaussée : c'est l'offre cœur, elle doit se voir sans
+ * ressembler à une pricing card SaaS.
  */
 export default function Offers() {
   const { t } = useLanguage();
 
   return (
-    <section id="offres" className="grain relative overflow-hidden bg-noir px-6 py-28 text-ivoire sm:px-10 sm:py-36 lg:px-16">
+    <section id="pricing" className="grain relative overflow-hidden bg-noir px-6 py-28 text-ivoire sm:px-10 sm:py-36 lg:px-16">
       <div className="relative z-10 mx-auto max-w-content">
         <div className="grid gap-14 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-5">
@@ -36,31 +37,60 @@ export default function Offers() {
           </div>
         </div>
 
-        <div className="mt-20 grid gap-0 border-t border-ivoire/15 sm:mt-24 lg:grid-cols-3">
+        <div className="mt-20 grid gap-6 sm:mt-24 lg:grid-cols-3 lg:gap-6">
           {t.offers.tiers.map((tier, i) => (
             <ScrollReveal key={tier.title} delay={i * 0.08}>
               <div
-                className={`flex h-full flex-col gap-3 border-b border-ivoire/15 py-9 pr-8 lg:border-b-0 lg:border-r lg:py-12 ${
-                  i === t.offers.tiers.length - 1 ? "lg:border-r-0" : ""
+                className={`relative flex h-full flex-col gap-5 border p-8 ${
+                  tier.badge ? "border-bronze bg-ivoire/[0.03]" : "border-ivoire/15"
                 }`}
               >
-                <h3 className="font-serif text-xl uppercase tracking-tight text-bronze">{tier.title}</h3>
+                {tier.badge ? (
+                  <span className="absolute -top-3 left-8 border border-bronze bg-noir px-3 py-1 font-sans text-[10px] uppercase tracking-widest2 text-bronze">
+                    {tier.badge}
+                  </span>
+                ) : null}
+                <h3 className="font-serif text-xl uppercase tracking-tight text-ivoire">{tier.title}</h3>
+                <div className="flex items-baseline gap-2">
+                  <span className="font-serif text-4xl text-ivoire">{tier.price}</span>
+                  <span className="font-sans text-xs uppercase tracking-widest2 text-ivoire/45">{tier.period}</span>
+                </div>
                 <p className="font-sans text-sm leading-relaxed text-ivoire/60">{tier.text}</p>
-                <span className="mt-1 font-sans text-[11px] uppercase tracking-widest2 text-ivoire/40">
-                  {t.offers.note}
-                </span>
+                <ul className="mt-1 flex flex-col gap-2.5 border-t border-ivoire/10 pt-5">
+                  {tier.deliverables.map((d) => (
+                    <li key={d} className="flex items-start gap-2.5 font-sans text-[13px] leading-snug text-ivoire/70">
+                      <span aria-hidden className="mt-[3px] text-bronze">✦</span>
+                      {d}
+                    </li>
+                  ))}
+                </ul>
+                <a
+                  href="#contact"
+                  className={`mt-2 inline-flex items-center justify-center gap-2 border px-6 py-3.5 text-center font-sans text-xs uppercase tracking-widest2 transition-colors duration-300 ${
+                    tier.badge
+                      ? "border-bronze bg-bronze text-noir hover:bg-transparent hover:text-bronze"
+                      : "border-ivoire/30 text-ivoire hover:border-bronze hover:text-bronze"
+                  }`}
+                >
+                  {t.offers.cta}
+                </a>
               </div>
             </ScrollReveal>
           ))}
         </div>
 
-        <ScrollReveal delay={0.1}>
-          <a
-            href="#contact"
-            className="mt-16 inline-block border border-ivoire px-8 py-4 font-sans text-xs uppercase tracking-widest2 text-ivoire transition-colors duration-300 hover:bg-ivoire hover:text-noir sm:mt-20"
-          >
-            {t.offers.cta}
-          </a>
+        <ScrollReveal delay={0.15}>
+          <p className="mt-10 font-sans text-[11px] uppercase tracking-widest2 text-ivoire/40">{t.offers.note}</p>
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.2}>
+          <div className="mt-14 border-t border-ivoire/15 pt-10 sm:mt-16">
+            <p className="mb-2 font-sans text-xs uppercase tracking-widest2 text-bronze">{t.offers.testNote.kicker}</p>
+            <h3 className="font-serif text-2xl uppercase tracking-tight text-ivoire sm:text-3xl">{t.offers.testNote.title}</h3>
+            <p className="mt-4 max-w-xl font-sans text-sm leading-relaxed text-ivoire/60 sm:text-base">
+              {t.offers.testNote.text}
+            </p>
+          </div>
         </ScrollReveal>
       </div>
     </section>

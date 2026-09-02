@@ -26,26 +26,22 @@ const body = Archivo({
 });
 
 const siteUrl = "https://estalia-studio.vercel.app";
-const title = "Estalia Studio — Films cinématographiques pour lieux d'exception";
+const title = "Estalia — Hotel Content Studio";
 const description =
-  "Studio de création de films cinématiques pour l'immobilier de prestige, les domaines de mariage, l'hôtellerie-restauration et les commerces premium.";
-const titleEn = "Estalia Studio — Cinematic Films for Exceptional Places";
-const descriptionEn =
-  "A creative studio producing cinematic films for luxury real estate, wedding venues, hospitality and premium businesses.";
+  "Estalia turns the photos and videos your hotel already has into premium social content — no new shoot. Hospitality content creation for independent boutique hotels.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title,
   description,
   keywords: [
-    "film immobilier",
-    "film cinématique lieu d'exception",
-    "cinematic real estate",
-    "wedding venue film",
-    "hospitality film studio",
-    "estalia studio",
+    "hotel content creation",
+    "hospitality content studio",
+    "hotel social media content",
+    "boutique hotel video",
+    "estalia",
   ],
-  authors: [{ name: "Estalia Studio" }],
+  authors: [{ name: "Estalia" }],
   alternates: {
     canonical: "/",
   },
@@ -54,18 +50,17 @@ export const metadata: Metadata = {
     url: siteUrl,
     title,
     description,
-    siteName: "Estalia Studio",
-    locale: "fr_FR",
-    // Métadonnées anglaises exposées via og:locale:alternate — le
-    // contenu anglais complet est servi côté client par le sélecteur
-    // FR / EN (voir lib/LanguageContext.tsx et data/content.ts).
+    siteName: "Estalia",
+    locale: "en_GB",
+    // Le FR reste servi côté client par le sélecteur (lib/LanguageContext.tsx)
+    // pour le fondateur — le lancement cible le marché UK, EN par défaut.
     // Le visuel de partage (og:image) est généré automatiquement par
     // app/opengraph-image.tsx — pas besoin de le déclarer ici.
   },
   twitter: {
     card: "summary_large_image",
-    title: titleEn,
-    description: descriptionEn,
+    title,
+    description,
   },
   icons: {
     icon: "/favicon.svg",
@@ -78,7 +73,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr" className={`${editorial.variable} ${body.variable}`}>
+    <html lang="en" className={`${editorial.variable} ${body.variable}`}>
       <body className="bg-ivoire font-sans text-noir antialiased">
         <LanguageProvider>
           <Header />

@@ -27,6 +27,56 @@ export type Project = {
   universes: UniverseId[];
 };
 
+/**
+ * Démonstrations Hospitality — portfolio de lancement de la homepage.
+ * `location` porte volontairement "Concept Study" : ce ne sont pas des
+ * établissements clients réels, mais des démonstrations de style produites
+ * par Estalia (visuels source propres, droits maîtrisés — voir
+ * generation-prompts.md). Jamais présentées comme un vrai projet livré.
+ */
+export const hospitalityDemos: Project[] = [
+  {
+    id: "demo-bedroom",
+    title: "BOUTIQUE HOTEL — BEDROOM",
+    location: "Concept Study",
+    tags: ["CINEMATIC HERO", "HOSPITALITY"],
+    video: "/videos/demos/bedroom.mp4",
+    poster: "/images/demos/bedroom-poster.jpg",
+    align: "left",
+    universes: ["hospitality"],
+  },
+  {
+    id: "demo-exterior",
+    title: "HOTEL EXTERIOR",
+    location: "Concept Study",
+    tags: ["ARCHITECTURAL MOVEMENT", "HOSPITALITY"],
+    video: "/videos/demos/exterior.mp4",
+    poster: "/images/demos/exterior-poster.jpg",
+    align: "right",
+    universes: ["hospitality"],
+  },
+  {
+    id: "demo-pool",
+    title: "POOL & RESORT",
+    location: "Concept Study",
+    tags: ["SOCIAL REEL", "HOSPITALITY"],
+    video: "/videos/demos/pool.mp4",
+    poster: "/images/demos/pool-poster.jpg",
+    align: "left",
+    universes: ["hospitality"],
+  },
+  {
+    id: "demo-restaurant",
+    title: "HOTEL RESTAURANT",
+    location: "Concept Study",
+    tags: ["EDITORIAL DINING", "HOSPITALITY"],
+    video: "/videos/demos/restaurant.mp4",
+    poster: "/images/demos/restaurant-poster.jpg",
+    align: "right",
+    universes: ["hospitality"],
+  },
+];
+
 export const projects: Project[] = [
   {
     id: "chateau",

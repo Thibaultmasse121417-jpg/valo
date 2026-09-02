@@ -9,7 +9,7 @@ export default function Approach() {
 
   return (
     <section
-      id="approche"
+      id="how-it-works"
       className="grain relative overflow-hidden bg-noir px-6 py-28 text-ivoire sm:px-10 sm:py-36 lg:px-16"
     >
       <div className="relative z-10 mx-auto max-w-content">

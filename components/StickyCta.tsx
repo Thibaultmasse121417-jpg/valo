@@ -18,6 +18,7 @@ export default function StickyCta() {
   const { t } = useLanguage();
   const [pastHero, setPastHero] = useState(false);
   const [nearContact, setNearContact] = useState(false);
+  const [nearPricing, setNearPricing] = useState(false);
   const [dismissed, setDismissed] = useState(true);
 
   useEffect(() => {
@@ -31,6 +32,10 @@ export default function StickyCta() {
   useEffect(() => {
     const hero = document.getElementById("top");
     const contact = document.getElementById("contact");
+    // La section pricing porte ses propres CTA ("Start with Estalia") —
+    // le rappel flottant ne doit pas se superposer à ces boutons, en
+    // particulier sur mobile où il chevauche le bas des cartes.
+    const pricing = document.getElementById("pricing");
     if (!hero || !contact) return;
 
     const heroObserver = new IntersectionObserver(
@@ -43,9 +48,20 @@ export default function StickyCta() {
     );
     heroObserver.observe(hero);
     contactObserver.observe(contact);
+
+    let pricingObserver: IntersectionObserver | undefined;
+    if (pricing) {
+      pricingObserver = new IntersectionObserver(
+        ([entry]) => setNearPricing(entry.isIntersecting),
+        { threshold: 0 }
+      );
+      pricingObserver.observe(pricing);
+    }
+
     return () => {
       heroObserver.disconnect();
       contactObserver.disconnect();
+      pricingObserver?.disconnect();
     };
   }, []);
 
@@ -58,7 +74,7 @@ export default function StickyCta() {
     }
   };
 
-  const visible = pastHero && !nearContact && !dismissed;
+  const visible = pastHero && !nearContact && !nearPricing && !dismissed;
 
   return (
     <AnimatePresence>

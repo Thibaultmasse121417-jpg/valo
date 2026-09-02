@@ -23,7 +23,9 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 const STORAGE_KEY = "estalia-locale";
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("fr");
+  // Lancement UK : l'anglais est la langue par défaut du site (voir brief
+  // Phase 2 §36). Le FR reste disponible via le toggle pour le fondateur.
+  const [locale, setLocaleState] = useState<Locale>("en");
 
   useEffect(() => {
     try {
@@ -33,11 +35,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         return;
       }
       const browserLang = window.navigator.language?.toLowerCase();
-      if (browserLang && !browserLang.startsWith("fr")) {
-        setLocaleState("en");
+      if (browserLang && browserLang.startsWith("fr")) {
+        setLocaleState("fr");
       }
     } catch {
-      // localStorage indisponible (SSR / navigation privée) : on garde le défaut FR.
+      // localStorage indisponible (SSR / navigation privée) : on garde le défaut EN.
     }
   }, []);
 

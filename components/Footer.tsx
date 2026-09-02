@@ -58,12 +58,10 @@ export default function Footer() {
             >
               {siteConfig.contact.email}
             </a>
-            <a
-              href={`tel:${siteConfig.contact.phone.replace(/\s+/g, "")}`}
-              className="w-fit transition-colors duration-300 hover:text-bronze"
-            >
-              {siteConfig.contact.phoneDisplay}
-            </a>
+            {/* Pas de numéro de téléphone : hors périmètre du footer minimal
+                du brief (Estalia / Instagram / LinkedIn / Contact / Privacy /
+                Terms / Legal / Copyright), et Estalia est un studio à distance
+                sans standard téléphonique — voir Trust ("never a call centre"). */}
             <div className="mt-2 flex gap-4">
               <a
                 href={siteConfig.social.instagram}

@@ -15,12 +15,17 @@ export const siteConfig = {
   brand: {
     name: "ESTALIA",
     sub: "STUDIO",
-    signature: "CINEMATIC EXPERIENCES",
+    // Positionnement de lancement (brief Phase 2 §2) : Estalia n'est PAS
+    // une agence marketing généraliste, c'est un studio de contenu créatif
+    // à distance. Cette ligne apparaît en signature du logo (footer, etc.).
+    signature: "REMOTE CREATIVE CONTENT STUDIO",
   },
 
-  // Coordonnées de contact — PLACEHOLDERS, à remplacer.
+  // Coordonnées de contact — PLACEHOLDER, à remplacer une fois le nom de
+  // domaine définitif choisi (voir domain-research.md). Convention
+  // "hello@" demandée par le brief plutôt que "contact@".
   contact: {
-    email: "contact@estalia-studio.com",
+    email: "hello@estalia-studio.com",
     phone: "+33 0 00 00 00 00",
     phoneDisplay: "+33 (0)0 00 00 00 00",
     address: "Paris, France",
