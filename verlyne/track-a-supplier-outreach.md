@@ -61,7 +61,9 @@ Note : je n'ai PAS mentionné de volume, de chiffres de ventes ou d'engagement d
 | Fournisseur | Lien trouvé | Statut d'accès |
 |---|---|---|
 | DG Jewelry | https://dgjewelry.cn/contact-us/ (aussi https://www.dgjewelry.com/) | Formulaire de contact sur le site. Fetch direct bloqué depuis cette session — à ouvrir toi-même dans un navigateur. |
-| 96Jewelry | https://96jewelry.com/ | Site "Custom Jewelry Manufacturer — China OEM ODM Factory", SGS Verified Alibaba Gold Supplier. Formulaire/contact à vérifier sur le site — fetch direct bloqué depuis cette session. |
+| 96Jewelry | https://96jewelry.com/ | Site "Custom Jewelry Manufacturer — China OEM ODM Factory", SGS Verified Alibaba Gold Supplier. Formulaire/contact à vérifier sur le site — fetch direct bloqué depuis cette session. STATUT : REJECT, ne pas contacter. |
+| Merryshine Wholesale | Contact : https://www.merryshinewholesale.com/pages/contact-us · Dropshipping (candidature requise, nom d'entreprise/infos) : https://www.merryshinewholesale.com/pages/dropshipping · Email trouvé : info@merryshinejewelry.com | Fetch direct bloqué. Adresse société trouvée : Shenzhen, Guangdong, CN. |
+| NihaoJewelry | Contact : https://www.nihaojewelry.com/contacts | Fetch direct bloqué. ⚠️ Info publique : leur acier inoxydable standard est du **304** (PVD ou plaqué or 18K), pas confirmé 316L — à vérifier explicitement dans la réponse. |
 
 Recommandé également : chercher ces deux fournisseurs sur **Alibaba** directement (leur profil Alibaba a généralement un chat intégré avec réponse plus rapide qu'un formulaire de site web) et envoyer le même message via le chat Alibaba.
 
@@ -255,7 +257,16 @@ Nouvelle recherche fournisseurs (9 candidats comparés) : voir le dossier "Verly
 
 Stratégie en 2 temps : un message court de qualification (6 points bloquants) d'abord, le questionnaire complet seulement si la réponse est positive. Réduit la friction, filtre vite les REJECT (comme 96Jewelry en Level 1).
 
-### A4.1 — ÉTAPE 1 : message de qualification (VERSION RÉELLEMENT ENVOYÉE, EN)
+### Coordonnées Merryshine & NihaoJewelry (recherche web, non vérifiées en direct)
+
+| Fournisseur | Canal de contact | Notes |
+|---|---|---|
+| Merryshine Wholesale | https://www.merryshinewholesale.com/pages/contact-us (formulaire) — ou candidature dropshipping directement : https://www.merryshinewholesale.com/pages/dropshipping (nom d'entreprise + infos demandées) — email : info@merryshinejewelry.com | Société basée à Shenzhen, Guangdong, CN |
+| NihaoJewelry | https://www.nihaojewelry.com/contacts (formulaire) | ⚠️ Leur gamme standard = acier **304** (PVD ou plaqué or 18K) selon leurs propres pages produit — pas confirmé 316L, à vérifier explicitement dans la réponse au point 1 |
+
+**DG Jewelry** : ne pas renvoyer le message de qualification — conversation déjà en cours avec Jett (voir A1/A3). Relance ciblée séparée à préparer si besoin (best-sellers + docs conformité, pas encore demandés explicitement).
+
+### A4.1 — ÉTAPE 1 : message de qualification (VERSION RÉELLEMENT ENVOYÉE, EN) — pour Merryshine et NihaoJewelry uniquement
 
 ```
 Subject: Verlyne — Quick Supplier Qualification (6 questions)
@@ -327,9 +338,9 @@ Thank you,
 
 ### STOP AVANT ENVOI
 ```
-ACTION: Envoyer le message de qualification (A4.1) à DG Jewelry (Jett), Merryshine (page dropshipping), NihaoJewelry (canal contact/app Shopify)
+ACTION: Envoyer le message de qualification (A4.1) à Merryshine (formulaire ou candidature dropshipping) et NihaoJewelry (formulaire contact) — PAS à DG Jewelry (conversation déjà en cours) ni 96Jewelry (REJECT)
 COST: 0€ | ENGAGEMENT: aucun
-RECOMMENDATION: Aucun outil d'envoi disponible ici — copie-colle toi-même les 3 versions. N'envoie A4.2 que si les 6 points reviennent positifs.
+RECOMMENDATION: Aucun outil d'envoi disponible ici — copie-colle toi-même les 2 versions. N'envoie A4.2 que si les 6 points reviennent positifs.
 ```
 
 ### 📋 COLLE LES RÉPONSES ICI (une fois reçues)
