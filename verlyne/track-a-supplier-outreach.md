@@ -1,6 +1,6 @@
 # TRACK A — SUPPLIER OUTREACH
 
-Statut : **PRÉPARÉ, NON ENVOYÉ.** Je n'ai pas la capacité technique d'envoyer un email ou un message à un tiers externe (pas d'outil d'envoi email/formulaire dans cette session, et l'accès direct à `dgjewelry.cn` / `dgjewelry.com` / `96jewelry.com` est bloqué par le proxy réseau de cet environnement). Voir A3 pour la procédure d'envoi manuel.
+Statut : **PRÉPARÉ, NON ENVOYÉ.** Je n'ai pas la capacité technique d'envoyer un email ou un message à un tiers externe (pas d'outil d'envoi email/formulaire dans cette session, et l'accès direct à `dgjewelry.cn` / `dgjewelry.com` / `96jewelry.com` / `merryshinewholesale.com` / `nihaojewelry.com` est bloqué par le proxy réseau de cet environnement). Voir A3 pour la procédure d'envoi manuel.
 
 ---
 
@@ -175,6 +175,8 @@ Dès qu'une réponse Level 1 arrive, je l'évalue selon cette grille :
 - **NEED MORE INFO** → réponse partielle, vague sur un point clé (coût, MOQ, white-label). → relance ciblée sur le(s) point(s) manquant(s), pas le Level 2 complet.
 - **REJECT** → pas de personnalisation réelle, pas d'expédition France, MOQ élevé incompatible avec un test, refus white-label, ou délais > 4-5 semaines.
 
+**Classification appliquée : 96Jewelry = REJECT** (pas de stock, pas de dropshipping — confirmé par Anna). **DG Jewelry = NEED MORE INFO** (réponse détaillée mais aucun chiffre encore, en attente de 3 infos demandées par Jett).
+
 ---
 
 ## SUPPLIER DUE DILIGENCE — LEVEL 2
@@ -242,7 +244,124 @@ CHANNEL: 96jewelry.com (formulaire à localiser sur le site) ou chat Alibaba
 MESSAGE: Voir Level 1 ci-dessus (prêt, inchangé)
 COST: 0€
 ENGAGEMENT: Aucun — simple demande d'information
-RECOMMENDATION: Idem — envoi manuel de ta part requis.
+RECOMMENDATION: Idem — envoi manuel de ta part requis. STATUT : 96Jewelry = REJECT, ne pas relancer (voir A2).
 ```
 
-Je n'ai contacté aucun des deux fournisseurs. Aucune réponse n'a donc été reçue.
+---
+
+## A4 — LEVEL 3 : MESSAGE CONSOLIDÉ (DG Jewelry, Merryshine, NihaoJewelry)
+
+Nouvelle recherche fournisseurs (9 candidats comparés) : voir le dossier "Verlyne Supplier Research" pour le détail complet. Priorité retenue pour ce contact : **DG Jewelry**, **Merryshine Wholesale**, **NihaoJewelry** — les 3 mieux notés (63-64/100 provisoire, DG seul confirmé par contact réel).
+
+### Message (identique pour les 3, EN) — inclut notre cahier des charges et demande leurs best-sellers
+
+```
+Subject: Verlyne — Product Recommendation Request + Full Sourcing Questionnaire
+
+Hi [Jett / Merryshine team / NihaoJewelry team],
+
+Here's our brand brief so you can recommend the right SKUs yourselves, rather than us guessing:
+
+"Minimalist premium-accessible personalized jewelry brand, feminine, elegant, giftable, 316L stainless steel preferred, 18K gold PVD preferred, consistent gold color across necklace/bracelet/earrings/ring."
+
+Two requests to start:
+A. Please send your 3 best-selling personalized necklace designs for European customers, and your best matching bracelet for each.
+B. For your top recommendation, please provide:
+
+PRODUCT
+- Exact SKU / reference
+- Real HD photos (front, back, profile, worn)
+- Real video if available
+- Macro photo of the engraving area
+- Dimensions and weight
+- Exact steel grade (confirm 316L)
+- Exact PVD spec (process, gold thickness in microns)
+- Engraving options: precision, front/back, available fonts, character limit
+- A genuinely matching bracelet (same gold tone, same finish) — photo of necklace + bracelet together
+- Do you also offer matching hoop/huggie earrings and a thin adjustable/open ring in the same gold tone? Photos if yes.
+- Packaging options available, and Verlyne branding options (box, card, insert)
+
+COMPLIANCE
+- REACH / nickel release / lead / cadmium documentation for THESE specific SKUs (not general marketing claims)
+
+FULFILLMENT
+- MOQ
+- Single-unit dropshipping available?
+- Automated Shopify integration — how exactly does engraving data (name/date/font) get transmitted?
+- Tracking: automatic, per order?
+- White-label: no invoice, no branding, no mention of your company in the package?
+- Defect/replacement policy
+
+PRICING (please break down: product / engraving / packaging / branding / fulfillment fee / shipping to France)
+- 1 unit / 10 units / 50 units / 100 units / 500 units / 1000 units
+- Production lead time for a personalized order
+- Shipping lead time to France
+
+We're comparing 3 suppliers in parallel (this is one of them) before selecting our partner(s).
+
+Thank you,
+[Name] — Verlyne
+```
+
+### STOP AVANT ENVOI
+```
+ACTION: Envoyer ce message à DG Jewelry (Jett), Merryshine (page dropshipping), NihaoJewelry (canal contact/app Shopify)
+COST: 0€ | ENGAGEMENT: aucun
+RECOMMENDATION: Aucun outil d'envoi disponible ici — copie-colle toi-même les 3 versions.
+```
+
+### 📋 COLLE LES RÉPONSES ICI (une fois reçues)
+
+**DG Jewelry — réponse Level 3 :**
+> (à coller ici)
+
+**Merryshine Wholesale — réponse :**
+> (à coller ici)
+
+**NihaoJewelry — réponse :**
+> (à coller ici)
+
+---
+
+## A5 — COMPARAISON FINALE DG vs MERRYSHINE vs NIHAO (gabarit, à remplir dès réponses réelles)
+
+Qualité 20 · Coût landed 15 · Personnalisation 15 · Automatisation Shopify 15 · Délais 10 · Packaging/branding 10 · Scalabilité 10 · Communication 5
+
+| Critère | DG Jewelry | Merryshine | NihaoJewelry |
+|---|---|---|---|
+| SKU recommandé | — | — | — |
+| Acier confirmé | — | — | — |
+| PVD confirmé | — | — | — |
+| Bracelet assorti (photo ensemble) | — | — | — |
+| Créoles disponibles | — | — | — |
+| Bague ajustable disponible | — | — | — |
+| MOQ | — | — | — |
+| Dropship 1 unité | — | — | — |
+| Coût landed (1 unité) | — | — | — |
+| Automatisation Shopify | — | — | — |
+| Transmission auto prénom/date/police | — | — | — |
+| Délai production | — | — | — |
+| Délai livraison France | — | — | — |
+| White-label | — | — | — |
+| Doc conformité (nickel/REACH) | — | — | — |
+| **SCORE /100** | — | — | — |
+
+**SUPPLIER #1 POUR LE TEST :** —
+**SUPPLIER #1 POUR LE SCALE :** —
+**BACKUP SUPPLIER :** —
+
+*(à remplir uniquement une fois les réponses réelles collées ci-dessus — aucune estimation ne sera substituée à une vraie donnée)*
+
+---
+
+## A6 — ÉCHANTILLONS (cadre de sélection, rien commandé)
+
+Max 3-5 échantillons. Même gravure test **"Emma"** partout pour une comparaison juste.
+
+Proposition provisoire (à confirmer selon les réponses) :
+1. Collier — DG Jewelry, gravure "Emma"
+2. Collier — Merryshine ou NihaoJewelry (celui qui répond en premier avec un SKU clair), gravure "Emma"
+3. Bracelet assorti — fournisseur retenu en #1 ou #2
+4-5. Réservés (créoles/bague) si les réponses le justifient
+
+Aucune commande passée automatiquement.
