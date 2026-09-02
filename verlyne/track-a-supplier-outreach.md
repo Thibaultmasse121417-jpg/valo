@@ -154,7 +154,16 @@ Once I receive these three details, I will prepare the complete sample quotation
 If the sample meets your requirements, we can then discuss the most cost-effective dropshipping and volume-pricing structure for Verlyne.
 
   |
-| 96Jewelry | Formulaire Site Web | 01/09/2026 | — | EN ATTENTE |
+| 96Jewelry | Formulaire Site Web | 01/09/2026 | — | Dear Thibault，
+ 
+Our factory main serivice is OEM and ODM service.
+We do not have stock on hand, and we do not offer dropshipping services, apologize for the inconvenience.
+
+We hope to collaborate with you on custom products in the future.
+
+Best Regards!
+
+Anna      |
 
 ---
 
