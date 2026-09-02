@@ -260,6 +260,54 @@ RECOMMENDATION: Idem — envoi manuel de ta part requis. STATUT : 96Jewelry = RE
 
 ---
 
+## A3-bis — DG Jewelry : prochaine réponse prête à envoyer (02/09/2026)
+
+Jett a demandé 3 choses avant de chiffrer l'échantillon (design/photo, texte de gravure, code postal). Gravure fixée sur **"Emma"**. Pour le design, plutôt que d'en inventer un avant d'avoir vu la gamme DG, le message lui demande de recommander lui-même son best-seller conforme au brief — même logique que Merryshine/NihaoJewelry en A4, pas une exception.
+
+**⚠️ Information manquante réelle, pas inventée : le code postal de livraison en France.** Dès que tu me le donnes, ce message est prêt à coller tel quel.
+
+```
+Subject: Verlyne — Sample Request: Design Recommendation + "Emma" Test Engraving
+
+Hi Jett,
+
+Thanks for the detailed answers — 316L stainless steel + 18K Gold PVD
+(0.05μm) confirmed as our target, that gives us a clear path to quote.
+
+To finalize the sample quotation:
+
+1) Design — rather than picking one ourselves before seeing your full
+range, could you recommend your best-selling personalized necklace
+that fits this brief, plus the matching bracelet you'd pair with it?
+"Minimalist premium-accessible personalized jewelry brand, feminine,
+elegant, giftable, 316L stainless steel, 18K gold PVD, consistent gold
+tone across pieces."
+Please include real photos (front/back/profile/worn), a macro shot of
+the engraving area, and video if available.
+
+2) Engraving text for the sample: "Emma"
+
+3) Delivery postal code: [CODE POSTAL — EN ATTENTE]
+
+Once the design is confirmed and you have the postal code, please
+prepare the full sample quotation (product + engraving + packaging +
+shipping, DDP to France) and the estimated delivery time.
+
+Separately, for our supplier comparison, could you also confirm:
+- MOQ specifically for personalized dropshipping (you mentioned 12pcs
+  is the ready-stock MOQ — is dropship handled differently?)
+- Nickel release / REACH compliance documentation for this exact SKU
+- Current production capacity per month, and how it scales at
+  100 / 500 / 1000+ orders per month
+- Whether a fully white-label packing slip/invoice is possible (no
+  DG Jewelry branding or company info visible to the end customer)
+
+Thank you,
+[Name] — Verlyne
+```
+
+---
+
 ## A4 — LEVEL 3 : DG Jewelry, Merryshine, NihaoJewelry (contact en 2 temps)
 
 Nouvelle recherche fournisseurs (9+ candidats comparés) : voir le dossier "Verlyne Supplier Research" pour le détail complet. Candidats actifs retenus pour ce contact : **DG Jewelry**, **Merryshine Wholesale**, **NihaoJewelry**.
