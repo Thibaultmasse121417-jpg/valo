@@ -1,6 +1,6 @@
 # TRACK A — SUPPLIER OUTREACH
 
-Statut : **PRÉPARÉ, NON ENVOYÉ.** Je n'ai pas la capacité technique d'envoyer un email ou un message à un tiers externe (pas d'outil d'envoi email/formulaire dans cette session, et l'accès direct à `dgjewelry.cn` / `dgjewelry.com` / `96jewelry.com` / `merryshinewholesale.com` / `nihaojewelry.com` est bloqué par le proxy réseau de cet environnement). Voir A3 pour la procédure d'envoi manuel.
+Statut : **PRÉPARÉ, NON ENVOYÉ.** Je n'ai pas la capacité technique d'envoyer un email ou un message à un tiers externe (pas d'outil d'envoi email/formulaire dans cette session, et l'accès direct à `dgjewelry.cn` / `dgjewelry.com` / `96jewelry.com` / `merryshinewholesale.com` / `nihaojewelry.com` / `shineon.com` est bloqué par le proxy réseau de cet environnement). Voir A3 pour la procédure d'envoi manuel.
 
 ---
 
@@ -62,8 +62,9 @@ Note : je n'ai PAS mentionné de volume, de chiffres de ventes ou d'engagement d
 |---|---|---|
 | DG Jewelry | https://dgjewelry.cn/contact-us/ (aussi https://www.dgjewelry.com/) | Formulaire de contact sur le site. Fetch direct bloqué depuis cette session — à ouvrir toi-même dans un navigateur. |
 | 96Jewelry | https://96jewelry.com/ | Site "Custom Jewelry Manufacturer — China OEM ODM Factory", SGS Verified Alibaba Gold Supplier. Formulaire/contact à vérifier sur le site — fetch direct bloqué depuis cette session. STATUT : REJECT, ne pas contacter. |
-| Merryshine Wholesale | Contact : https://www.merryshinewholesale.com/pages/contact-us · Dropshipping (candidature requise, nom d'entreprise/infos) : https://www.merryshinewholesale.com/pages/dropshipping · Email trouvé : info@merryshinejewelry.com | Fetch direct bloqué. Adresse société trouvée : Shenzhen, Guangdong, CN. |
-| NihaoJewelry | Contact : https://www.nihaojewelry.com/contacts | Fetch direct bloqué. ⚠️ Info publique : leur acier inoxydable standard est du **304** (PVD ou plaqué or 18K), pas confirmé 316L — à vérifier explicitement dans la réponse. |
+| Merryshine Wholesale | Contact : https://www.merryshinewholesale.com/pages/contact-us · Dropshipping (candidature requise, nom d'entreprise/infos) : https://www.merryshinewholesale.com/pages/dropshipping · Email trouvé : info@merryshinejewelry.com | Fetch direct bloqué. Adresse société trouvée : Shenzhen, Guangdong, CN. STATUT : envoyé, en attente de réponse. |
+| NihaoJewelry | Contact : https://www.nihaojewelry.com/contacts | Fetch direct bloqué. ⚠️ Info publique : leur acier inoxydable standard est du **304** (PVD ou plaqué or 18K), pas confirmé 316L — à vérifier explicitement dans la réponse. STATUT : envoyé, en attente de réponse. |
+| ShineOn | Email : hello@shineon.com · Portail vendeur (app Shopify native) : https://sellers.shineon.com/ | Fetch direct bloqué. Info publique : app Shopify gratuite (commission uniquement à la vente), usines US (Tampa, FL) **et UE (Amsterdam, NL)** — potentiellement le meilleur délai France de tous les candidats. STATUT : à envoyer.
 
 Recommandé également : chercher ces deux fournisseurs sur **Alibaba** directement (leur profil Alibaba a généralement un chat intégré avec réponse plus rapide qu'un formulaire de site web) et envoyer le même message via le chat Alibaba.
 
@@ -251,22 +252,40 @@ RECOMMENDATION: Idem — envoi manuel de ta part requis. STATUT : 96Jewelry = RE
 
 ---
 
-## A4 — LEVEL 3 : DG Jewelry, Merryshine, NihaoJewelry (contact en 2 temps)
+## A4 — LEVEL 3 : DG Jewelry, Merryshine, NihaoJewelry, ShineOn (contact en 2 temps)
 
-Nouvelle recherche fournisseurs (9 candidats comparés) : voir le dossier "Verlyne Supplier Research" pour le détail complet. Priorité retenue pour ce contact : **DG Jewelry**, **Merryshine Wholesale**, **NihaoJewelry** — les 3 mieux notés (63-64/100 provisoire, DG seul confirmé par contact réel).
+Nouvelle recherche fournisseurs (9+ candidats comparés) : voir le dossier "Verlyne Supplier Research" pour le détail complet. Priorité retenue pour ce contact : **DG Jewelry**, **Merryshine Wholesale**, **NihaoJewelry**, **ShineOn** (4ᵉ candidat ajouté — app Shopify native, usine UE à Amsterdam).
 
 Stratégie en 2 temps : un message court de qualification (6 points bloquants) d'abord, le questionnaire complet seulement si la réponse est positive. Réduit la friction, filtre vite les REJECT (comme 96Jewelry en Level 1).
 
-### Coordonnées Merryshine & NihaoJewelry (recherche web, non vérifiées en direct)
+### Coordonnées Merryshine, NihaoJewelry & ShineOn (recherche web, non vérifiées en direct)
 
 | Fournisseur | Canal de contact | Notes |
 |---|---|---|
-| Merryshine Wholesale | https://www.merryshinewholesale.com/pages/contact-us (formulaire) — ou candidature dropshipping directement : https://www.merryshinewholesale.com/pages/dropshipping (nom d'entreprise + infos demandées) — email : info@merryshinejewelry.com | Société basée à Shenzhen, Guangdong, CN |
-| NihaoJewelry | https://www.nihaojewelry.com/contacts (formulaire) | ⚠️ Leur gamme standard = acier **304** (PVD ou plaqué or 18K) selon leurs propres pages produit — pas confirmé 316L, à vérifier explicitement dans la réponse au point 1 |
+| Merryshine Wholesale | https://www.merryshinewholesale.com/pages/contact-us (formulaire) — ou candidature dropshipping directement : https://www.merryshinewholesale.com/pages/dropshipping (nom d'entreprise + infos demandées) — email : info@merryshinejewelry.com | Société basée à Shenzhen, Guangdong, CN. **Envoyé le 02/09/2026, en attente.** |
+| NihaoJewelry | https://www.nihaojewelry.com/contacts (formulaire) | ⚠️ Leur gamme standard = acier **304** (PVD ou plaqué or 18K) selon leurs propres pages produit — pas confirmé 316L, à vérifier explicitement dans la réponse au point 1. **Envoyé le 02/09/2026, en attente.** |
+| ShineOn | Email : hello@shineon.com · Portail vendeur (app Shopify) : https://sellers.shineon.com/ | App Shopify gratuite, commission uniquement à la vente. Usines US (Tampa, FL) **et UE (Amsterdam, NL)** — délai France potentiellement le meilleur du panel. **À envoyer.** |
 
 **DG Jewelry** : ne pas renvoyer le message de qualification — conversation déjà en cours avec Jett (voir A1/A3). Relance ciblée séparée à préparer si besoin (best-sellers + docs conformité, pas encore demandés explicitement).
 
-### A4.1 — ÉTAPE 1 : message de qualification (VERSION RÉELLEMENT ENVOYÉE, EN) — pour Merryshine et NihaoJewelry uniquement
+### A4.1 — ÉTAPE 1 : message de qualification (version courte, EN) — pour Merryshine, NihaoJewelry, ShineOn
+
+```
+Hi, we're launching Verlyne, a personalized jewelry brand for the EU market (engraved necklace + matching bracelet). Could you confirm:
+1) 316L steel + 18K gold PVD available?
+2) Single-unit dropship to France, no MOQ?
+3) Shopify auto-transmits engraving text/font?
+4) White-label shipping (no invoice/branding)?
+5) EU compliance docs (REACH/nickel) available?
+6) Can you share your top 3 best-selling necklace designs + matching bracelet?
+
+If yes, we'll send full specs and request pricing tiers.
+Thanks, [Name] — Verlyne
+```
+
+*(Version longue disponible plus bas en A4.1-bis si un champ accepte plus de texte.)*
+
+### A4.1-bis — Version longue (si le formulaire accepte plus de texte)
 
 ```
 Subject: Verlyne — Quick Supplier Qualification (6 questions)
@@ -293,7 +312,7 @@ Thank you, [Name] Verlyne
 ```
 Subject: Verlyne — Product Recommendation Request + Full Sourcing Questionnaire
 
-Hi [Jett / Merryshine team / NihaoJewelry team],
+Hi [Jett / Merryshine team / NihaoJewelry team / ShineOn team],
 
 Here's our brand brief so you can recommend the right SKUs yourselves, rather than us guessing:
 
@@ -330,7 +349,7 @@ PRICING (please break down: product / engraving / packaging / branding / fulfill
 - Production lead time for a personalized order
 - Shipping lead time to France
 
-We're comparing 3 suppliers in parallel (this is one of them) before selecting our partner(s).
+We're comparing suppliers in parallel before selecting our partner(s).
 
 Thank you,
 [Name] — Verlyne
@@ -338,9 +357,9 @@ Thank you,
 
 ### STOP AVANT ENVOI
 ```
-ACTION: Envoyer le message de qualification (A4.1) à Merryshine (formulaire ou candidature dropshipping) et NihaoJewelry (formulaire contact) — PAS à DG Jewelry (conversation déjà en cours) ni 96Jewelry (REJECT)
+ACTION: Envoyer le message de qualification (A4.1) à ShineOn (hello@shineon.com ou sellers.shineon.com) — Merryshine et NihaoJewelry déjà envoyés le 02/09
 COST: 0€ | ENGAGEMENT: aucun
-RECOMMENDATION: Aucun outil d'envoi disponible ici — copie-colle toi-même les 2 versions. N'envoie A4.2 que si les 6 points reviennent positifs.
+RECOMMENDATION: Aucun outil d'envoi disponible ici — copie-colle toi-même. Le portail sellers.shineon.com peut nécessiter une installation d'app Shopify plutôt qu'un simple email — si c'est le cas, préfère hello@shineon.com pour rester au stade "question" sans rien installer.
 ```
 
 ### 📋 COLLE LES RÉPONSES ICI (une fois reçues)
@@ -348,36 +367,39 @@ RECOMMENDATION: Aucun outil d'envoi disponible ici — copie-colle toi-même les
 **DG Jewelry — réponse qualification (A4.1) :**
 > (à coller ici)
 
-**Merryshine Wholesale — réponse qualification (A4.1) :**
+**Merryshine Wholesale — réponse qualification (A4.1) :** *(envoyé 02/09/2026)*
 > (à coller ici)
 
-**NihaoJewelry — réponse qualification (A4.1) :**
+**NihaoJewelry — réponse qualification (A4.1) :** *(envoyé 02/09/2026)*
+> (à coller ici)
+
+**ShineOn — réponse qualification (A4.1) :**
 > (à coller ici)
 
 ---
 
-## A5 — COMPARAISON FINALE DG vs MERRYSHINE vs NIHAO (gabarit, à remplir dès réponses réelles)
+## A5 — COMPARAISON FINALE DG vs MERRYSHINE vs NIHAO vs SHINEON (gabarit, à remplir dès réponses réelles)
 
 Qualité 20 · Coût landed 15 · Personnalisation 15 · Automatisation Shopify 15 · Délais 10 · Packaging/branding 10 · Scalabilité 10 · Communication 5
 
-| Critère | DG Jewelry | Merryshine | NihaoJewelry |
-|---|---|---|---|
-| SKU recommandé | — | — | — |
-| Acier confirmé | — | — | — |
-| PVD confirmé | — | — | — |
-| Bracelet assorti (photo ensemble) | — | — | — |
-| Créoles disponibles | — | — | — |
-| Bague ajustable disponible | — | — | — |
-| MOQ | — | — | — |
-| Dropship 1 unité | — | — | — |
-| Coût landed (1 unité) | — | — | — |
-| Automatisation Shopify | — | — | — |
-| Transmission auto prénom/date/police | — | — | — |
-| Délai production | — | — | — |
-| Délai livraison France | — | — | — |
-| White-label | — | — | — |
-| Doc conformité (nickel/REACH) | — | — | — |
-| **SCORE /100** | — | — | — |
+| Critère | DG Jewelry | Merryshine | NihaoJewelry | ShineOn |
+|---|---|---|---|---|
+| SKU recommandé | — | — | — | — |
+| Acier confirmé | — | — | — | — |
+| PVD confirmé | — | — | — | — |
+| Bracelet assorti (photo ensemble) | — | — | — | — |
+| Créoles disponibles | — | — | — | — |
+| Bague ajustable disponible | — | — | — | — |
+| MOQ | — | — | — | — |
+| Dropship 1 unité | — | — | — | — |
+| Coût landed (1 unité) | — | — | — | — |
+| Automatisation Shopify | — | — | — | — |
+| Transmission auto prénom/date/police | — | — | — | — |
+| Délai production | — | — | — | — |
+| Délai livraison France | — | — | — | — |
+| White-label | — | — | — | — |
+| Doc conformité (nickel/REACH) | — | — | — | — |
+| **SCORE /100** | — | — | — | — |
 
 **SUPPLIER #1 POUR LE TEST :** —
 **SUPPLIER #1 POUR LE SCALE :** —
@@ -393,7 +415,7 @@ Max 3-5 échantillons. Même gravure test **"Emma"** partout pour une comparaiso
 
 Proposition provisoire (à confirmer selon les réponses) :
 1. Collier — DG Jewelry, gravure "Emma"
-2. Collier — Merryshine ou NihaoJewelry (celui qui répond en premier avec un SKU clair), gravure "Emma"
+2. Collier — Merryshine, NihaoJewelry ou ShineOn (celui qui répond en premier avec un SKU clair), gravure "Emma"
 3. Bracelet assorti — fournisseur retenu en #1 ou #2
 4-5. Réservés (créoles/bague) si les réponses le justifient
 
