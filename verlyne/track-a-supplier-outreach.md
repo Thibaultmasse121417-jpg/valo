@@ -249,11 +249,35 @@ RECOMMENDATION: Idem — envoi manuel de ta part requis. STATUT : 96Jewelry = RE
 
 ---
 
-## A4 — LEVEL 3 : MESSAGE CONSOLIDÉ (DG Jewelry, Merryshine, NihaoJewelry)
+## A4 — LEVEL 3 : DG Jewelry, Merryshine, NihaoJewelry (contact en 2 temps)
 
 Nouvelle recherche fournisseurs (9 candidats comparés) : voir le dossier "Verlyne Supplier Research" pour le détail complet. Priorité retenue pour ce contact : **DG Jewelry**, **Merryshine Wholesale**, **NihaoJewelry** — les 3 mieux notés (63-64/100 provisoire, DG seul confirmé par contact réel).
 
-### Message (identique pour les 3, EN) — inclut notre cahier des charges et demande leurs best-sellers
+Stratégie en 2 temps : un message court de qualification (6 points bloquants) d'abord, le questionnaire complet seulement si la réponse est positive. Réduit la friction, filtre vite les REJECT (comme 96Jewelry en Level 1).
+
+### A4.1 — ÉTAPE 1 : message de qualification (VERSION RÉELLEMENT ENVOYÉE, EN)
+
+```
+Subject: Verlyne — Quick Supplier Qualification (6 questions)
+
+Hi,
+
+We're launching Verlyne, a premium-accessible personalized jewelry brand for the European market.
+Our main product will be a personalized engraved necklace, with a matching bracelet and potentially earrings/rings.
+Before going further, could you please confirm these 6 points:
+
+1. Do you offer personalized engraved jewelry in 316L stainless steel with 18K gold PVD?
+2. Can you fulfill single personalized orders with no MOQ and ship directly to customers in France?
+3. Can Shopify orders automatically transmit the customer's engraving text / font / personalization data to you?
+4. Can orders be shipped fully white-label, with no supplier branding or invoice?
+5. Can you provide EU compliance documents (REACH / nickel release / lead / cadmium) for the exact products supplied?
+6. Could you send us your 3 best-selling personalized necklace designs for European customers, with the best matching bracelet for each?
+
+If the answer is yes, we'll send you our full sourcing specification and request pricing for 1 / 10 / 50 / 100 / 500 / 1000 orders.
+Thank you, [Name] Verlyne
+```
+
+### A4.2 — ÉTAPE 2 : questionnaire complet (à envoyer UNIQUEMENT si l'Étape 1 revient positive sur les 6 points)
 
 ```
 Subject: Verlyne — Product Recommendation Request + Full Sourcing Questionnaire
@@ -264,9 +288,7 @@ Here's our brand brief so you can recommend the right SKUs yourselves, rather th
 
 "Minimalist premium-accessible personalized jewelry brand, feminine, elegant, giftable, 316L stainless steel preferred, 18K gold PVD preferred, consistent gold color across necklace/bracelet/earrings/ring."
 
-Two requests to start:
-A. Please send your 3 best-selling personalized necklace designs for European customers, and your best matching bracelet for each.
-B. For your top recommendation, please provide:
+For your top recommendation, please provide:
 
 PRODUCT
 - Exact SKU / reference
@@ -305,20 +327,20 @@ Thank you,
 
 ### STOP AVANT ENVOI
 ```
-ACTION: Envoyer ce message à DG Jewelry (Jett), Merryshine (page dropshipping), NihaoJewelry (canal contact/app Shopify)
+ACTION: Envoyer le message de qualification (A4.1) à DG Jewelry (Jett), Merryshine (page dropshipping), NihaoJewelry (canal contact/app Shopify)
 COST: 0€ | ENGAGEMENT: aucun
-RECOMMENDATION: Aucun outil d'envoi disponible ici — copie-colle toi-même les 3 versions.
+RECOMMENDATION: Aucun outil d'envoi disponible ici — copie-colle toi-même les 3 versions. N'envoie A4.2 que si les 6 points reviennent positifs.
 ```
 
 ### 📋 COLLE LES RÉPONSES ICI (une fois reçues)
 
-**DG Jewelry — réponse Level 3 :**
+**DG Jewelry — réponse qualification (A4.1) :**
 > (à coller ici)
 
-**Merryshine Wholesale — réponse :**
+**Merryshine Wholesale — réponse qualification (A4.1) :**
 > (à coller ici)
 
-**NihaoJewelry — réponse :**
+**NihaoJewelry — réponse qualification (A4.1) :**
 > (à coller ici)
 
 ---
