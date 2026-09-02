@@ -75,7 +75,85 @@ Recommandé également : chercher ces deux fournisseurs sur **Alibaba** directem
 
 | Fournisseur | Canal | Date envoi | Réponse reçue | Classification |
 |---|---|---|---|---|
-| DG Jewelry | Formulaire Site Web | 01/09/2026 | — | EN ATTENTE |
+| DG Jewelry | Formulaire Site Web | 01/09/2026 | — | Hello Thibault,
+
+This is Jett from DG Jewelry. Nice to meet you ! Thank you for the detailed inquiry. Your test-first approach makes sense, especially for a personalized product launching into the French market.
+
+We can support the evaluation, but before giving you an exact all-in price, we need to confirm the exact necklace design because the product structure, engraving area and packaging will directly affect the cost.
+
+Please see my answers below:
+
+1. One personalized sample
+Yes, we can prepare one personalized sample for your initial evaluation. The exact price will depend on the necklace design.
+
+2. Base material
+For this project, we would recommend 316L stainless steel, especially if durability and corrosion resistance are priorities.
+
+3. Gold plating
+Our recommended option is 18K Gold PVD.
+
+For reference:
+
+Standard PVD: approximately 0.03 μm
+Higher-quality customized PVD: approximately 0.05 μm
+For Verlyne, I would suggest starting from 0.05 μm.
+
+4. Engraving
+Laser engraving can be done individually according to each customer's name, date or short message.
+
+The engraving cost depends mainly on the engraving area and content.
+
+5. Packaging
+Standard individual packaging is available, and we can also evaluate gift-box or customized packaging options if required.
+
+6. DDP delivery to France
+Yes, we can calculate an all-in shipping solution to France.
+
+To provide an accurate DDP / delivered cost, please send me the French postal code.
+
+7. Lead time
+For an in-stock jewelry style, our normal stock preparation and dispatch is approximately within one week.
+
+Personalized engraving will require additional processing time, which we will confirm after the necklace and engraving details are finalized.
+
+8. One-piece dropshipping
+Yes, we can discuss personalized dropshipping for this type of project.
+
+For a one-piece shipment, however, international freight becomes a relatively large part of the landed cost, so I would like to calculate the actual economics for you before recommending the best fulfillment structure.
+
+Our normal wholesale MOQ for ready-stock jewelry is 12 pcs per style, while dropshipping is handled as a different fulfillment model.
+
+9. White-label shipment
+We can evaluate a neutral / white-label packing solution without DG Jewelry marketing materials.
+
+Any documents legally required by the courier or customs would still need to comply with shipping regulations.
+
+10. Shopify / API / CSV integration
+We do not currently use a standard plug-and-play Shopify/API integration.
+
+For the initial test stage, we can first define a practical order-processing workflow. If your order volume increases later, we can further discuss CSV or other order-processing solutions.
+
+11. Total sample cost delivered to France
+I can quote:
+
+Product + engraving + packaging + shipping
+
+as one complete sample price once the necklace design and postal code are confirmed.
+
+12. Total sample delivery time
+This will also be confirmed together with the final sample quotation, so that you receive both the exact cost and realistic delivery schedule in one document.
+
+To move forward, could you please send me:
+
+1. The necklace photo / product link / design you want to test
+2. An example of the engraving text
+3. Your delivery postal code in France
+
+Once I receive these three details, I will prepare the complete sample quotation and can also show you real photos of the product, engraving area, chain/clasp and packaging.
+
+If the sample meets your requirements, we can then discuss the most cost-effective dropshipping and volume-pricing structure for Verlyne.
+
+  |
 | 96Jewelry | Formulaire Site Web | 01/09/2026 | — | EN ATTENTE |
 
 ---
