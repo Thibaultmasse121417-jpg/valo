@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { siteConfig } from "@/data/config";
 
 export const metadata: Metadata = {
-  title: `Politique de confidentialité — ${siteConfig.brand.name} ${siteConfig.brand.sub}`,
-  description: "Politique de confidentialité du site Estalia Studio.",
+  title: `Privacy Policy — ${siteConfig.brand.name} ${siteConfig.brand.sub}`,
+  description: "Privacy policy for the Estalia Studio website.",
 };
 
+/** Voir la note dans app/mentions-legales/page.tsx : document légal figé, en anglais. */
 export default function ConfidentialitePage() {
   return (
     <main className="bg-ivoire">
@@ -15,7 +16,7 @@ export default function ConfidentialitePage() {
             {siteConfig.brand.name} {siteConfig.brand.sub}
           </p>
           <h1 className="font-serif text-4xl uppercase tracking-wide sm:text-5xl">
-            Politique de confidentialité
+            Privacy policy
           </h1>
         </div>
       </div>
@@ -23,36 +24,46 @@ export default function ConfidentialitePage() {
       <div className="mx-auto max-w-content px-6 py-20 sm:px-10 sm:py-24 lg:px-16">
         <div className="flex max-w-2xl flex-col gap-10 font-sans text-sm leading-relaxed text-noir/70">
           <section>
-            <h2 className="mb-3 font-serif text-xl text-noir">Données collectées</h2>
+            <h2 className="mb-3 font-serif text-xl text-noir">Data we collect</h2>
             <p>
-              Le formulaire de contact du site collecte les informations que vous transmettez
-              volontairement (nom, entreprise, email, téléphone, secteur, lien du bien ou de
-              l&apos;établissement, message) afin de traiter votre demande.
+              The site&apos;s contact form collects the information you voluntarily submit (name,
+              company, email, phone, sector, property/establishment URL, message) in order to
+              respond to your enquiry.
             </p>
           </section>
 
           <section>
-            <h2 className="mb-3 font-serif text-xl text-noir">Utilisation</h2>
+            <h2 className="mb-3 font-serif text-xl text-noir">Cookies</h2>
             <p>
-              Ces informations sont utilisées uniquement pour répondre à votre demande et, le cas
-              échéant, échanger sur un projet de réalisation. Elles ne sont ni vendues, ni cédées à
-              des tiers à des fins commerciales.
+              This site does not use advertising or tracking cookies. Any analytics in use are
+              limited to anonymous, aggregate event counts (e.g. page views, button clicks) and do
+              not identify you personally. [ Name the analytics tool in use, and add a cookie
+              consent banner here if that changes. ]
             </p>
           </section>
 
           <section>
-            <h2 className="mb-3 font-serif text-xl text-noir">Conservation</h2>
+            <h2 className="mb-3 font-serif text-xl text-noir">How it&apos;s used</h2>
             <p>
-              Les données transmises sont conservées le temps nécessaire au traitement de votre
-              demande et à la relation professionnelle qui pourrait en découler.
+              This information is used solely to respond to your enquiry and, where relevant, to
+              discuss a project with you. It is never sold or passed to third parties for
+              commercial purposes.
             </p>
           </section>
 
           <section>
-            <h2 className="mb-3 font-serif text-xl text-noir">Vos droits</h2>
+            <h2 className="mb-3 font-serif text-xl text-noir">Retention</h2>
             <p>
-              Conformément à la réglementation applicable, vous disposez d&apos;un droit d&apos;accès,
-              de rectification et de suppression de vos données. Pour l&apos;exercer, écrivez-nous à{" "}
+              Data you submit is kept for as long as needed to handle your enquiry and any
+              resulting professional relationship.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="mb-3 font-serif text-xl text-noir">Your rights</h2>
+            <p>
+              Under applicable data protection law (including UK GDPR), you have the right to
+              access, correct and request deletion of your data. To exercise it, write to us at{" "}
               <a
                 href={`mailto:${siteConfig.contact.email}`}
                 className="underline decoration-noir/20 underline-offset-2 hover:text-bronze"
@@ -64,9 +75,9 @@ export default function ConfidentialitePage() {
           </section>
 
           <p className="text-xs text-noir/40">
-            Ce document est fourni à titre indicatif et ne constitue pas un avis juridique. Faites
-            valider votre politique de confidentialité définitive par un professionnel du droit
-            avant mise en ligne.
+            This document is provided as a starting point and does not constitute legal advice.
+            Have your final privacy policy reviewed by a qualified professional before relying on
+            it commercially.
           </p>
         </div>
       </div>

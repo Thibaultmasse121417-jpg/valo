@@ -61,6 +61,18 @@ export const siteConfig = {
     url: "",
   },
 
+  // Paiement — décision Phase 2 (voir docs/phase-2/payment-flow.md) :
+  // seul Estalia Test (point d'entrée à faible risque, paiement unique)
+  // passe par un checkout direct. Content et Pro restent "contact-first"
+  // (formulaire → échange avant engagement 3 mois / mensuel) — pas de
+  // checkout direct pour un abonnement récurrent avant une conversation.
+  // Tant que `testCheckoutUrl` est vide, le bouton "Start with Estalia"
+  // d'Estalia Test retombe sur #contact comme les deux autres offres —
+  // jamais de lien cassé. Collez ici un Stripe Payment Link une fois créé.
+  payment: {
+    testCheckoutUrl: "",
+  },
+
   legal: {
     company: "Estalia Studio",
   },

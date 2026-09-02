@@ -3,6 +3,7 @@
 import ScrollReveal from "./ScrollReveal";
 import TitleWipe from "./TitleWipe";
 import { useLanguage } from "@/lib/LanguageContext";
+import { siteConfig } from "@/data/config";
 
 /**
  * Pricing éditorial — trois paliers avec prix réels affichés (Test /
@@ -64,16 +65,30 @@ export default function Offers() {
                     </li>
                   ))}
                 </ul>
-                <a
-                  href="#contact"
-                  className={`mt-2 inline-flex items-center justify-center gap-2 border px-6 py-3.5 text-center font-sans text-xs uppercase tracking-widest2 transition-colors duration-300 ${
-                    tier.badge
-                      ? "border-bronze bg-bronze text-noir hover:bg-transparent hover:text-bronze"
-                      : "border-ivoire/30 text-ivoire hover:border-bronze hover:text-bronze"
-                  }`}
-                >
-                  {t.offers.cta}
-                </a>
+                {(() => {
+                  // Seul Estalia Test passe par un checkout direct (voir
+                  // data/config.ts payment.testCheckoutUrl) — Content et
+                  // Pro restent volontairement "contact-first". Tant qu'aucun
+                  // lien de paiement réel n'est configuré, tout retombe sur
+                  // #contact : jamais de bouton mort.
+                  const checkoutUrl = tier.id === "test" ? siteConfig.payment.testCheckoutUrl : "";
+                  const href = checkoutUrl || "#contact";
+                  const external = Boolean(checkoutUrl);
+                  return (
+                    <a
+                      href={href}
+                      target={external ? "_blank" : undefined}
+                      rel={external ? "noreferrer" : undefined}
+                      className={`mt-2 inline-flex items-center justify-center gap-2 border px-6 py-3.5 text-center font-sans text-xs uppercase tracking-widest2 transition-colors duration-300 ${
+                        tier.badge
+                          ? "border-bronze bg-bronze text-noir hover:bg-transparent hover:text-bronze"
+                          : "border-ivoire/30 text-ivoire hover:border-bronze hover:text-bronze"
+                      }`}
+                    >
+                      {t.offers.cta}
+                    </a>
+                  );
+                })()}
               </div>
             </ScrollReveal>
           ))}

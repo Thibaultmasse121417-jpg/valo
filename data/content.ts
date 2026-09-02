@@ -91,6 +91,8 @@ export interface ContentShape {
     title: string[];
     intro: string;
     tiers: {
+      /** Identifiant stable (indépendant de la langue) pour brancher le paiement — voir data/config.ts payment.testCheckoutUrl. */
+      id: "test" | "content" | "pro";
       title: string;
       price: string;
       period: string;
@@ -295,6 +297,7 @@ export const content: Record<Locale, ContentShape> = {
       intro: "Des prix clairs, pas de devis à rallonge.",
       tiers: [
         {
+          id: "test",
           title: "Estalia Test",
           price: "290 €",
           period: "paiement unique",
@@ -302,6 +305,7 @@ export const content: Record<Locale, ContentShape> = {
           deliverables: ["1 film Hero cinématique", "2 déclinaisons courtes", "1 tour de retouches"],
         },
         {
+          id: "content",
           title: "Estalia Content",
           price: "690 €",
           period: "/ mois",
@@ -310,6 +314,7 @@ export const content: Record<Locale, ContentShape> = {
           badge: "La plus choisie",
         },
         {
+          id: "pro",
           title: "Estalia Pro",
           price: "1 290 €",
           period: "/ mois",
@@ -626,7 +631,7 @@ export const content: Record<Locale, ContentShape> = {
       universes: [
         { label: "Real Estate", href: "/real-estate" },
         { label: "Wedding & Venues", href: "/wedding-venues" },
-        { label: "Vacation Rentals", href: "/business" },
+        { label: "Business", href: "/business" },
       ],
       legal: [
         { label: "Mentions légales", href: "/mentions-legales" },
@@ -795,6 +800,7 @@ export const content: Record<Locale, ContentShape> = {
       intro: "Clear pricing. No lengthy quote process.",
       tiers: [
         {
+          id: "test",
           title: "Estalia Test",
           price: "£290",
           period: "one-time",
@@ -802,6 +808,7 @@ export const content: Record<Locale, ContentShape> = {
           deliverables: ["1 cinematic Hero", "2 short variants", "1 revision round"],
         },
         {
+          id: "content",
           title: "Estalia Content",
           price: "£690",
           period: "/ month",
@@ -810,6 +817,7 @@ export const content: Record<Locale, ContentShape> = {
           badge: "Most popular",
         },
         {
+          id: "pro",
           title: "Estalia Pro",
           price: "£1,290",
           period: "/ month",
@@ -1124,7 +1132,7 @@ export const content: Record<Locale, ContentShape> = {
       universes: [
         { label: "Real Estate", href: "/real-estate" },
         { label: "Wedding & Venues", href: "/wedding-venues" },
-        { label: "Vacation Rentals", href: "/business" },
+        { label: "Business", href: "/business" },
       ],
       legal: [
         { label: "Legal notice", href: "/mentions-legales" },
