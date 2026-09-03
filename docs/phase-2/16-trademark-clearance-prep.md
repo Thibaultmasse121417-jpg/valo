@@ -1,11 +1,64 @@
 # Trademark clearance — preparation (UK + EU)
 
-**Status: not done. This document does not conclude on availability.**
-It could not be done from this session — the official trademark
-databases (UK IPO, EUIPO) are blocked by this environment's network
-policy, and a Google search is explicitly not a substitute for a real
-clearance search (per your instruction). This is a ready-to-run
-checklist for you or a trademark professional.
+**Status: real searches run by the owner (2026-09-03), results logged
+below. This document still does not conclude on legal availability** —
+that call needs a trademark professional, not this document. The
+official databases were unreachable from this session (blocked by
+network policy); the owner ran both searches directly and shared the
+results, which are recorded here.
+
+## Findings (2026-09-03)
+
+**UK IPO** (word search, "Similar", classes 35/41/42, status Live): no
+exact "ESTALIA" mark found. Closest relevant hits: **RCR RESTALIA
+Consultoría de Restauración** (classes 35, 41, 43 — active Spanish
+restaurant/franchise consultancy), **VESTALIA** (class 35), **ESTILA**
+(classes 41, 42).
+
+**TMview** (contains "ESTALIA", EU territories + EUIPO + WO, classes
+35/41/42): no exact "ESTALIA" mark found either. Three close variants
+follow the exact "[one letter] + ESTALIA" pattern as the brand name
+itself:
+
+| Mark | Jurisdiction(s) | Relevant classes | Owner |
+|---|---|---|---|
+| **CESTALIA** | Spain | 35 | Aragonesa de Lotes S.L. |
+| **VESTALIA** | Spain, **EUIPO (EU-wide)**, Hungary, France | 35, 41, 42 (varies by filing) | Several unrelated owners |
+| **RESTALIA** | Spain, **EUIPO (EU-wide)** | 35, 41 (+ 38, 39, 43, 45...) | RESTALIA GRUPO DE EURORESTAURACIÓN, S.L. |
+
+**RESTALIA is the material risk.** It's not an isolated filing — it's an
+active, still-expanding trademark family (RESTALIA, GRUPO RESTALIA, RCR
+RESTALIA, FUNDACIÓN RESTALIA, RESTALIA SOCIAL FOOD, and more), registered
+both nationally in Spain and EU-wide via EUIPO, squarely in classes 35
+and 41 — Estalia Studio's own core classes — with a filing as recent as
+March 2026. This is the profile of a rights holder actively maintaining
+and extending its portfolio, not a dormant registration.
+
+Everything else found (FORESTALIA, INVESTALIA, GESTALIA, PRESTALIA,
+TEMPESTALIA, ORQUESTALIA/ORCHESTALIA, PRESUPUESTALIA, TUESTALIA,
+Bienestalia, Testalia.es, FESTÀLIA) contains "-estalia" only as a tail
+fragment of a longer compound word — a materially different overall
+impression, and lower risk under a similarity assessment than the three
+above.
+
+## What this does and doesn't mean
+
+Not a legal conclusion — no C&D exists, no opposition has been filed,
+and "ESTALIA" itself is registered nowhere found in either search. But
+the *pattern* (three independent "[one letter]+ESTALIA" registrations,
+one of them an actively-litigation-postured franchise group, both in the
+exact classes Estalia Studio needs) is a genuine, non-theoretical
+reason to get a paid professional opinion before any further spend —
+domain purchase, trademark filing of Estalia's own, or paid
+advertising under the name.
+
+**Recommendation: get a fixed-fee UK trademark clearance opinion
+(commonly £100–£300) from a solicitor before buying the domain or
+filing anything.** Cheaper and faster than finding out after launch.
+
+---
+
+## How the searches were run (for reference / re-running later)
 
 ## Why this is worth doing before any spend
 

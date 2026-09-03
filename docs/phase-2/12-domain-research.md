@@ -3,14 +3,18 @@
 **No domain was purchased.** Per the brief, this is research only — the
 owner authorises and buys.
 
-**Name status: "Estalia" is PENDING TRADEMARK/DOMAIN CLEARANCE.** The
-preview site keeps the "ESTALIA STUDIO" wordmark as-is (per the owner's
-instruction, art direction is not being touched), but the name itself is
-not yet cleared — see
-[16-trademark-clearance-prep.md](./16-trademark-clearance-prep.md) for
-the UK + EU search checklist. Do not treat anything below as a legal
-availability conclusion; it's directional research from general web
-search, not a trademark register search.
+**Name status: "Estalia" is PENDING TRADEMARK/DOMAIN CLEARANCE — real UK
+IPO + TMview searches have now been run (2026-09-03) and found a
+genuine risk pattern worth a professional opinion before further spend.**
+The preview site keeps the "ESTALIA STUDIO" wordmark as-is (per the
+owner's instruction, art direction is not being touched). Full findings
+in [16-trademark-clearance-prep.md](./16-trademark-clearance-prep.md) —
+short version: no exact "ESTALIA" mark exists in the UK or EU, but three
+close one-letter-prefix variants do (CESTALIA, VESTALIA, and especially
+RESTALIA — an active, EU-wide, still-expanding restaurant franchise
+group registered in the same classes Estalia Studio needs). Do not treat
+this as a legal conclusion; a solicitor's opinion is the recommended
+next step before buying the domain.
 
 ## Important finding: a real naming risk
 
