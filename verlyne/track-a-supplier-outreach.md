@@ -339,6 +339,10 @@ method? Engraving text for the sample: "Emma".
 
 **Statut : en attente de la réponse de Jett** (chiffrage + confirmation sertissage pierre vs gravure uniquement). Rien commandé, rien facturé.
 
+### ✅ Code postal transmis à Jett (03/09/2026)
+
+Confirmé par Thibault ("j'ai envoyé les deux") — le code postal France a été transmis directement à Jett sur WhatsApp, en parallèle des photos de référence. Valeur non communiquée dans cette session (échange direct Thibault ↔ Jett), pas nécessaire pour la suite du suivi. Jett a maintenant toutes les infos qu'il avait demandées (design/référence, gravure "Emma", code postal) — **en attente de son chiffrage complet.**
+
 ---
 
 ## A4 — LEVEL 3 : DG Jewelry, Merryshine, NihaoJewelry (contact en 2 temps)
@@ -456,6 +460,8 @@ RECOMMENDATION: Dès qu'une réponse Merryshine ou NihaoJewelry arrive, colle-la
 
 **DG Jewelry — réponse qualification (A4.1) :**
 > (à coller ici)
+
+**✅ Questionnaire complet A4.2 envoyé à Zoé Chow (03/09/2026)** — confirmé par Thibault. En attente de sa réponse.
 
 **Merryshine Wholesale — réponse qualification (A4.1) reçue (03/09/2026) :**
 > Salut Verlyne,
