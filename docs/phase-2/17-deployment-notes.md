@@ -17,9 +17,24 @@ egress policy, so deployment could not be triggered from here directly.
 - The repo's default branch (`main`) is whatever Vercel deployed as
   "Production" on first import — that is not this phase's work.
   This phase's build lives on `claude/estalia-studio-website-fnepcl`,
-  reachable as a **Preview Deployment** once a commit lands on that
-  branch after the GitHub integration was connected (Vercel deploys a
-  preview per branch/commit automatically once the repo is linked).
+  reachable as a **Preview Deployment**.
+
+### Preview URLs (Hobby plan, no custom domain)
+
+- **`estalia-git-claude-es-449ea8-thibaultmasse121417-3683s-projects.vercel.app`**
+  — the **branch alias**. This is the one to use/share: it auto-updates
+  to whatever the latest commit on `claude/estalia-studio-website-fnepcl`
+  is, so it never needs to be re-fetched after a future push.
+- `estalia-e3dv8knyj-thibaultmasse121417-3683s-projects.vercel.app` —
+  pinned to one specific commit (`b155fe5`); will not reflect later
+  pushes.
+- `estalia-self.vercel.app` — an additional Vercel-assigned alias, role
+  unconfirmed (possibly the project's default/production alias); not
+  relied on above.
+
+None of this session's tools can reach `*.vercel.app` to verify these
+load correctly (blocked by the same network egress policy as
+`api.vercel.com`) — confirmed working by the owner viewing them directly.
 
 ## Note for a future real launch
 
