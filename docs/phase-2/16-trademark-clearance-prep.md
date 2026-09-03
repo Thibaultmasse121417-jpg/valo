@@ -56,6 +56,16 @@ advertising under the name.
 (commonly £100–£300) from a solicitor before buying the domain or
 filing anything.** Cheaper and faster than finding out after launch.
 
+**Owner's decision (2026-09-03): proceed with "Estalia" as-is for now.**
+Building continues under the name at the current, pre-purchase stage
+(no domain bought, no trademark filed, no name-related spend yet) — the
+risk above is accepted knowingly rather than resolved. This is a
+reasonable call at this stage (nothing irreversible has been spent on
+the name), but it means the risk described above is still live, not
+cleared. Revisit before the domain purchase or a trademark filing —
+those are the two moments this actually starts costing something if the
+name later needs to change.
+
 ---
 
 ## How the searches were run (for reference / re-running later)
