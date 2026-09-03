@@ -21,6 +21,7 @@ asked to have written down.
 14. [Social starter kit](./14-social-starter-kit.md)
 15. [Launch checklist](./15-launch-checklist.md)
 16. [Trademark clearance — preparation](./16-trademark-clearance-prep.md)
+17. [Deployment notes](./17-deployment-notes.md)
 
 None of these documents were published, purchased, or sent anywhere —
 per the brief's explicit spending/action prohibition, everything here is
