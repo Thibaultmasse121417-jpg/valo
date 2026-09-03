@@ -322,6 +322,23 @@ Thank you,
   - Fiorena — "Collana Liora" (collier minimaliste non personnalisé, 44,95€) : https://fiorena.it/products/collana-liora — référence de style/finition générale
 - WhatsApp : aucun outil d'envoi disponible dans cet environnement — envoi manuel requis de la part de Thibault. Numéro DG non communiqué dans cette réponse, à récupérer avant envoi.
 
+### ✅ Envoyé à DG Jewelry sur WhatsApp (03/09/2026)
+
+Thibault a confirmé l'envoi. Contenu envoyé :
+- Photo du **Duo Bracelet** (Maxxim Paris, référence réelle, bestseller confirmé #7 chez ce concurrent — https://maxximparis.com/products/duo-armband)
+- Photos du **Liora Necklace** (Maxxim Paris, bestseller confirmé #3 — https://maxximparis.com/products/liora-ketting)
+- Légende :
+```
+Hi Jett, here's a real reference for the style we're aiming for —
+the engraved bar bracelet (initials/date), plus two birthstone pieces
+(necklace + bracelet). Could you quote something similar in 316L
+stainless steel + 18K gold PVD? For the birthstone pieces: do you
+also do gemstone setting, or is engraving your only personalization
+method? Engraving text for the sample: "Emma".
+```
+
+**Statut : en attente de la réponse de Jett** (chiffrage + confirmation sertissage pierre vs gravure uniquement). Rien commandé, rien facturé.
+
 ---
 
 ## A4 — LEVEL 3 : DG Jewelry, Merryshine, NihaoJewelry (contact en 2 temps)
