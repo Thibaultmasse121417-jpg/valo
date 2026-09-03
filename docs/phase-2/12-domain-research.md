@@ -3,6 +3,15 @@
 **No domain was purchased.** Per the brief, this is research only — the
 owner authorises and buys.
 
+**Name status: "Estalia" is PENDING TRADEMARK/DOMAIN CLEARANCE.** The
+preview site keeps the "ESTALIA STUDIO" wordmark as-is (per the owner's
+instruction, art direction is not being touched), but the name itself is
+not yet cleared — see
+[16-trademark-clearance-prep.md](./16-trademark-clearance-prep.md) for
+the UK + EU search checklist. Do not treat anything below as a legal
+availability conclusion; it's directional research from general web
+search, not a trademark register search.
+
 ## Important finding: a real naming risk
 
 Two things turned up in live search that should be resolved **before**

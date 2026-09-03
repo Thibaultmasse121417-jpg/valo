@@ -7,6 +7,22 @@ never generate video directly from text, so the "before" image stays a
 real, reusable, Estalia-owned asset in its own right (it doubles as the
 Immediate Proof "before" side).
 
+**Balance check (2026-09-02): still 0.15 Higgsfield credits — unchanged,
+not enough to run any of the prompts below.** Nothing has been
+generated. This document is fully ready to execute the moment credits
+land; no further prep work is needed on it before that.
+
+**Generation priority order, per the owner's instruction:**
+1. Bedroom
+2. Exterior
+3. Pool/Spa
+4. Restaurant
+
+Generate and review them in that order rather than in parallel — each
+one confirms the model/prompt combination is holding up before spending
+credits on the next, and Bedroom (the Hero's most likely home) matters
+most if only one lands well before credits run out again.
+
 General rules for every prompt below (do not repeat per-prompt, but every
 generation must follow them):
 
@@ -48,19 +64,31 @@ very subtle parallax, tripod-smooth motion, no zoom, no crash push,
 preserve the exact building geometry, windows and materials of the
 source image, gentle movement of foliage or light only, 6–8 seconds."
 
-## 03 — Pool & Resort (Social Reel)
+## 03 — Pool/Spa (Social Reel)
 
-**Still prompt:** "Editorial photograph of a boutique hotel pool deck,
-minimal luxury sun loungers, still turquoise water, warm midday or
-golden-hour light, restrained planting, no people, no branding, shot at
-a low, immersive angle close to water level, 16:9."
+Shipped on the site as "Pool & Resort" (`data/projects.ts` —
+unchanged, since art direction/copy isn't being touched this round).
+Two still options below — generate whichever reads stronger, or both and
+pick on quality; either slots into the same demo without any site code
+change.
 
-**Video prompt:** "Gentle water ripple and light shimmer across the pool
-surface, slow lateral or slight rising camera movement, aspirational
-social pace — a touch faster and more dynamic than the bedroom or
-exterior clips, but still smooth and editorial, not shaky handheld,
-preserve exact deck and architecture geometry from the source image,
-6–8 seconds."
+**Still prompt (pool-forward):** "Editorial photograph of a boutique
+hotel pool deck, minimal luxury sun loungers, still turquoise water,
+warm midday or golden-hour light, restrained planting, no people, no
+branding, shot at a low, immersive angle close to water level, 16:9."
+
+**Still prompt (spa-forward alternative):** "Editorial photograph of a
+boutique hotel spa relaxation area, warm stone and natural wood
+textures, still water feature or plunge pool, soft diffused light, folded
+linen towels, minimal styling, no people, no branding, shallow depth of
+field, intimate low-angle composition, 16:9."
+
+**Video prompt (from either still):** "Gentle water ripple and light
+shimmer across the water surface, slow lateral or slight rising camera
+movement, aspirational social pace — a touch faster and more dynamic than
+the bedroom or exterior clips, but still smooth and editorial, not shaky
+handheld, preserve exact architecture and material geometry from the
+source image, 6–8 seconds."
 
 ## 04 — Restaurant (Editorial Dining)
 

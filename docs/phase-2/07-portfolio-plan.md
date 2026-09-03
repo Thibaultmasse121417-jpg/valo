@@ -7,16 +7,22 @@ portfolio can go live before Estalia has a single real customer, without
 touching anyone else's copyrighted photography (see the copyright rule
 carried over from earlier phases).
 
-| Demo | Source shot (fictional) | Result treatment | Tag |
-|---|---|---|---|
-| 01 — Bedroom | Boutique hotel bedroom, static wide shot, natural light | Slow cinematic room reveal — one continuous push, warm colour grade | Cinematic Hero |
-| 02 — Exterior | Hotel façade, straight-on architectural photo | Slow architectural movement — subtle drift/parallax across the façade | Architectural Movement |
-| 03 — Pool & Resort | Pool deck, midday or golden-hour still | Aspirational social reel — short cuts, movement-led, vertical-native | Social Reel |
-| 04 — Restaurant | Table setting / dining room, static | Editorial dining content — close, tactile, slower pace than the pool reel | Editorial Dining |
+**Generation priority (owner's instruction): Bedroom → Exterior →
+Pool/Spa → Restaurant.** Generate in that order, reviewing each before
+spending credits on the next.
 
-A fifth and sixth (Spa/Wellness, Wedding/Venue) are in the brief as
-optional extensions once the first four are live and credits allow —
-not required for launch.
+| Priority | Demo | Source shot (fictional) | Result treatment | Tag |
+|---|---|---|---|---|
+| 1 | Bedroom | Boutique hotel bedroom, static wide shot, natural light | Slow cinematic room reveal — one continuous push, warm colour grade | Cinematic Hero |
+| 2 | Exterior | Hotel façade, straight-on architectural photo | Slow architectural movement — subtle drift/parallax across the façade | Architectural Movement |
+| 3 | Pool/Spa (shipped as "Pool & Resort") | Pool deck or spa relaxation area, midday/golden-hour still — two still options in the Generation Prompts doc | Aspirational social reel — movement-led, vertical-native | Social Reel |
+| 4 | Restaurant | Table setting / dining room, static | Editorial dining content — close, tactile, slower pace than the pool reel | Editorial Dining |
+
+A fifth and sixth (a separate dedicated Wellness demo, and Wedding/Venue)
+are in the brief as optional extensions once the first four are live and
+credits allow — not required for launch. **Balance check (2026-09-02):
+still 0.15 Higgsfield credits — generation remains blocked**; nothing
+below has changed status since the last check.
 
 ## Why four, and why these four
 
