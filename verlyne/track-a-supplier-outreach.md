@@ -306,6 +306,22 @@ Thank you,
 [Name] — Verlyne
 ```
 
+### Réponse reçue de DG Jewelry (03/09/2026)
+
+> Bonjour, Thibault Masse
+> Merci pour les informations fournies. Par ailleurs, auriez-vous des photos de référence spécifiques ? Pourriez-vous me les envoyer sur WhatsApp ?
+> Dongguan DG Jewelry Co., Ltd
+
+**⚠️ Point ouvert, pas supposé :** cette réponse remercie pour "les informations fournies" — je n'ai pas la confirmation de ce qui a été envoyé exactement à DG (le message A3-bis ci-dessus attendait encore le code postal). À clarifier avec Thibault.
+
+**Ce qui est demandé :** 2 photos de référence (style souhaité) + passage au canal WhatsApp.
+
+**Réponse apportée :**
+- Aucune photo inventée ni générée — contraire à la règle du projet. Références réelles proposées à Thibault pour capture d'écran manuelle, issues du Winner Research déjà réalisé (BrandSearch, vérifié le 03/09/2026) :
+  - Fiorena — "Collana Nome & Fiore di Nascita" (collier prénom personnalisé, 49,95€) : https://fiorena.it/products/collana-nome-fiore-di-nascit — référence la plus proche du produit Verlyne (personnalisation + style minimaliste)
+  - Fiorena — "Collana Liora" (collier minimaliste non personnalisé, 44,95€) : https://fiorena.it/products/collana-liora — référence de style/finition générale
+- WhatsApp : aucun outil d'envoi disponible dans cet environnement — envoi manuel requis de la part de Thibault. Numéro DG non communiqué dans cette réponse, à récupérer avant envoi.
+
 ---
 
 ## A4 — LEVEL 3 : DG Jewelry, Merryshine, NihaoJewelry (contact en 2 temps)
@@ -424,8 +440,54 @@ RECOMMENDATION: Dès qu'une réponse Merryshine ou NihaoJewelry arrive, colle-la
 **DG Jewelry — réponse qualification (A4.1) :**
 > (à coller ici)
 
-**Merryshine Wholesale — réponse qualification (A4.1) :** *(envoyé 02/09/2026)*
-> (à coller ici)
+**Merryshine Wholesale — réponse qualification (A4.1) reçue (03/09/2026) :**
+> Salut Verlyne,
+> J'espère que vous vous portez bien. Je m'appelle Zoé et je travaille chez Merryshine Jewellery, un fabricant et fournisseur de premier plan dans le secteur de la joaillerie. Nous fournissons des bijoux haut de gamme à de nombreuses entreprises à travers le monde et nous nous sommes forgé une réputation d'excellence et de fiabilité.
+> Nous avons bien reçu votre demande. Pourriez-vous nous envoyer plus de détails ?
+> Merci, et j'espère avoir l'occasion de travailler ensemble.
+> Cordialement,
+> Zoé Chow — Responsable du développement commercial, Shenzhen Merryshine Jewelry Co., Ltd.
+
+**Classification : aucun des 6 points de qualification n'est répondu** — réponse d'accueil générique demandant le détail complet. Ni PASS ni REJECT : elle nous renvoie directement vers l'étape 2 (questionnaire complet A4.2), personnalisé ci-dessous pour Zoé. Aucune donnée exploitable pour le score A5 tant que les 6 points ne sont pas confirmés.
+
+**Message prêt à envoyer à Zoé Chow (A4.2 personnalisé) :**
+```
+Subject: Verlyne — Full Sourcing Questionnaire + Product Recommendation Request
+
+Hi Zoé,
+
+Thank you for getting back to us. Here's our brand brief so you can
+recommend the right SKUs yourselves, rather than us guessing:
+
+"Minimalist premium-accessible personalized jewelry brand, feminine,
+elegant, giftable, 316L stainless steel preferred, 18K gold PVD
+preferred, consistent gold color across necklace/bracelet/earrings/ring."
+
+Before pricing, could you confirm:
+1) 316L steel + 18K gold PVD available?
+2) Single-unit dropship to France, no MOQ?
+3) Can Shopify orders automatically transmit engraving text/font to you?
+4) White-label shipping (no invoice/branding)?
+5) EU compliance docs (REACH/nickel release) available for the exact
+   SKU you'd recommend?
+6) Could you share your top 3 best-selling personalized necklace
+   designs for European customers, with the best matching bracelet
+   for each — real photos (front/back/profile/worn), macro shot of
+   the engraving area, and video if available?
+
+Once confirmed, please also send:
+- MOQ and pricing breakdown at 1 / 10 / 50 / 100 / 500 / 1000 units
+  (product / engraving / packaging / branding / fulfillment / shipping
+  to France, all itemized)
+- Production lead time for a personalized order, and shipping lead
+  time to France
+- Defect/replacement policy
+
+We're comparing suppliers in parallel before selecting our partner(s).
+
+Thank you,
+[Name] — Verlyne
+```
 
 **NihaoJewelry — réponse qualification (A4.1) :** *(envoyé 02/09/2026)*
 > (à coller ici)
