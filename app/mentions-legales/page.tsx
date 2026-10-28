@@ -2,133 +2,86 @@ import type { Metadata } from "next";
 import { siteConfig } from "@/data/config";
 
 export const metadata: Metadata = {
-  title: `Legal Notice — ${siteConfig.brand.name} ${siteConfig.brand.sub}`,
-  description: "Legal notice and terms of service for the Estalia Studio website.",
+  title: "Mentions légales",
+  description: "Mentions légales et conditions du site Estalia Studio.",
+  alternates: { canonical: "/mentions-legales" },
 };
 
 /**
- * Page en anglais (langue par défaut du lancement UK — brief Phase 2 §36).
- * Contrairement au reste du site, cette page n'est pas pilotée par
- * data/content.ts : c'est un document légal figé, pas une copie
- * marketing à faire varier — un futur passage au bilingue FR/EN se
- * ferait par un second fichier plutôt que par le LanguageContext.
- * Toute information encadrée par [ ] est un vrai vide à compléter —
- * jamais une donnée inventée (SIREN, adresse, hébergeur…).
+ * Document légal figé, en français. Tout ce qui est entre [ ] est un vrai
+ * vide à compléter par le fondateur — jamais une donnée inventée
+ * (SIREN, adresse, hébergeur…). À faire relire par un professionnel.
  */
 export default function MentionsLegalesPage() {
+  const todo = (text: string) => <span className="todo">[ {text} ]</span>;
   return (
-    <main className="bg-ivoire">
-      <div className="flex min-h-[40vh] items-end bg-noir px-6 pb-16 pt-32 text-ivoire sm:px-10 lg:px-16">
-        <div className="mx-auto w-full max-w-content">
-          <p className="mb-3 font-sans text-xs uppercase tracking-widest2 text-bronze">
-            {siteConfig.brand.name} {siteConfig.brand.sub}
-          </p>
-          <h1 className="font-serif text-4xl uppercase tracking-wide sm:text-5xl">
-            Legal notice &amp; terms
+    <main id="main">
+      <section className="s-hero">
+        <div className="wrap">
+          <p className="label">Estalia Studio</p>
+          <h1 className="display" style={{ fontSize: "clamp(3rem, 7vw, 6.4rem)" }}>
+            <span className="tl">Mentions</span>
+            <span className="tl in1"><em>légales</em></span>
           </h1>
         </div>
-      </div>
-
-      <div className="mx-auto max-w-content px-6 py-20 sm:px-10 sm:py-24 lg:px-16">
-        <div className="flex max-w-2xl flex-col gap-10 font-sans text-sm leading-relaxed text-noir/70">
-          <section>
-            <h2 className="mb-3 font-serif text-xl text-noir">Publisher</h2>
-            <p>
-              {siteConfig.legal.company}
-              <br />
-              [ Legal structure — company number — to complete ]
-              <br />
-              [ Registered address — to complete ]
-              <br />
-              Contact:{" "}
-              <a
-                href={`mailto:${siteConfig.contact.email}`}
-                className="underline decoration-noir/20 underline-offset-2 hover:text-bronze"
-              >
-                {siteConfig.contact.email}
-              </a>
+      </section>
+      <section className="section tight" style={{ paddingTop: 0 }}>
+        <div className="wrap">
+          <div className="legal">
+            <section>
+              <h2>Éditeur du site</h2>
+              <p>
+                {siteConfig.legal.company} — {siteConfig.founder.name}
+                <br />
+                {todo("Forme juridique et numéro SIREN — à compléter")}
+                <br />
+                {todo("Adresse du siège — à compléter")}
+                <br />
+                Contact&nbsp;: <a href={`mailto:${siteConfig.contact.email}`}>{siteConfig.contact.email}</a>
+              </p>
+            </section>
+            <section>
+              <h2>Directeur de la publication</h2>
+              <p>{todo("Nom du directeur de la publication — à compléter")}</p>
+            </section>
+            <section>
+              <h2>Hébergement</h2>
+              <p>{todo("Nom, adresse et contact de l’hébergeur — à compléter (par exemple Vercel Inc.)")}</p>
+            </section>
+            <section>
+              <h2>Propriété intellectuelle</h2>
+              <p>
+                Les contenus de ce site (textes, images, vidéos, identité visuelle) appartiennent à Estalia Studio ou à ses
+                clients, sauf mention contraire, et ne peuvent être reproduits sans autorisation préalable.
+              </p>
+            </section>
+            <section>
+              <h2>Conditions des prestations</h2>
+              <h3>Prestations</h3>
+              <p>
+                Estalia Studio crée des films de promotion, des contenus visuels, des sites web et des directions artistiques.
+                Les films peuvent être réalisés à partir des photos et vidéos fournies par le client, à distance.
+              </p>
+              <h3 style={{ marginTop: 18 }}>Devis</h3>
+              <p>
+                Chaque prestation fait l’objet d’un devis précisant son contenu, son prix, ses délais et les ajustements
+                inclus. {todo("Conditions de paiement, d’annulation et de facturation — à compléter")}
+              </p>
+              <h3 style={{ marginTop: 18 }}>Visuels fournis</h3>
+              <p>
+                Le client garantit détenir les droits sur les photos et vidéos qu’il transmet et autorise Estalia Studio à
+                les utiliser pour réaliser ses contenus.
+              </p>
+              <h3 style={{ marginTop: 18 }}>Responsabilité et droit applicable</h3>
+              <p>{todo("Clause de responsabilité, droit applicable et juridiction — à rédiger avec un professionnel")}</p>
+            </section>
+            <p className="small">
+              Ce document est une base de travail et ne constitue pas un conseil juridique. Faites-le relire par un
+              professionnel et complétez chaque champ entre crochets avant de vous y fier.
             </p>
-          </section>
-
-          <section>
-            <h2 className="mb-3 font-serif text-xl text-noir">Publication director</h2>
-            <p>[ Name of the publication director — to complete ]</p>
-          </section>
-
-          <section>
-            <h2 className="mb-3 font-serif text-xl text-noir">Hosting</h2>
-            <p>[ Host name, address and contact — to complete, e.g. Vercel Inc. ]</p>
-          </section>
-
-          <section>
-            <h2 className="mb-3 font-serif text-xl text-noir">Intellectual property</h2>
-            <p>
-              All content on this site (text, images, video, visual identity) is the property of
-              Estalia Studio or its clients, unless stated otherwise, and may not be reproduced
-              without prior authorisation.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="mb-4 font-serif text-2xl text-noir">Terms of service</h2>
-            <div className="flex flex-col gap-6">
-              <div>
-                <h3 className="mb-2 font-serif text-lg text-noir">1. Service</h3>
-                <p>
-                  Estalia is a remote creative content studio. We turn photography and video a
-                  client already owns into edited, social-native content. We do not attend a
-                  client&apos;s property and do not organise a physical photo or video shoot as
-                  part of any offer described on this site.
-                </p>
-              </div>
-              <div>
-                <h3 className="mb-2 font-serif text-lg text-noir">2. Offers &amp; payment</h3>
-                <p>
-                  Estalia Test is a one-time, single-payment order. Estalia Content and Estalia
-                  Pro are recurring monthly subscriptions with a minimum initial commitment as
-                  stated on the pricing section; they renew monthly until cancelled and may be
-                  cancelled with notice as agreed at onboarding. [ Cancellation notice period,
-                  invoicing details and payment provider terms — to complete ].
-                </p>
-              </div>
-              <div>
-                <h3 className="mb-2 font-serif text-lg text-noir">3. Source material &amp; rights</h3>
-                <p>
-                  The client warrants that they own, or hold the necessary rights to, any
-                  photography or video they send us, and grants Estalia a licence to use it solely
-                  to produce their content. Estalia does not alter the real layout, furniture or
-                  structure of a client&apos;s property in the content it produces.
-                </p>
-              </div>
-              <div>
-                <h3 className="mb-2 font-serif text-lg text-noir">4. Revisions &amp; delivery</h3>
-                <p>
-                  Each offer includes a defined number of revision rounds, as stated on the
-                  pricing section. Nothing is published or delivered as final without the
-                  client&apos;s review.
-                </p>
-              </div>
-              <div>
-                <h3 className="mb-2 font-serif text-lg text-noir">5. Liability</h3>
-                <p>
-                  [ Liability limitation clause — to be drafted with a qualified professional
-                  before this document is relied on commercially. ]
-                </p>
-              </div>
-              <div>
-                <h3 className="mb-2 font-serif text-lg text-noir">6. Governing law</h3>
-                <p>[ Governing law and jurisdiction — to complete ]</p>
-              </div>
-            </div>
-          </section>
-
-          <p className="text-xs text-noir/40">
-            This document is provided as a starting point and does not constitute legal advice.
-            Have it reviewed by a qualified professional, and complete every [ bracketed ] field
-            with your real details, before relying on it commercially.
-          </p>
+          </div>
         </div>
-      </div>
+      </section>
     </main>
   );
 }

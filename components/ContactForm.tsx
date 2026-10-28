@@ -1,286 +1,247 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import TitleWipe from "./TitleWipe";
-import { useLanguage } from "@/lib/LanguageContext";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import { T, useLang } from "@/lib/LanguageContext";
+import { useUI } from "@/lib/UIContext";
+import { PROJECT_TYPES, type L } from "@/data/site";
 import { siteConfig } from "@/data/config";
 
-type Fields = {
-  name: string;
-  company: string;
-  email: string;
-  phone: string;
-  sector: string;
-  url: string;
-  message: string;
-};
+const N = " ";
+const EMAIL = siteConfig.contact.email;
+const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-const initialFields: Fields = {
-  name: "",
-  company: "",
-  email: "",
-  phone: "",
-  sector: "",
-  url: "",
-  message: "",
-};
+type Fields = { name: string; email: string; company: string; type: string; message: string };
+type Errors = Partial<Record<keyof Fields, L>>;
+type Status = { kind: "idle" } | { kind: "sending" } | { kind: "sent" } | { kind: "failed"; text: string };
 
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const urlPattern = /^https?:\/\/.+\..+/i;
-const easing = [0.19, 1, 0.22, 1] as const;
-
-/** Petit repère visuel de confidentialité — pas une icône de marque, juste un signal d'usage. */
-function LockIcon({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 16 16" fill="none" className={className} aria-hidden="true">
-      <rect x="3.5" y="7" width="9" height="6.5" rx="1" stroke="currentColor" strokeWidth="1.1" />
-      <path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
-    </svg>
-  );
+function validate(f: Fields): Errors {
+  const e: Errors = {};
+  if (!f.name.trim()) e.name = { fr: "Merci d’indiquer votre nom.", en: "Please enter your name." };
+  if (!f.email.trim()) e.email = { fr: "Merci d’indiquer votre adresse e-mail.", en: "Please enter your email address." };
+  else if (!emailRe.test(f.email.trim())) e.email = { fr: "Cette adresse e-mail ne semble pas valide.", en: "This email address doesn’t look valid." };
+  if (!f.type) e.type = { fr: "Merci de choisir un type de projet.", en: "Please choose a project type." };
+  if (!f.message.trim()) e.message = { fr: "Quelques mots suffisent.", en: "A few words are enough." };
+  return e;
 }
 
-type ContactFormProps = {
-  /** Présélectionne le secteur (ex. "immobilier" depuis /real-estate) sans verrouiller le champ. */
-  defaultSector?: string;
-};
-
 /**
- * Formulaire de contact premium et unique, partagé par la homepage et
- * les 4 landing pages d'univers. Le secteur peut être présélectionné
- * (voir defaultSector) mais reste modifiable — un visiteur qui atterrit
- * depuis /hospitality mais gère aussi des biens immobiliers peut changer.
+ * Formulaire de demande de devis, envoyé à Formspree. Le message de
+ * réussite ne s'affiche que si Formspree confirme la réception ; en cas
+ * d'échec, le visiteur le sait et peut copier son message pour l'envoyer
+ * par e-mail — jamais de faux « message envoyé ».
  */
-export default function ContactForm({ defaultSector }: ContactFormProps) {
-  const { t } = useLanguage();
-  const f = t.contactForm;
+export default function ContactForm({ context }: { context?: string }) {
+  const { t } = useLang();
+  const { quote } = useUI();
+  const [f, setF] = useState<Fields>({ name: "", email: "", company: "", type: "", message: "" });
+  const [errors, setErrors] = useState<Errors>({});
+  const [touched, setTouched] = useState(false);
+  const [status, setStatus] = useState<Status>({ kind: "idle" });
+  const [copied, setCopied] = useState<"mail" | "msg" | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const fallbackRef = useRef<HTMLTextAreaElement>(null);
+  const mailRef = useRef<HTMLSpanElement>(null);
 
-  const [fields, setFields] = useState<Fields>({ ...initialFields, sector: defaultSector ?? "" });
-  const [errors, setErrors] = useState<Partial<Record<keyof Fields, string>>>({});
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  // une formule choisie plus haut (tarifs, saisons, sites) pré-remplit le type de projet
+  useEffect(() => {
+    if (quote.type) setF((cur) => ({ ...cur, type: quote.type! }));
+  }, [quote.type]);
 
-  const update = (key: keyof Fields, value: string) => {
-    setFields((prev) => ({ ...prev, [key]: value }));
-    setErrors((prev) => ({ ...prev, [key]: undefined }));
+  const metier = quote.context || context || "";
+
+  const set = (k: keyof Fields) => (e: { target: { value: string } }) => {
+    const next = { ...f, [k]: e.target.value };
+    setF(next);
+    if (touched) setErrors(validate(next));
   };
 
-  const validate = (): boolean => {
-    const next: Partial<Record<keyof Fields, string>> = {};
-    if (!fields.name.trim()) next.name = f.errors.required;
-    if (!fields.email.trim()) next.email = f.errors.required;
-    else if (!emailPattern.test(fields.email.trim())) next.email = f.errors.email;
-    if (!fields.sector.trim()) next.sector = f.errors.required;
-    if (fields.url.trim() && !urlPattern.test(fields.url.trim())) next.url = f.errors.url;
-    setErrors(next);
-    return Object.keys(next).length === 0;
+  const copy = (text: string, el: HTMLElement | null, which: "mail" | "msg") => {
+    const select = () => {
+      if (!el) return;
+      if (el instanceof HTMLTextAreaElement) {
+        el.focus();
+        el.select();
+      } else {
+        const r = document.createRange();
+        r.selectNodeContents(el);
+        const s = window.getSelection();
+        s?.removeAllRanges();
+        s?.addRange(r);
+      }
+    };
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(text).then(
+        () => {
+          setCopied(which);
+          setTimeout(() => setCopied(null), 2200);
+        },
+        select
+      );
+    } else select();
   };
 
-  const submit = async (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
+    setTouched(true);
+    const errs = validate(f);
+    setErrors(errs);
+    const first = (Object.keys(errs) as (keyof Fields)[])[0];
+    if (first) {
+      formRef.current?.querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
+      return;
+    }
+    const typeLabel = PROJECT_TYPES.find((p) => p.id === f.type)?.label.fr ?? f.type;
+    const text =
+      `Bonjour Thibault,\n\n${f.message.trim()}\n\n— ${f.name.trim()}${f.company.trim() ? ` (${f.company.trim()})` : ""}` +
+      `\nType de projet${N}: ${typeLabel}${metier ? `\nMétier${N}: ${metier}` : ""}\nE-mail${N}: ${f.email.trim()}`;
 
-    setStatus("submitting");
+    setStatus({ kind: "sending" });
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 12000);
     try {
-      const sectorLabel = f.sectorOptions.find((o) => o.value === fields.sector)?.label ?? fields.sector;
       const res = await fetch(siteConfig.contactEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
-          name: fields.name,
-          company: fields.company || undefined,
-          email: fields.email,
-          phone: fields.phone || undefined,
-          sector: sectorLabel,
-          url: fields.url || undefined,
-          message: fields.message || undefined,
-          _subject: `Estalia Studio — nouveau projet (${sectorLabel}) — ${fields.name}`,
-          _replyto: fields.email,
+          name: f.name.trim(),
+          email: f.email.trim(),
+          company: f.company.trim(),
+          project_type: typeLabel,
+          message: f.message.trim(),
+          metier,
+          _subject: `Estalia Studio — demande de devis (${typeLabel}) — ${f.name.trim()}`,
+          _replyto: f.email.trim(),
         }),
+        signal: ctrl.signal,
       });
-      if (!res.ok) throw new Error("request_failed");
-      setStatus("success");
+      if (!res.ok) throw new Error(`status ${res.status}`);
+      setStatus({ kind: "sent" });
+      setF({ name: "", email: "", company: "", type: "", message: "" });
+      setTouched(false);
     } catch {
-      setStatus("error");
+      setStatus({ kind: "failed", text });
+    } finally {
+      clearTimeout(timer);
     }
   };
 
-  const inputClass =
-    "w-full border-b border-ivoire/25 bg-transparent py-3 font-sans text-sm text-ivoire placeholder:text-ivoire/35 focus:border-bronze focus:outline-none";
-  const labelClass = "font-sans text-[11px] uppercase tracking-widest2 text-ivoire/50";
-  const errorClass = "mt-1.5 font-sans text-xs text-bronze";
+  const err = (k: keyof Fields) =>
+    errors[k] ? (
+      <p className="err" id={`e-${k}`}>{t(errors[k]!)}</p>
+    ) : null;
+  const fieldClass = (k: keyof Fields) => `field${errors[k] ? " has-err" : ""}`;
+  const aria = (k: keyof Fields) => (errors[k] ? { "aria-invalid": true, "aria-describedby": `e-${k}` } : {});
 
   return (
-    <section id="contact" className="grain relative overflow-hidden bg-noir px-6 py-28 text-ivoire sm:px-10 sm:py-36 lg:px-16">
-      <div className="relative z-10 mx-auto max-w-content">
-        <div className="grid gap-14 lg:grid-cols-12 lg:gap-10">
-          <div className="lg:col-span-5">
-            <p className="mb-4 font-sans text-xs uppercase tracking-widest2 text-bronze">{f.kicker}</p>
-            <h2 className="font-serif text-4xl uppercase leading-[1.1] tracking-tight sm:text-5xl">
-              {f.title.map((line, i) => (
-                <TitleWipe key={line} delay={0.05 + i * 0.12}>
-                  {line}
-                </TitleWipe>
-              ))}
-            </h2>
-            <p className="mt-6 max-w-sm font-sans text-base leading-relaxed text-ivoire/60">{f.subtitle}</p>
-            <p className="mt-8 flex max-w-sm items-start gap-2 font-sans text-xs leading-relaxed text-ivoire/45">
-              <LockIcon className="mt-0.5 h-3 w-3 shrink-0 text-bronze/70" />
-              {f.responseTime}
-            </p>
+    <section className="section contact" id="contact" aria-labelledby="contact-title">
+      <div className="wrap contact-grid">
+        <div className="contact-intro">
+          <p className="label" data-reveal><b>10</b>&nbsp; <T fr="Devis" en="Quote" /></p>
+          <h2 className="t-l" id="contact-title" data-reveal>
+            <T
+              fr={<><span className="tl">Vous avez un lieu,</span><span className="tl">une marque ou une idée</span><span className="tl"><em>à faire vivre{N}?</em></span></>}
+              en={<><span className="tl">Have a place,</span><span className="tl">a brand or an idea</span><span className="tl"><em>to bring to life?</em></span></>}
+            />
+          </h2>
+          <p className="body-l" data-reveal>
+            <T fr="Décrivez votre projet en quelques mots. C’est Thibault qui vous répond, personnellement." en="Tell us about your project in a few words. Thibault will answer you personally." />
+          </p>
+          <div className="mail-row" data-reveal>
+            <span className="small"><T fr="Ou écrivez directement à" en="Or write directly to" /></span>
+            <span className="mail" ref={mailRef}>{EMAIL}</span>
+            <button type="button" className="copy-btn" onClick={() => copy(EMAIL, mailRef.current, "mail")}>
+              {copied === "mail" ? <T fr="Copié" en="Copied" /> : <T fr="Copier" en="Copy" />}
+            </button>
           </div>
+        </div>
 
-          <div className="lg:col-span-6 lg:col-start-7">
-            <AnimatePresence mode="wait">
-              {status === "success" ? (
-                <motion.div
-                  key="success"
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, ease: easing }}
-                  className="flex flex-col gap-3 border-t border-ivoire/15 pt-8"
-                  role="status"
-                >
-                  <p className="font-serif text-2xl uppercase tracking-tight text-ivoire sm:text-3xl">
-                    {f.success}
-                  </p>
-                  <p className="font-sans text-sm text-ivoire/55">{f.successNote}</p>
-                </motion.div>
-              ) : (
-                <motion.form
-                  key="form"
-                  onSubmit={submit}
-                  noValidate
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.5, ease: easing }}
-                  className="flex flex-col gap-7"
-                >
-                  <div className="grid gap-7 sm:grid-cols-2">
-                    <div>
-                      <label className={labelClass} htmlFor="cf-name">
-                        {f.name}
-                      </label>
-                      <input
-                        id="cf-name"
-                        autoComplete="name"
-                        className={inputClass}
-                        value={fields.name}
-                        onChange={(e) => update("name", e.target.value)}
-                        aria-invalid={Boolean(errors.name)}
-                      />
-                      {errors.name ? <p className={errorClass}>{errors.name}</p> : null}
-                    </div>
-                    <div>
-                      <label className={labelClass} htmlFor="cf-company">
-                        {f.company}
-                      </label>
-                      <input
-                        id="cf-company"
-                        autoComplete="organization"
-                        className={inputClass}
-                        value={fields.company}
-                        onChange={(e) => update("company", e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <label className={labelClass} htmlFor="cf-email">
-                        {f.email}
-                      </label>
-                      <input
-                        id="cf-email"
-                        type="email"
-                        autoComplete="email"
-                        className={inputClass}
-                        value={fields.email}
-                        onChange={(e) => update("email", e.target.value)}
-                        aria-invalid={Boolean(errors.email)}
-                      />
-                      {errors.email ? <p className={errorClass}>{errors.email}</p> : null}
-                    </div>
-                    <div>
-                      <label className={labelClass} htmlFor="cf-phone">
-                        {f.phone}
-                      </label>
-                      <input
-                        id="cf-phone"
-                        type="tel"
-                        autoComplete="tel"
-                        className={inputClass}
-                        value={fields.phone}
-                        onChange={(e) => update("phone", e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <label className={labelClass} htmlFor="cf-sector">
-                        {f.sector}
-                      </label>
-                      <select
-                        id="cf-sector"
-                        className={`${inputClass} appearance-none bg-noir`}
-                        value={fields.sector}
-                        onChange={(e) => update("sector", e.target.value)}
-                        aria-invalid={Boolean(errors.sector)}
-                      >
-                        <option value="" disabled>
-                          —
-                        </option>
-                        {f.sectorOptions.map((opt) => (
-                          <option key={opt.value} value={opt.value}>
-                            {opt.label}
-                          </option>
-                        ))}
-                      </select>
-                      {errors.sector ? <p className={errorClass}>{errors.sector}</p> : null}
-                    </div>
-                    <div>
-                      <label className={labelClass} htmlFor="cf-url">
-                        {f.url}
-                      </label>
-                      <input
-                        id="cf-url"
-                        type="url"
-                        placeholder="https://…"
-                        className={inputClass}
-                        value={fields.url}
-                        onChange={(e) => update("url", e.target.value)}
-                        aria-invalid={Boolean(errors.url)}
-                      />
-                      {errors.url ? <p className={errorClass}>{errors.url}</p> : null}
-                    </div>
-                  </div>
+        <div className="contact-form">
+          <form ref={formRef} className="form" onSubmit={onSubmit} noValidate>
+            <div className="row2">
+              <div className={fieldClass("name")}>
+                <label htmlFor="f-name"><T fr="Nom" en="Name" /></label>
+                <input id="f-name" name="name" type="text" autoComplete="name" enterKeyHint="next" value={f.name} onChange={set("name")} {...aria("name")} />
+                {err("name")}
+              </div>
+              <div className={fieldClass("email")}>
+                <label htmlFor="f-email"><T fr="Adresse e-mail" en="Email address" /></label>
+                <input
+                  id="f-email" name="email" type="email" autoComplete="email" inputMode="email" autoCapitalize="none" autoCorrect="off"
+                  spellCheck={false} enterKeyHint="next" value={f.email} onChange={set("email")} {...aria("email")}
+                />
+                {err("email")}
+              </div>
+            </div>
+            <div className="row2">
+              <div className="field">
+                <label htmlFor="f-company"><T fr="Activité ou entreprise" en="Business or company" /></label>
+                <input
+                  id="f-company" name="company" type="text" autoComplete="organization" enterKeyHint="next" value={f.company} onChange={set("company")}
+                  placeholder={t({ fr: "Ex. boulangerie, agence, camping…", en: "e.g. bakery, agency, campsite…" })}
+                />
+              </div>
+              <div className={fieldClass("type")}>
+                <label htmlFor="f-type"><T fr="Type de projet" en="Project type" /></label>
+                <select id="f-type" name="type" value={f.type} onChange={set("type")} {...aria("type")}>
+                  <option value="" disabled>{t({ fr: "Choisir…", en: "Choose…" })}</option>
+                  {PROJECT_TYPES.map((p) => (
+                    <option key={p.id} value={p.id}>{t(p.label)}</option>
+                  ))}
+                </select>
+                {err("type")}
+              </div>
+            </div>
+            <div className={fieldClass("message")}>
+              <label htmlFor="f-message"><T fr="Quelques mots sur votre besoin" en="A few words about your project" /></label>
+              <textarea
+                id="f-message" name="message" rows={5} enterKeyHint="send" value={f.message} onChange={set("message")} {...aria("message")}
+                placeholder={t({ fr: "Votre lieu, ce que vous aimeriez montrer, vos délais éventuels…", en: "Your place, what you’d like to show, any timing…" })}
+              />
+              {err("message")}
+            </div>
+            <div className="form-foot">
+              <button type="submit" className="btn btn--solid" disabled={status.kind === "sending"}>
+                {status.kind === "sending" ? (
+                  <T fr="Envoi…" en="Sending…" />
+                ) : (
+                  <>
+                    <T fr="Demander un devis" en="Request a quote" /> <span className="arr" aria-hidden="true">→</span>
+                  </>
+                )}
+              </button>
+              <p className="small"><T fr="Vos informations servent uniquement à vous répondre." en="Your details are only used to reply to you." /></p>
+            </div>
 
-                  <div>
-                    <label className={labelClass} htmlFor="cf-message">
-                      {f.message}
-                    </label>
-                    <textarea
-                      id="cf-message"
-                      rows={3}
-                      className={`${inputClass} resize-none`}
-                      value={fields.message}
-                      onChange={(e) => update("message", e.target.value)}
-                    />
-                  </div>
-
-                  <p className="flex items-start gap-2 font-sans text-xs leading-relaxed text-ivoire/40">
-                    <LockIcon className="mt-0.5 h-3 w-3 shrink-0 text-bronze/70" />
-                    {f.privacyNote}
-                  </p>
-
-                  {status === "error" ? <p className="font-sans text-xs text-bronze">{f.error}</p> : null}
-
-                  <button
-                    type="submit"
-                    disabled={status === "submitting"}
-                    className="mt-2 w-fit border border-ivoire px-8 py-4 font-sans text-xs uppercase tracking-widest2 text-ivoire transition-colors duration-300 hover:bg-ivoire hover:text-noir disabled:opacity-50"
-                  >
-                    {status === "submitting" ? f.submitting : f.submit}
-                  </button>
-                </motion.form>
+            <div role="status" aria-live="polite">
+              {status.kind === "sent" && (
+                <p className="status ok">
+                  <T fr="Merci, votre demande est bien partie. Thibault vous répond personnellement." en="Thank you, your request has been sent. Thibault will reply to you personally." />
+                </p>
               )}
-            </AnimatePresence>
-          </div>
+              {status.kind === "failed" && (
+                <div className="fallback">
+                  <p>
+                    <T
+                      fr={<><strong>Votre demande n’est pas partie.</strong> L’envoi automatique n’a pas abouti. Copiez votre message ci-dessous et envoyez-le à {EMAIL}.</>}
+                      en={<><strong>Your request was not sent.</strong> Automatic sending didn’t go through. Copy your message below and send it to {EMAIL}.</>}
+                    />
+                  </p>
+                  <textarea ref={fallbackRef} readOnly value={status.text} aria-label={t({ fr: "Votre message", en: "Your message" })} />
+                  <div className="acts">
+                    <button type="button" className="btn" onClick={() => copy(status.text, fallbackRef.current, "msg")}>
+                      {copied === "msg" ? <T fr="Copié" en="Copied" /> : <T fr="Copier le message" en="Copy the message" />}
+                    </button>
+                    <a
+                      className="btn"
+                      href={`mailto:${EMAIL}?subject=${encodeURIComponent(`Demande de devis — ${f.name.trim()}`)}&body=${encodeURIComponent(status.text)}`}
+                    >
+                      <T fr="Ouvrir ma messagerie" en="Open my email app" />
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
+          </form>
         </div>
       </div>
     </section>

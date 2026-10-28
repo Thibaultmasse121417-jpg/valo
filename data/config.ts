@@ -12,20 +12,22 @@
  */
 
 export const siteConfig = {
+  // Adresse publique du site (aperçu Vercel tant qu'aucun domaine n'est acheté).
+  url: "https://estalia-studio.vercel.app",
+
   brand: {
     name: "ESTALIA",
     sub: "STUDIO",
-    // Positionnement de lancement (brief Phase 2 §2) : Estalia n'est PAS
-    // une agence marketing généraliste, c'est un studio de contenu créatif
-    // à distance. Cette ligne apparaît en signature du logo (footer, etc.).
-    signature: "REMOTE CREATIVE CONTENT STUDIO",
+    // Positionnement : films de promotion, sites web et direction
+    // artistique pour les commerces et les lieux (refonte FR).
+    signature: "FILMS, SITES WEB & DIRECTION ARTISTIQUE",
   },
 
-  // Coordonnées de contact — PLACEHOLDER, à remplacer une fois le nom de
-  // domaine définitif choisi (voir domain-research.md). Convention
-  // "hello@" demandée par le brief plutôt que "contact@".
+  // Coordonnées de contact. L'adresse e-mail est celle affichée sur le
+  // site (formulaire, pied de page). Téléphone et adresse restent des
+  // PLACEHOLDERS et ne sont affichés nulle part tant qu'ils le sont.
   contact: {
-    email: "hello@estalia-studio.com",
+    email: "contact@estalia-studio.com",
     phone: "+33 0 00 00 00 00",
     phoneDisplay: "+33 (0)0 00 00 00 00",
     address: "Paris, France",

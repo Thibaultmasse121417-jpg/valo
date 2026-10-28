@@ -1,84 +1,89 @@
-import type { Metadata } from "next";
-import { Bodoni_Moda, Archivo } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Cormorant_Garamond, Manrope } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/lib/LanguageContext";
+import { UIProvider } from "@/lib/UIContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Player from "@/components/Player";
+import Motion from "@/components/Motion";
+import { siteConfig } from "@/data/config";
 
-// Serif éditoriale à fort contraste (haute couture / presse architecture)
-// pour les grands titres — plus affirmée et impactante que les serifs
-// "romantiques" génériquement associées aux sites IA (Cormorant, Playfair…).
-const editorial = Bodoni_Moda({
+// Titres : serif éditoriale, élégante et expressive (choix du fondateur).
+const serif = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500"],
   style: ["normal", "italic"],
-  variable: "--font-editorial",
+  variable: "--font-serif",
   display: "swap",
 });
 
-// Grotesque contemporaine, plus construite et professionnelle qu'Inter,
-// pour le texte courant, la navigation et les labels.
-const body = Archivo({
+// Texte courant, navigation, boutons : sans empattement très lisible.
+const sans = Manrope({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  variable: "--font-body",
+  weight: ["400", "500", "600"],
+  variable: "--font-sans",
   display: "swap",
 });
 
-const siteUrl = "https://estalia-studio.vercel.app";
-const title = "Estalia — Hotel Content Studio";
+const siteUrl = siteConfig.url;
+const title = "Estalia Studio — Films, sites web & direction artistique";
 const description =
-  "Estalia turns the photos and videos your hotel already has into premium social content — no new shoot. Hospitality content creation for independent boutique hotels.";
+  "Films de promotion, sites web sur mesure et direction artistique pour les commerces, agences immobilières, campings, hôtels et notaires. Studio fondé par Thibault Masse.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title,
+  title: { default: title, template: "%s — Estalia Studio" },
   description,
   keywords: [
-    "hotel content creation",
-    "hospitality content studio",
-    "hotel social media content",
-    "boutique hotel video",
-    "estalia",
+    "vidéo de promotion commerce",
+    "film immobilier",
+    "vidéo camping",
+    "vidéo hôtel",
+    "site web sur mesure",
+    "direction artistique",
+    "Estalia Studio",
   ],
-  authors: [{ name: "Estalia" }],
-  alternates: {
-    canonical: "/",
-  },
+  authors: [{ name: "Thibault Masse" }],
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     url: siteUrl,
     title,
     description,
-    siteName: "Estalia",
-    locale: "en_GB",
-    // Le FR reste servi côté client par le sélecteur (lib/LanguageContext.tsx)
-    // pour le fondateur — le lancement cible le marché UK, EN par défaut.
-    // Le visuel de partage (og:image) est généré automatiquement par
-    // app/opengraph-image.tsx — pas besoin de le déclarer ici.
+    siteName: "Estalia Studio",
+    locale: "fr_FR",
   },
-  twitter: {
-    card: "summary_large_image",
-    title,
-    description,
-  },
-  icons: {
-    icon: "/favicon.svg",
-  },
+  twitter: { card: "summary_large_image", title, description },
+  icons: { icon: "/favicon.svg" },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#0b0b0a",
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${editorial.variable} ${body.variable}`}>
-      <body className="bg-ivoire font-sans text-noir antialiased">
+    <html lang="fr" className={`${serif.variable} ${sans.variable}`} suppressHydrationWarning>
+      <head>
+        {/* active les apparitions au défilement seulement si le JavaScript tourne */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+      </head>
+      <body>
         <LanguageProvider>
-          <Header />
-          {children}
-          <Footer />
+          <UIProvider>
+            <a className="skip" href="#main">Aller au contenu</a>
+            <div id="app">
+              <Header />
+              {children}
+              <Footer />
+            </div>
+            <Player />
+            <Motion />
+          </UIProvider>
         </LanguageProvider>
       </body>
     </html>

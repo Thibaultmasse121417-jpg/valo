@@ -1,16 +1,10 @@
-# Images — à déposer ici
+# Images
 
-| Fichier                | Utilisation                                              |
-| ------------------------ | --------------------------------------------------------- |
-| `founder.jpg`             | Photo du fondateur (section À propos)                    |
-| `chateau-poster.jpg`      | Image "poster" du projet Château (affichée avant lecture / si vidéo absente) |
-| `villa-poster.jpg`        | Image "poster" du projet Villa                            |
-| `paris-poster.jpg`        | Image "poster" du projet Appartement Paris                |
-| `domaine-poster.jpg`      | Image "poster" du projet Domaine                           |
-| `hero-poster.jpg`         | Image "poster" de la vidéo Hero                            |
+| Fichier | Utilisation |
+| --- | --- |
+| `villa-poster.jpg`, `paris-poster.jpg`, `chateau-poster.jpg`, `domaine-poster.jpg` | « Études de direction artistique » (propositions conceptuelles, pas des commandes clients) |
+| `villa-poster.jpg`, `domaine-poster.jpg` | Grandes images des pages Agences immobilières et Campings & hôtels |
+| `hero-poster.jpg` | Non utilisée pour l'instant |
 
-Recommandations :
-- Format **JPG ou WebP**, haute qualité mais compressé pour le web (< 400 Ko idéalement).
-- Orientation paysage, cadrage large (les images sont recadrées en `object-cover`).
-- Tant qu'un fichier est absent, le site affiche automatiquement un
-  placeholder éditorial élégant avec le titre du projet (jamais d'image cassée).
+Les images passent par `next/image` (redimensionnées et converties en AVIF/WebP automatiquement).
+Pour ajouter un portrait du fondateur, déposez `founder.jpg` ici et demandez son intégration dans la section Studio.
