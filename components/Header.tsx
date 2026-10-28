@@ -1,24 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
-import { useLanguage } from "@/lib/LanguageContext";
-import Logo from "./Logo";
+import { T, useLang } from "@/lib/LanguageContext";
+import { MOBILE_NAV, NAV } from "@/data/site";
+import { siteConfig } from "@/data/config";
 
+/**
+ * En-tête fixe. « Demander un devis » reste visible sur tous les écrans,
+ * téléphone compris, sans jamais recouvrir le contenu de la page.
+ */
 export default function Header() {
-  const { t, locale, toggleLocale } = useLanguage();
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
-  // Sur une landing page d'univers, on masque les liens vers LES AUTRES
-  // univers : un visiteur qui arrive sur /real-estate via une pub ne doit
-  // pas repartir avec l'impression qu'Estalia fait "un peu de tout" — la
-  // page doit se sentir dédiée à son secteur. Le sélecteur complet reste
-  // sur la homepage, où l'exploration inter-secteurs est justement le but.
   const isHome = pathname === "/";
-  const universeLinks = t.nav.links.filter((link) => link.href !== "#contact");
-  const contactLink = t.nav.links.find((link) => link.href === "#contact");
+  const hasForm = isHome || pathname.startsWith("/metiers") || pathname === "/sites-web";
+  const { toggleLocale, t } = useLang();
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [current, setCurrent] = useState<string | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const href = (id: string) => (isHome ? `#${id}` : `/#${id}`);
+  const quoteHref = hasForm ? "#contact" : "/#contact";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -27,132 +31,108 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [menuOpen]);
+  useEffect(() => setOpen(false), [pathname]);
 
-  const darkText = scrolled || menuOpen;
+  useEffect(() => {
+    // fermé, le menu sort de l'ordre de tabulation et de l'arbre d'accessibilité
+    if (open) menuRef.current?.removeAttribute("inert");
+    else menuRef.current?.setAttribute("inert", "");
+    document.documentElement.classList.toggle("menu-open", open);
+    document.body.style.overflow = open ? "hidden" : "";
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("keydown", onKey);
+    setTimeout(() => document.querySelector<HTMLElement>(".mmenu nav a")?.focus(), 60);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  // le lien de la section à l'écran est marqué « en cours »
+  useEffect(() => {
+    if (!isHome || !("IntersectionObserver" in window)) {
+      setCurrent(null);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((en) => en.isIntersecting && setCurrent(en.target.id)),
+      { rootMargin: "-45% 0px -50% 0px" }
+    );
+    document.querySelectorAll("main section[id], #contact").forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [isHome]);
+
+  const solid = scrolled || !isHome || open;
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
-        scrolled || menuOpen
-          ? "bg-ivoire/85 backdrop-blur-md"
-          : "bg-transparent"
-      }`}
-    >
-      <div className="mx-auto flex max-w-content items-center justify-between px-6 py-5 sm:px-10 lg:px-16">
-        <a href="/" aria-label={`Estalia Studio — ${t.nav.homeLabel}`}>
-          <Logo tone={darkText ? "dark" : "light"} />
-        </a>
-
-        <nav
-          className={`hidden items-center gap-9 font-sans text-[11px] uppercase tracking-widest2 transition-colors duration-500 lg:flex ${
-            darkText ? "text-noir/70" : "text-ivoire/85"
-          }`}
-        >
-          {isHome
-            ? universeLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="relative pb-1 transition-colors duration-300 hover:text-bronze"
-                >
-                  {link.label}
-                </a>
-              ))
-            : null}
-          {contactLink ? (
-            <a href={contactLink.href} className="relative pb-1 transition-colors duration-300 hover:text-bronze">
-              {contactLink.label}
+    <>
+      <header className={`site-header${solid ? " is-solid" : ""}`}>
+        <div className="wrap bar">
+          <Link className="logo" href="/" aria-label={t({ fr: "Estalia Studio — accueil", en: "Estalia Studio — home" })}>
+            <span className="logo-word">Estalia</span>
+            <span className="logo-sub">{siteConfig.brand.sub}</span>
+          </Link>
+          <nav className="nav" aria-label={t({ fr: "Navigation principale", en: "Main navigation" })}>
+            {NAV.map((n) => (
+              <a key={n.id} className="nl" href={href(n.id)} aria-current={current === n.id ? "true" : undefined}>
+                {t(n.label)}
+              </a>
+            ))}
+          </nav>
+          <div className="head-tools">
+            <button
+              type="button"
+              className="lang-btn desk"
+              onClick={toggleLocale}
+              aria-label={t({ fr: "Switch to English", en: "Passer en français" })}
+            >
+              <T fr="EN" en="FR" />
+            </button>
+            <a className="btn btn--solid quote-btn" href={quoteHref}>
+              <T fr="Demander un devis" en="Request a quote" />
             </a>
-          ) : null}
-          <button
-            type="button"
-            onClick={toggleLocale}
-            aria-label="Changer de langue"
-            className={`border px-2 py-1 text-[10px] transition-colors duration-300 hover:border-bronze hover:text-bronze ${
-              darkText ? "border-noir/20" : "border-ivoire/30"
-            }`}
-          >
-            {locale === "fr" ? "FR / EN" : "EN / FR"}
-          </button>
-          <a
-            href="#contact"
-            className={`border px-4 py-2.5 transition-colors duration-300 hover:border-bronze hover:text-bronze ${
-              darkText ? "border-noir/30" : "border-ivoire/40"
-            }`}
-          >
-            {t.nav.cta}
-          </a>
-        </nav>
+            <button
+              type="button"
+              className="menu-btn"
+              aria-expanded={open}
+              aria-controls="mmenu"
+              aria-label="Menu"
+              onClick={() => setOpen((o) => !o)}
+            >
+              <span className="bars" aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+      </header>
 
-        <button
-          type="button"
-          onClick={() => setMenuOpen((v) => !v)}
-          aria-label={menuOpen ? t.nav.closeMenu : t.nav.openMenu}
-          aria-expanded={menuOpen}
-          className="relative z-10 flex h-10 w-10 flex-col items-center justify-center gap-1.5 lg:hidden"
-        >
-          <span
-            className={`h-px w-5 transition-all duration-300 ${
-              darkText ? "bg-noir" : "bg-ivoire"
-            } ${menuOpen ? "translate-y-[3.5px] rotate-45" : ""}`}
-          />
-          <span
-            className={`h-px w-5 transition-all duration-300 ${
-              darkText ? "bg-noir" : "bg-ivoire"
-            } ${menuOpen ? "-translate-y-[3.5px] -rotate-45" : ""}`}
-          />
-        </button>
-      </div>
-
-      <AnimatePresence>
-        {menuOpen ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="fixed inset-x-0 top-[72px] z-40 flex h-[calc(100dvh-72px)] flex-col justify-between overflow-y-auto bg-ivoire px-6 pb-10 pt-6 sm:px-10 lg:hidden"
-          >
-            <nav className="flex flex-col gap-1">
-              {(isHome ? t.nav.links : contactLink ? [contactLink] : []).map((link, i) => (
-                <motion.a
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMenuOpen(false)}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.05 * i, duration: 0.5 }}
-                  className="border-b border-noir/10 py-5 font-serif text-2xl uppercase tracking-tight text-noir"
-                >
-                  {link.label}
-                </motion.a>
-              ))}
-            </nav>
-            <div className="flex flex-col gap-5">
+      <div ref={menuRef} className="mmenu" id="mmenu" aria-hidden={!open}>
+        <div className="wrap">
+          <nav aria-label={t({ fr: "Menu mobile", en: "Mobile menu" })}>
+            {MOBILE_NAV.map((n, i) => (
+              <a key={n.id} href={href(n.id)} onClick={() => setOpen(false)}>
+                <span className="label">0{i + 1}</span>
+                {t(n.label)}
+              </a>
+            ))}
+          </nav>
+          <div className="mm-foot">
+            <a className="btn btn--solid" href={quoteHref} onClick={() => setOpen(false)}>
+              <T fr="Demander un devis" en="Request a quote" /> <span className="arr" aria-hidden="true">→</span>
+            </a>
+            <div className="mm-row">
+              <span className="small" style={{ userSelect: "all", WebkitUserSelect: "all" }}>
+                {siteConfig.contact.email}
+              </span>
               <button
                 type="button"
+                className="lang-btn"
                 onClick={toggleLocale}
-                className="w-fit border border-noir/20 px-3 py-2 font-sans text-xs uppercase tracking-widest2 text-noir/70"
+                aria-label={t({ fr: "Switch to English", en: "Passer en français" })}
               >
-                {locale === "fr" ? "FR / EN" : "EN / FR"}
+                <T fr="English" en="Français" />
               </button>
-              <a
-                href="#contact"
-                onClick={() => setMenuOpen(false)}
-                className="w-full border border-noir px-6 py-4 text-center font-sans text-xs uppercase tracking-widest2 text-noir"
-              >
-                {t.nav.cta}
-              </a>
             </div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
-    </header>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

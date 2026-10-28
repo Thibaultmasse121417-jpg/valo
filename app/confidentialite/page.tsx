@@ -2,85 +2,68 @@ import type { Metadata } from "next";
 import { siteConfig } from "@/data/config";
 
 export const metadata: Metadata = {
-  title: `Privacy Policy — ${siteConfig.brand.name} ${siteConfig.brand.sub}`,
-  description: "Privacy policy for the Estalia Studio website.",
+  title: "Confidentialité",
+  description: "Politique de confidentialité du site Estalia Studio.",
+  alternates: { canonical: "/confidentialite" },
 };
 
-/** Voir la note dans app/mentions-legales/page.tsx : document légal figé, en anglais. */
+/** Voir la note de app/mentions-legales/page.tsx : document figé, en français. */
 export default function ConfidentialitePage() {
   return (
-    <main className="bg-ivoire">
-      <div className="flex min-h-[40vh] items-end bg-noir px-6 pb-16 pt-32 text-ivoire sm:px-10 lg:px-16">
-        <div className="mx-auto w-full max-w-content">
-          <p className="mb-3 font-sans text-xs uppercase tracking-widest2 text-bronze">
-            {siteConfig.brand.name} {siteConfig.brand.sub}
-          </p>
-          <h1 className="font-serif text-4xl uppercase tracking-wide sm:text-5xl">
-            Privacy policy
+    <main id="main">
+      <section className="s-hero">
+        <div className="wrap">
+          <p className="label">Estalia Studio</p>
+          <h1 className="display" style={{ fontSize: "clamp(3rem, 7vw, 6.4rem)" }}>
+            <span className="tl">Confidentialité</span>
           </h1>
         </div>
-      </div>
-
-      <div className="mx-auto max-w-content px-6 py-20 sm:px-10 sm:py-24 lg:px-16">
-        <div className="flex max-w-2xl flex-col gap-10 font-sans text-sm leading-relaxed text-noir/70">
-          <section>
-            <h2 className="mb-3 font-serif text-xl text-noir">Data we collect</h2>
-            <p>
-              The site&apos;s contact form collects the information you voluntarily submit (name,
-              company, email, phone, sector, property/establishment URL, message) in order to
-              respond to your enquiry.
+      </section>
+      <section className="section tight" style={{ paddingTop: 0 }}>
+        <div className="wrap">
+          <div className="legal">
+            <section>
+              <h2>Données collectées</h2>
+              <p>
+                Le formulaire de demande de devis recueille les informations que vous saisissez (nom, adresse e-mail,
+                activité, type de projet, message) afin de répondre à votre demande. Elles sont transmises par le service
+                Formspree, qui achemine le message jusqu’à nous.
+              </p>
+            </section>
+            <section>
+              <h2>Cookies</h2>
+              <p>
+                Ce site n’utilise pas de cookies publicitaires ni de suivi. Votre choix de langue est enregistré dans
+                votre navigateur, sur votre appareil uniquement.{" "}
+                <span className="todo">[ Si un outil de mesure d’audience est ajouté, le nommer ici et prévoir le recueil du consentement. ]</span>
+              </p>
+            </section>
+            <section>
+              <h2>Utilisation</h2>
+              <p>
+                Vos informations servent uniquement à vous répondre et, le cas échéant, à échanger sur votre projet. Elles
+                ne sont ni vendues ni transmises à des tiers à des fins commerciales.
+              </p>
+            </section>
+            <section>
+              <h2>Conservation</h2>
+              <p>Vos données sont conservées le temps nécessaire au traitement de votre demande et de la relation qui peut en découler.</p>
+            </section>
+            <section>
+              <h2>Vos droits</h2>
+              <p>
+                Conformément au RGPD, vous pouvez accéder à vos données, les rectifier ou en demander la suppression en
+                écrivant à <a href={`mailto:${siteConfig.contact.email}`}>{siteConfig.contact.email}</a>. Vous pouvez aussi
+                adresser une réclamation à la CNIL.
+              </p>
+            </section>
+            <p className="small">
+              Ce document est une base de travail et ne constitue pas un conseil juridique. Faites relire votre politique
+              de confidentialité par un professionnel avant de vous y fier.
             </p>
-          </section>
-
-          <section>
-            <h2 className="mb-3 font-serif text-xl text-noir">Cookies</h2>
-            <p>
-              This site does not use advertising or tracking cookies. Any analytics in use are
-              limited to anonymous, aggregate event counts (e.g. page views, button clicks) and do
-              not identify you personally. [ Name the analytics tool in use, and add a cookie
-              consent banner here if that changes. ]
-            </p>
-          </section>
-
-          <section>
-            <h2 className="mb-3 font-serif text-xl text-noir">How it&apos;s used</h2>
-            <p>
-              This information is used solely to respond to your enquiry and, where relevant, to
-              discuss a project with you. It is never sold or passed to third parties for
-              commercial purposes.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="mb-3 font-serif text-xl text-noir">Retention</h2>
-            <p>
-              Data you submit is kept for as long as needed to handle your enquiry and any
-              resulting professional relationship.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="mb-3 font-serif text-xl text-noir">Your rights</h2>
-            <p>
-              Under applicable data protection law (including UK GDPR), you have the right to
-              access, correct and request deletion of your data. To exercise it, write to us at{" "}
-              <a
-                href={`mailto:${siteConfig.contact.email}`}
-                className="underline decoration-noir/20 underline-offset-2 hover:text-bronze"
-              >
-                {siteConfig.contact.email}
-              </a>
-              .
-            </p>
-          </section>
-
-          <p className="text-xs text-noir/40">
-            This document is provided as a starting point and does not constitute legal advice.
-            Have your final privacy policy reviewed by a qualified professional before relying on
-            it commercially.
-          </p>
+          </div>
         </div>
-      </div>
+      </section>
     </main>
   );
 }

@@ -2,12 +2,12 @@ import { ImageResponse } from "next/og";
 import { OgCard, loadOgFonts, size, contentType } from "@/lib/ogImage";
 
 export const runtime = "nodejs";
-export const alt = "Estalia — Hotel Content Studio";
+export const alt = "Estalia Studio — Des images qui se ressentent";
 export { size, contentType };
 
 export default async function TwitterImage() {
   const fonts = await loadOgFonts();
-  return new ImageResponse(<OgCard tagline="Hotel Content Studio" />, {
+  return new ImageResponse(<OgCard tagline="Films · Sites web · Direction artistique" />, {
     ...size,
     fonts,
   });

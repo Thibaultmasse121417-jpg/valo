@@ -1,103 +1,65 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useLanguage } from "@/lib/LanguageContext";
+import { T, useLang } from "@/lib/LanguageContext";
+import { TRADES, TRADE_ORDER, tradeHref } from "@/data/site";
 import { siteConfig } from "@/data/config";
-import Logo from "./Logo";
 
 export default function Footer() {
-  const { t } = useLanguage();
-  const year = new Date().getFullYear();
   const pathname = usePathname();
-  // Même logique que le header : sur une landing page d'univers, on
-  // n'affiche pas la liste des AUTRES secteurs — la page doit rester
-  // dédiée. Ce lien n'existe que sur la homepage.
-  const isHome = pathname === "/";
+  const { toggleLocale, t } = useLang();
+  const home = (id: string) => (pathname === "/" ? `#${id}` : `/#${id}`);
 
   return (
-    <footer className="grain relative overflow-hidden bg-noir px-6 pb-10 pt-20 text-ivoire sm:px-10 lg:px-16">
-      <div className="relative z-10 mx-auto max-w-content">
-        <div className={`grid gap-12 border-b border-ivoire/12 pb-14 sm:grid-cols-2 ${isHome ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
+    <footer className="footer">
+      <div className="wrap">
+        <div className="foot-cols">
           <div>
-            <Logo tone="light" />
-            <p className="mt-4 font-sans text-xs uppercase tracking-widest2 text-bronze">
-              {siteConfig.brand.signature}
-            </p>
+            <h2 className="label">Navigation</h2>
+            <ul>
+              <li><a href={home("films")}><T fr="Le film" en="The film" /></a></li>
+              <li><a href={home("promo")}><T fr="Vidéos promo" en="Promo videos" /></a></li>
+              <li><a href={home("saisons")}><T fr="Saisons" en="Seasons" /></a></li>
+              <li><a href={home("tarifs")}><T fr="Tarifs" en="Pricing" /></a></li>
+              <li><a href={home("faq")}>FAQ</a></li>
+            </ul>
           </div>
-
-          {isHome ? (
-            <nav className="flex flex-col gap-3">
-              {t.footer.universes.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="w-fit font-sans text-sm text-ivoire/60 transition-colors duration-300 hover:text-bronze"
-                >
-                  {link.label}
-                </a>
+          <div>
+            <h2 className="label"><T fr="Métiers" en="Trades" /></h2>
+            <ul>
+              {[...TRADE_ORDER, "sites-web" as const].map((slug) => (
+                <li key={slug}>
+                  <Link href={tradeHref(slug)}>{t(TRADES[slug].name)}</Link>
+                </li>
               ))}
-            </nav>
-          ) : null}
-
-          <nav className="flex flex-col gap-3">
-            {t.footer.nav.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="w-fit font-sans text-sm text-ivoire/60 transition-colors duration-300 hover:text-bronze"
-              >
-                {link.label}
-              </a>
-            ))}
-          </nav>
-
-          <div className="flex flex-col gap-3 font-sans text-sm text-ivoire/60">
-            <a
-              href={`mailto:${siteConfig.contact.email}`}
-              className="w-fit transition-colors duration-300 hover:text-bronze"
-            >
-              {siteConfig.contact.email}
-            </a>
-            {/* Pas de numéro de téléphone : hors périmètre du footer minimal
-                du brief (Estalia / Instagram / LinkedIn / Contact / Privacy /
-                Terms / Legal / Copyright), et Estalia est un studio à distance
-                sans standard téléphonique — voir Trust ("never a call centre"). */}
-            <div className="mt-2 flex gap-4">
-              <a
-                href={siteConfig.social.instagram}
-                target="_blank"
-                rel="noreferrer"
-                className="w-fit transition-colors duration-300 hover:text-bronze"
-              >
-                Instagram
-              </a>
-              <a
-                href={siteConfig.social.linkedin}
-                target="_blank"
-                rel="noreferrer"
-                className="w-fit transition-colors duration-300 hover:text-bronze"
-              >
-                LinkedIn
-              </a>
-            </div>
+            </ul>
+          </div>
+          <div>
+            <h2 className="label"><T fr="Écrire" en="Write" /></h2>
+            <ul>
+              <li><span className="muted" style={{ userSelect: "all", WebkitUserSelect: "all" }}>{siteConfig.contact.email}</span></li>
+              <li><a href={home("contact")}><T fr="Demander un devis" en="Request a quote" /></a></li>
+            </ul>
+          </div>
+          <div>
+            <h2 className="label"><T fr="Langue" en="Language" /></h2>
+            <ul>
+              <li>
+                <button type="button" className="tlink" onClick={toggleLocale} aria-label={t({ fr: "Switch to English", en: "Passer en français" })}>
+                  <T fr="English" en="Français" />
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
-
-        <div className="flex flex-col gap-4 pt-8 font-sans text-xs text-ivoire/40 sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            © {year} {siteConfig.legal.company}. {t.footer.rights}
-          </p>
-          <div className="flex gap-6">
-            {t.footer.legal.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="transition-colors duration-300 hover:text-bronze"
-              >
-                {link.label}
-              </a>
-            ))}
-          </div>
+        <p className="wordmark" aria-hidden="true">Estal<em>ia</em></p>
+        <div className="foot-base">
+          <p className="small">© {new Date().getFullYear()} Estalia Studio — {siteConfig.founder.name}</p>
+          <nav className="small" aria-label={t({ fr: "Informations légales", en: "Legal" })}>
+            <Link href="/mentions-legales"><T fr="Mentions légales" en="Legal notice" /></Link>
+            <Link href="/confidentialite"><T fr="Confidentialité" en="Privacy" /></Link>
+          </nav>
         </div>
       </div>
     </footer>

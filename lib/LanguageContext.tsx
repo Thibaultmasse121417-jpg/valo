@@ -1,45 +1,31 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
-import { content, type Content, type Locale } from "@/data/content";
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
+import type { L } from "@/data/site";
+
+export type Locale = "fr" | "en";
 
 type LanguageContextValue = {
   locale: Locale;
-  setLocale: (locale: Locale) => void;
   toggleLocale: () => void;
-  t: Content;
+  /** texte de la langue active — pour les attributs (aria-label, alt, placeholder) */
+  t: (text: L) => string;
 };
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
-
 const STORAGE_KEY = "estalia-locale";
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  // Lancement UK : l'anglais est la langue par défaut du site (voir brief
-  // Phase 2 §36). Le FR reste disponible via le toggle pour le fondateur.
-  const [locale, setLocaleState] = useState<Locale>("en");
+  // Le français est la langue principale : c'est lui que le serveur rend
+  // (et que les moteurs de recherche lisent). L'anglais n'apparaît que si
+  // le visiteur l'a choisi avec le sélecteur.
+  const [locale, setLocale] = useState<Locale>("fr");
 
   useEffect(() => {
     try {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
-      if (stored === "fr" || stored === "en") {
-        setLocaleState(stored);
-        return;
-      }
-      const browserLang = window.navigator.language?.toLowerCase();
-      if (browserLang && browserLang.startsWith("fr")) {
-        setLocaleState("fr");
-      }
+      if (window.localStorage.getItem(STORAGE_KEY) === "en") setLocale("en");
     } catch {
-      // localStorage indisponible (SSR / navigation privée) : on garde le défaut EN.
+      // stockage indisponible (navigation privée) : on reste en français
     }
   }, []);
 
@@ -47,40 +33,31 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     document.documentElement.lang = locale;
   }, [locale]);
 
-  const setLocale = useCallback((next: Locale) => {
-    setLocaleState(next);
-    try {
-      window.localStorage.setItem(STORAGE_KEY, next);
-    } catch {
-      // ignore
-    }
+  const toggleLocale = useCallback(() => {
+    setLocale((current) => {
+      const next = current === "fr" ? "en" : "fr";
+      try {
+        window.localStorage.setItem(STORAGE_KEY, next);
+      } catch {
+        // ignore
+      }
+      return next;
+    });
   }, []);
 
-  const toggleLocale = useCallback(() => {
-    setLocale(locale === "fr" ? "en" : "fr");
-  }, [locale, setLocale]);
+  const t = useCallback((text: L) => text[locale], [locale]);
 
-  const value = useMemo<LanguageContextValue>(
-    () => ({
-      locale,
-      setLocale,
-      toggleLocale,
-      t: content[locale],
-    }),
-    [locale, setLocale, toggleLocale]
-  );
-
-  return (
-    <LanguageContext.Provider value={value}>
-      {children}
-    </LanguageContext.Provider>
-  );
+  return <LanguageContext.Provider value={{ locale, toggleLocale, t }}>{children}</LanguageContext.Provider>;
 }
 
-export function useLanguage() {
+export function useLang() {
   const ctx = useContext(LanguageContext);
-  if (!ctx) {
-    throw new Error("useLanguage must be used within a LanguageProvider");
-  }
+  if (!ctx) throw new Error("useLang must be used inside LanguageProvider");
   return ctx;
+}
+
+/** Affiche le texte de la langue active. Utilisable depuis un composant serveur. */
+export function T({ fr, en }: { fr: ReactNode; en: ReactNode }) {
+  const { locale } = useLang();
+  return <>{locale === "en" ? en : fr}</>;
 }
