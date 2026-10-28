@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c0a09" />
+  <meta name="color-scheme" content="dark" />
+  <title>Estalia Studio — Films promo & sites web pour les lieux qui ont une âme</title>
+  <meta name="description" content="Estalia Studio crée des films de promotion et des sites web sur mesure pour les commerces, agences immobilières, campings, hôtels et notaires." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230c0a09'/%3E%3Crect x='10' y='10' width='44' height='44' fill='none' stroke='%23c9a46a' stroke-width='2'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Georgia,serif' font-size='30' fill='%23f4efe6'%3EE%3C/text%3E%3C/svg%3E" />
+  <link rel="preload" as="image" href="media/frames/desktop/f_001.webp" media="(min-width: 768px)" />
+  <link rel="preload" as="image" href="media/frames/mobile/f_001.webp" media="(max-width: 767.98px)" />
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body>
+  <a class="skip" href="#contenu">Aller au contenu</a>
+
+  <!-- Écran de chargement (préchargement des images du hero) -->
+  <div class="loader" aria-hidden="true">
+    <div class="loader__mark"><span class="mono">E</span></div>
+    <div class="loader__bar"><span></span></div>
+  </div>
+
+  <div class="progress" aria-hidden="true"><span></span></div>
+  <div class="hud" aria-hidden="true"><span data-hud-scene>Sc. 01 — Ouverture</span><span data-hud-tc>00:00:00:00</span></div>
+
+  <header class="nav at-hero" data-nav>
+    <a class="brand" href="#top" aria-label="Estalia Studio — retour en haut">
+      <span class="mono" aria-hidden="true">E</span>
+      <span class="brand__word">Estalia<small>Studio</small></span>
+    </a>
+    <nav class="nav__links" aria-label="Navigation principale">
+      <a href="#metiers">Métiers</a>
+      <a href="#offres">Offres</a>
+      <a href="#temps-forts">Temps forts</a>
+      <a href="#films">Films</a>
+      <a href="#tarifs">Tarifs</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn btn--small nav__cta" href="#devis">Demander un devis</a>
+    <button class="nav__burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <div class="menu" id="menu" hidden>
+    <nav aria-label="Menu mobile">
+      <a href="#metiers"><i>01</i>Métiers</a>
+      <a href="#offres"><i>02</i>Offres</a>
+      <a href="#temps-forts"><i>03</i>Temps forts</a>
+      <a href="#films"><i>04</i>Films</a>
+      <a href="#tarifs"><i>05</i>Tarifs</a>
+      <a href="#faq"><i>06</i>FAQ</a>
+    </nav>
+    <a class="btn" href="#devis">Demander un devis</a>
+  </div>
+
+  <main id="contenu">
+    <!-- ═════════ 1. HERO — vidéo pilotée au scroll (canvas, image par image) ═════════
+         À REMPLACER : vos images dans public/media/frames/ (npm run frames -- hero.mp4) -->
+    <section class="hero" id="top" aria-label="Estalia Studio">
+      <div class="hero__stage">
+        <canvas class="hero__canvas" aria-hidden="true"></canvas>
+        <div class="hero__shade" aria-hidden="true"></div>
+        <div class="hero__bars" aria-hidden="true"><i></i><i></i></div>
+        <div class="hero__center">
+          <div class="hero__logo" aria-hidden="true">
+            <span class="mono mono--lg">E</span>
+            <span class="hero__wordmark">Estalia <small>Studio</small></span>
+          </div>
+          <h1 class="hero__title">
+            <span class="line"><span>Des images</span></span>
+            <span class="line"><span>qui se <em>ressentent.</em></span></span>
+          </h1>
+          <a class="btn hero__cta" href="#devis">Demander un devis</a>
+        </div>
+        <div class="hero__cue" aria-hidden="true"><span>Défiler</span><i></i></div>
+      </div>
+    </section>
+
+    <!-- ═════════ 2. MANIFESTE ═════════ -->
+    <section class="manifesto" aria-labelledby="manifesto-title">
+      <p class="kicker" id="manifesto-title">Le studio</p>
+      <p class="manifesto__text" data-words>
+        Estalia filme votre lieu, vos produits et votre équipe, puis construit le site qui leur fait honneur. Pour que vos futurs clients ressentent l’endroit avant même d’en pousser la porte.
+      </p>
+      <ul class="manifesto__facts">
+        <li><b>Tournage</b><span>sur place, sans fermer</span></li>
+        <li><b>Montage</b><span>étalonnage cinéma</span></li>
+        <li><b>Diffusion</b><span>site, réseaux, vitrines</span></li>
+      </ul>
+    </section>
+
+    <!-- ═════════ 3. TRANSITION « ZOOM À TRAVERS » ═════════ -->
+    <section class="portal" aria-labelledby="metiers-title">
+      <div class="portal__stage">
+        <!-- À REMPLACER : image d'entrée de la section Métiers -->
+        <img class="portal__img" src="media/images/commerce.jpg" alt="" width="1600" height="900" />
+        <div class="portal__mask" aria-hidden="true"></div>
+        <p class="portal__word portal__word--l" aria-hidden="true">Entrez</p>
+        <p class="portal__word portal__word--r" aria-hidden="true">dans le cadre</p>
+        <p class="portal__caption" aria-hidden="true">Chaque film commence par un lieu</p>
+        <div class="portal__after">
+          <p class="kicker">Nos métiers</p>
+          <h2 id="metiers-title" class="h2">Quatre univers.<br /><em>Une même exigence.</em></h2>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═════════ 4. MÉTIERS — média épinglé, texte qui défile ═════════ -->
+    <section class="trades" id="metiers" aria-label="Nos métiers">
+      <div class="trades__media" aria-hidden="true">
+        <!-- À REMPLACER : une vidéo par métier dans public/media/videos/ -->
+        <figure class="trades__frame is-active" data-trade="0">
+          <video muted loop playsinline preload="metadata" poster="media/images/commerce.jpg" data-src="media/videos/commerce.mp4"></video>
+        </figure>
+        <figure class="trades__frame" data-trade="1">
+          <video muted loop playsinline preload="none" poster="media/images/immo.jpg" data-src="media/videos/immo.mp4"></video>
+        </figure>
+        <figure class="trades__frame" data-trade="2">
+          <video muted loop playsinline preload="none" poster="media/images/camping.jpg" data-src="media/videos/camping.mp4"></video>
+        </figure>
+        <figure class="trades__frame" data-trade="3">
+          <video muted loop playsinline preload="none" poster="media/images/notaire.jpg" data-src="media/videos/notaire.mp4"></video>
+        </figure>
+        <div class="trades__counter"><span data-trade-num>01</span> / 04</div>
+        <span class="placeholder-tag">Vidéo temporaire</span>
+      </div>
+
+      <div class="trades__list">
+        <article class="trade" data-index="0">
+          <p class="trade__num">01 — Commerces</p>
+          <h3 class="h3">La boutique qu’on a envie de pousser.</h3>
+          <p>Boulangeries, cavistes, fleuristes, restaurants, créateurs : nous filmons le geste, la matière, le sourire derrière le comptoir. Un film court qui donne faim, envie, ou les deux.</p>
+          <ul class="tags"><li>Le lieu</li><li>Les produits</li><li>L’équipe</li></ul>
+          <a class="link" href="#devis">Parler de mon commerce</a>
+        </article>
+        <article class="trade" data-index="1">
+          <p class="trade__num">02 — Agences immobilières</p>
+          <h3 class="h3">Vendre la lumière avant les mètres carrés.</h3>
+          <p>Visites filmées en plan-séquence, vues de drone, rendu cinéma : vos mandats se démarquent sur les portails, et vos vendeurs voient la différence dès le rendez-vous d’estimation.</p>
+          <ul class="tags"><li>Visite plan-séquence</li><li>Drone</li><li>Formats portails</li></ul>
+          <a class="link" href="#devis">Parler de mon agence</a>
+        </article>
+        <article class="trade" data-index="2">
+          <p class="trade__num">03 — Campings &amp; hôtels</p>
+          <h3 class="h3">Donner envie de réserver avant le premier café.</h3>
+          <p>Le matin sur la terrasse, la piscine à 17 h, la chambre qui donne sur les pins. Nous captons l’expérience que vos clients viendront chercher, déclinée pour votre site, Instagram et les plateformes.</p>
+          <ul class="tags"><li>Expérience séjour</li><li>Saisonnalité</li><li>Réservation directe</li></ul>
+          <a class="link" href="#devis">Parler de mon établissement</a>
+        </article>
+        <article class="trade" data-index="3">
+          <p class="trade__num">04 — Notaires</p>
+          <h3 class="h3">Inspirer confiance, sobrement.</h3>
+          <p>Présentation de l’étude, portraits de l’équipe, biens à la vente : une image institutionnelle juste et élégante, qui rassure vos clients sans jamais en faire trop.</p>
+          <ul class="tags"><li>Portraits</li><li>Présentation de l’étude</li><li>Biens en vente</li></ul>
+          <a class="link" href="#devis">Parler de mon étude</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- ═════════ 5. PARALLAXE — premier plan / sujet / arrière-plan ═════════ -->
+    <section class="depth" aria-labelledby="depth-title">
+      <!-- À REMPLACER : arrière-plan, sujet et premier plan -->
+      <div class="depth__layer depth__bg" data-speed="-12" aria-hidden="true">
+        <img src="media/images/camping.jpg" alt="" width="1600" height="900" loading="lazy" />
+      </div>
+      <div class="depth__layer depth__subject" data-speed="-30">
+        <p class="kicker">Notre regard</p>
+        <h2 id="depth-title" class="h2">Un premier plan.<br />Un sujet.<br /><em>Un horizon.</em></h2>
+        <p class="depth__lead">Nous composons chaque plan comme au cinéma : de la profondeur, de la lumière, et toujours votre lieu au centre du cadre.</p>
+      </div>
+      <figure class="depth__layer depth__card" data-speed="-55" aria-hidden="true">
+        <video muted loop playsinline preload="none" poster="media/images/hotel.jpg" data-src="media/videos/hotel.mp4"></video>
+        <figcaption>Plan 12 · Lumière de 7 h</figcaption>
+      </figure>
+      <div class="depth__layer depth__fg" data-speed="-70" aria-hidden="true">
+        <img src="media/images/premier-plan.jpg" alt="" width="2000" height="580" loading="lazy" />
+      </div>
+    </section>
+
+    <!-- ═════════ 6. OFFRES — cartes en verre dépoli ═════════ -->
+    <section class="offers" id="offres" aria-labelledby="offres-title">
+      <div class="offers__bg" aria-hidden="true">
+        <video muted loop playsinline preload="none" poster="media/images/immo.jpg" data-src="media/videos/immo.mp4"></video>
+      </div>
+      <header class="section-head">
+        <p class="kicker">Ce que nous créons</p>
+        <h2 id="offres-title" class="h2">Trois façons de<br /><em>vous faire remarquer.</em></h2>
+      </header>
+      <div class="offers__grid">
+        <article class="glass offer">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="1.5"/><path d="M8 21h8M12 17v4"/></svg>
+          <h3 class="h4">Sites web sur mesure</h3>
+          <p>Un site rapide, beau et pensé pour transformer les visites en demandes : design unique, textes, référencement local, réservation ou contact intégrés.</p>
+          <ul class="checks">
+            <li>Design sur mesure, mobile d’abord</li>
+            <li>Référencement local Google</li>
+            <li>Vos films intégrés en plein écran</li>
+            <li>Mise en ligne et hébergement</li>
+          </ul>
+        </article>
+        <article class="glass offer">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="14" height="12" rx="1.5"/><path d="m16 10 6-3v10l-6-3z"/></svg>
+          <h3 class="h4">Films promo</h3>
+          <p>De 30 à 90 secondes de cinéma sur votre activité, tournées sur place et livrées dans tous les formats : site, réseaux, vitrine, portails.</p>
+          <ul class="checks">
+            <li>Tournage sur place, drone selon le lieu</li>
+            <li>Montage, étalonnage, musique sous licence</li>
+            <li>Formats 16:9, 9:16 et 1:1</li>
+            <li>Vous êtes propriétaire des films</li>
+          </ul>
+        </article>
+        <article class="glass offer">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="1.5"/><path d="M3 10h18M8 3v4M16 3v4M8 14h2M14 14h2M8 17h2"/></svg>
+          <h3 class="h4">Packs saisonniers</h3>
+          <p>Un film pour chaque temps fort de l’année, préparé à l’avance, pour être visible au moment exact où vos clients cherchent.</p>
+          <ul class="checks">
+            <li>Calendrier éditorial annuel</li>
+            <li>4 à 6 films courts par an</li>
+            <li>Publication planifiée</li>
+            <li>Tarif dégressif</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- ═════════ 7. CALENDRIER DES TEMPS FORTS ═════════ -->
+    <section class="moments" id="temps-forts" aria-labelledby="moments-title">
+      <header class="section-head">
+        <p class="kicker">Temps forts</p>
+        <h2 id="moments-title" class="h2">Le bon film,<br /><em>au bon moment.</em></h2>
+        <p class="section-head__lead">Nous tournons quelques semaines avant chaque temps fort, pour que votre vidéo soit prête quand vos clients commencent à chercher.</p>
+      </header>
+
+      <div class="moments__wrap">
+        <div class="moments__tabs" role="tablist" aria-label="Temps forts de l’année">
+          <button role="tab" id="tab-0" aria-controls="moment-panel" aria-selected="true" data-moment="0"><span>Février</span>Saint-Valentin</button>
+          <button role="tab" id="tab-1" aria-controls="moment-panel" aria-selected="false" tabindex="-1" data-moment="1"><span>Mai</span>Fête des mères</button>
+          <button role="tab" id="tab-2" aria-controls="moment-panel" aria-selected="false" tabindex="-1" data-moment="2"><span>Juin – août</span>Été</button>
+          <button role="tab" id="tab-3" aria-controls="moment-panel" aria-selected="false" tabindex="-1" data-moment="3"><span>Septembre</span>Rentrée</button>
+          <button role="tab" id="tab-4" aria-controls="moment-panel" aria-selected="false" tabindex="-1" data-moment="4"><span>Novembre</span>Black Friday</button>
+          <button role="tab" id="tab-5" aria-controls="moment-panel" aria-selected="false" tabindex="-1" data-moment="5"><span>Décembre</span>Noël</button>
+        </div>
+
+        <div class="moments__panel" id="moment-panel" role="tabpanel" aria-labelledby="tab-0" tabindex="0">
+          <div class="moments__video">
+            <!-- À REMPLACER : la vidéo de chaque temps fort est définie dans src/main.js (MOMENTS) -->
+            <video muted loop playsinline preload="none" poster="media/images/notaire.jpg" data-src="media/videos/notaire.mp4"></video>
+            <span class="placeholder-tag">Vidéo temporaire</span>
+          </div>
+          <div class="moments__info">
+            <p class="moments__when" data-m="when">Tournage conseillé : début janvier</p>
+            <h3 class="h3" data-m="title">Pour deux.</h3>
+            <p data-m="text">Coffrets, dîners, week-ends en amoureux : un film chaleureux qui donne une idée de cadeau, ou une raison de réserver.</p>
+            <dl class="moments__spec">
+              <div><dt>Vidéo associée</dt><dd data-m="video">Film 20 s + 2 formats verticaux</dd></div>
+              <div><dt>Idéal pour</dt><dd data-m="for">Restaurants, hôtels, chocolatiers, fleuristes</dd></div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═════════ 8. PORTFOLIO VIDÉO ═════════ -->
+    <section class="films" id="films" aria-labelledby="films-title">
+      <header class="section-head section-head--row">
+        <div>
+          <p class="kicker">Films</p>
+          <h2 id="films-title" class="h2">Quelques <em>plans.</em></h2>
+        </div>
+        <p class="section-head__lead">Exemples temporaires, en attendant vos premières réalisations. Touchez un film pour le voir en grand.</p>
+      </header>
+      <!-- À REMPLACER : vos films (data-full = version longue, data-src = extrait muet en boucle) -->
+      <div class="films__grid">
+        <button class="film film--wide" type="button" data-full="media/videos/hotel.mp4" aria-label="Voir le film : Domaine et jardins, hôtel">
+          <video muted loop playsinline preload="none" poster="media/images/hotel.jpg" data-src="media/videos/hotel.mp4"></video>
+          <span class="film__meta"><b>Domaine &amp; jardins</b><i>Hôtel · 0:45</i></span>
+        </button>
+        <button class="film film--tall" type="button" data-full="media/videos/commerce.mp4" aria-label="Voir le film : Une adresse parisienne, commerce">
+          <video muted loop playsinline preload="none" poster="media/images/commerce.jpg" data-src="media/videos/commerce.mp4"></video>
+          <span class="film__meta"><b>Une adresse parisienne</b><i>Commerce · 0:30</i></span>
+        </button>
+        <button class="film" type="button" data-full="media/videos/immo.mp4" aria-label="Voir le film : Villa face à la mer, immobilier">
+          <video muted loop playsinline preload="none" poster="media/images/immo.jpg" data-src="media/videos/immo.mp4"></video>
+          <span class="film__meta"><b>Villa face à la mer</b><i>Immobilier · 1:10</i></span>
+        </button>
+        <button class="film" type="button" data-full="media/videos/notaire.mp4" aria-label="Voir le film : Château au crépuscule, étude notariale">
+          <video muted loop playsinline preload="none" poster="media/images/notaire.jpg" data-src="media/videos/notaire.mp4"></video>
+          <span class="film__meta"><b>Château au crépuscule</b><i>Étude notariale · 0:40</i></span>
+        </button>
+        <button class="film film--wide" type="button" data-full="media/videos/camping.mp4" aria-label="Voir le film : La vallée au matin, camping">
+          <video muted loop playsinline preload="none" poster="media/images/camping.jpg" data-src="media/videos/camping.mp4"></video>
+          <span class="film__meta"><b>La vallée au matin</b><i>Camping · 0:50</i></span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ═════════ 9. TARIFS ═════════
+         À VALIDER : montants indicatifs à ajuster -->
+    <section class="pricing" id="tarifs" aria-labelledby="tarifs-title">
+      <header class="section-head">
+        <p class="kicker">Tarifs</p>
+        <h2 id="tarifs-title" class="h2">Des formules <em>claires.</em></h2>
+        <p class="section-head__lead">Tarifs de départ, hors taxes. Vous recevez un devis précis sous 48 h, sans engagement.</p>
+      </header>
+      <div class="pricing__grid">
+        <article class="plan">
+          <p class="plan__name">Essentiel</p>
+          <p class="plan__what">Un film promo</p>
+          <p class="plan__price"><small>à partir de</small> 490 €<span> HT</span></p>
+          <ul class="checks">
+            <li>Film de 30 secondes</li>
+            <li>Une demi-journée de tournage</li>
+            <li>2 formats (horizontal + vertical)</li>
+            <li>1 aller-retour de révision</li>
+          </ul>
+          <a class="btn btn--line" href="#devis" data-plan="Essentiel">Choisir Essentiel</a>
+        </article>
+        <article class="plan plan--featured">
+          <p class="plan__badge">Le plus choisi</p>
+          <p class="plan__name">Signature</p>
+          <p class="plan__what">Film + site web</p>
+          <p class="plan__price"><small>à partir de</small> 1 900 €<span> HT</span></p>
+          <ul class="checks">
+            <li>Film de 60 secondes + 3 déclinaisons</li>
+            <li>Site vitrine sur mesure, 5 pages</li>
+            <li>Référencement local et mise en ligne</li>
+            <li>2 allers-retours de révision</li>
+          </ul>
+          <a class="btn" href="#devis" data-plan="Signature">Choisir Signature</a>
+        </article>
+        <article class="plan">
+          <p class="plan__name">Saisons</p>
+          <p class="plan__what">Le pack annuel</p>
+          <p class="plan__price"><small>à partir de</small> 190 €<span> HT / mois</span></p>
+          <ul class="checks">
+            <li>4 temps forts filmés dans l’année</li>
+            <li>12 formats courts pour les réseaux</li>
+            <li>Calendrier éditorial et publication</li>
+            <li>Engagement 12 mois</li>
+          </ul>
+          <a class="btn btn--line" href="#devis" data-plan="Saisons">Choisir Saisons</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- ═════════ 10. FAQ ═════════ -->
+    <section class="faq" id="faq" aria-labelledby="faq-title">
+      <header class="section-head">
+        <p class="kicker">Questions fréquentes</p>
+        <h2 id="faq-title" class="h2">Avant de <em>se lancer.</em></h2>
+      </header>
+      <div class="faq__list">
+        <details>
+          <summary>Combien de temps dure un tournage ?</summary>
+          <div class="faq__a"><div><p>Une demi-journée suffit pour la plupart des commerces et des biens immobiliers. Pour un hôtel ou un camping, nous prévoyons en général une journée, avec deux moments de lumière : le matin et la fin d’après-midi.</p></div></div>
+        </details>
+        <details>
+          <summary>Sous quel délai recevons-nous la vidéo ?</summary>
+          <div class="faq__a"><div><p>Comptez 7 à 10 jours ouvrés après le tournage pour la première version, puis 48 h par aller-retour de révision.</p></div></div>
+        </details>
+        <details>
+          <summary>Faut-il fermer l’établissement pendant le tournage ?</summary>
+          <div class="faq__a"><div><p>Non. Nous nous organisons autour de votre activité : tôt le matin, entre deux services ou en fin de journée. Vos clients du jour ne sont filmés qu’avec leur accord.</p></div></div>
+        </details>
+        <details>
+          <summary>À qui appartiennent les films ?</summary>
+          <div class="faq__a"><div><p>À vous. Les musiques sont sous licence commerciale et vous pouvez utiliser les films livrés partout : site, réseaux sociaux, vitrine, publicité, portails immobiliers.</p></div></div>
+        </details>
+        <details>
+          <summary>Pouvez-vous reprendre notre site existant ?</summary>
+          <div class="faq__a"><div><p>Oui : refonte complète ou simple intégration de vos nouveaux films. Nous conservons votre nom de domaine et préservons votre référencement actuel.</p></div></div>
+        </details>
+        <details>
+          <summary>Les prises de vue par drone sont-elles possibles partout ?</summary>
+          <div class="faq__a"><div><p>Elles respectent la réglementation en vigueur. Si votre lieu se trouve en zone restreinte, nous demandons les autorisations nécessaires ou proposons une alternative au sol.</p></div></div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ═════════ 11. DEVIS — formulaire en verre dépoli ═════════ -->
+    <section class="quote" id="devis" aria-labelledby="devis-title">
+      <div class="quote__bg" aria-hidden="true">
+        <video muted loop playsinline preload="none" poster="media/images/hotel.jpg" data-src="media/videos/hotel.mp4"></video>
+      </div>
+      <div class="quote__intro">
+        <p class="kicker">Devis</p>
+        <h2 id="devis-title" class="h2">Parlons de<br /><em>votre lieu.</em></h2>
+        <p>Réponse sous 48 h ouvrées avec une proposition chiffrée. Aucun engagement.</p>
+        <!-- À REMPLACER : votre adresse e-mail de contact -->
+        <a class="link" href="mailto:contact@estalia-studio.com">contact@estalia-studio.com</a>
+      </div>
+
+      <!-- À REMPLACER : FORM_ENDPOINT dans src/main.js (Formspree, Getform…) ; sans lui, le formulaire ouvre un e-mail prérempli -->
+      <form class="glass form" novalidate>
+        <div class="form__row">
+          <div class="field">
+            <label for="f-nom">Nom et prénom</label>
+            <input id="f-nom" name="nom" type="text" autocomplete="name" required />
+            <p class="field__err" id="f-nom-err"></p>
+          </div>
+          <div class="field">
+            <label for="f-societe">Établissement</label>
+            <input id="f-societe" name="etablissement" type="text" autocomplete="organization" />
+          </div>
+        </div>
+        <div class="form__row">
+          <div class="field">
+            <label for="f-email">E-mail</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" required />
+            <p class="field__err" id="f-email-err"></p>
+          </div>
+          <div class="field">
+            <label for="f-tel">Téléphone <span class="opt">(facultatif)</span></label>
+            <input id="f-tel" name="telephone" type="tel" autocomplete="tel" inputmode="tel" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-metier">Votre activité</label>
+          <select id="f-metier" name="activite" required>
+            <option value="">Choisir…</option>
+            <option>Commerce</option>
+            <option>Agence immobilière</option>
+            <option>Camping</option>
+            <option>Hôtel</option>
+            <option>Étude notariale</option>
+            <option>Autre</option>
+          </select>
+          <p class="field__err" id="f-metier-err"></p>
+        </div>
+        <fieldset class="field">
+          <legend>Votre besoin</legend>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" name="besoin" value="Site web" /><span>Site web</span></label>
+            <label class="chip"><input type="checkbox" name="besoin" value="Film promo" /><span>Film promo</span></label>
+            <label class="chip"><input type="checkbox" name="besoin" value="Pack saisonnier" /><span>Pack saisonnier</span></label>
+          </div>
+        </fieldset>
+        <div class="field">
+          <label for="f-formule">Formule envisagée</label>
+          <select id="f-formule" name="formule">
+            <option value="">Je ne sais pas encore</option>
+            <option>Essentiel</option>
+            <option>Signature</option>
+            <option>Saisons</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-msg">Votre projet en quelques mots</label>
+          <textarea id="f-msg" name="message" rows="4" enterkeyhint="send"></textarea>
+        </div>
+        <label class="consent">
+          <input type="checkbox" name="consentement" required />
+          <span>J’accepte qu’Estalia Studio utilise ces informations pour me répondre.</span>
+        </label>
+        <p class="field__err" id="f-consent-err"></p>
+        <button class="btn btn--full" type="submit"><span>Envoyer ma demande</span></button>
+        <p class="form__status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <!-- ═════════ 12. FOOTER — ESTALIA géant, vidéo dans les lettres ═════════ -->
+  <footer class="footer">
+    <div class="giant" aria-hidden="true">
+      <!-- À REMPLACER : vidéo visible à travers les lettres -->
+      <video muted loop playsinline preload="none" poster="media/images/camping.jpg" data-src="media/videos/camping.mp4"></video>
+      <svg class="giant__mask" viewBox="0 0 1000 200" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <mask id="giant-cut" maskUnits="userSpaceOnUse" x="-100" y="-100" width="1200" height="400">
+            <rect x="-100" y="-100" width="1200" height="400" fill="#fff" />
+            <text x="500" y="168" text-anchor="middle" textLength="960" lengthAdjust="spacingAndGlyphs">ESTALIA</text>
+          </mask>
+        </defs>
+        <rect x="-100" y="-100" width="1200" height="400" mask="url(#giant-cut)" />
+      </svg>
+    </div>
+    <div class="footer__cols">
+      <div>
+        <p class="footer__tag">Films promo &amp; sites web pour les lieux qui ont une âme.</p>
+        <a class="btn btn--small" href="#devis">Demander un devis</a>
+      </div>
+      <nav aria-label="Pied de page">
+        <p class="kicker">Navigation</p>
+        <a href="#metiers">Métiers</a><a href="#offres">Offres</a><a href="#temps-forts">Temps forts</a><a href="#films">Films</a><a href="#tarifs">Tarifs</a>
+      </nav>
+      <div>
+        <p class="kicker">Contact</p>
+        <a href="mailto:contact@estalia-studio.com">contact@estalia-studio.com</a>
+        <p class="muted">France · Sur rendez-vous</p>
+      </div>
+    </div>
+    <div class="footer__base">
+      <p>© 2026 Estalia Studio</p>
+      <p><a href="#">Mentions légales</a> · <a href="#">Confidentialité</a></p>
+    </div>
+  </footer>
+
+  <dialog class="lightbox" aria-label="Lecture du film">
+    <button class="lightbox__close" type="button" aria-label="Fermer">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <video controls playsinline></video>
+  </dialog>
+</body>
+</html>
