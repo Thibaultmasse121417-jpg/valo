@@ -1,4 +1,4 @@
-# Estalia Studio — site vitrine (Vite + GSAP + Lenis)
+# Estalia Studio — le site (Vite + GSAP ScrollTrigger + Lenis)
 
 ```bash
 cd site
@@ -7,44 +7,62 @@ npm run dev       # http://localhost:5173 (accessible depuis le téléphone via 
 npm run build     # génère dist/ à déployer (Vercel, Netlify, OVH…)
 ```
 
-## Remplacer les médias temporaires
+## Le récit
 
-Tous les médias actuels sont **temporaires** : ils ont été fabriqués à partir des
-photos de `../public/images/` (lent mouvement de caméra, `npm run media:temp`).
-Sur le site, ils portent l'étiquette « Vidéo temporaire » ; dans le code, chaque
-emplacement est signalé par un commentaire `À REMPLACER`.
+Un seul mouvement de caméra, du ciel jusqu'au formulaire, en alternant spectacle et calme :
 
-| Fichier | Où il apparaît |
-| --- | --- |
-| `public/media/frames/desktop/f_001…120.webp` | Hero piloté au scroll (ordinateur, 16:9) |
-| `public/media/frames/mobile/f_001…072.webp` | Hero piloté au scroll (téléphone, 9:16) |
-| `public/media/videos/commerce.mp4` + `images/commerce.jpg` | Métier Commerces, portail d'entrée, portfolio, temps forts |
-| `public/media/videos/immo.mp4` + `images/immo.jpg` | Métier Agences immobilières, fond des Offres, portfolio |
-| `public/media/videos/camping.mp4` + `images/camping.jpg` | Métier Campings & hôtels, parallaxe, mot ESTALIA du footer |
-| `public/media/videos/notaire.mp4` + `images/notaire.jpg` | Métier Notaires, Saint-Valentin, portfolio |
-| `public/media/videos/hotel.mp4` + `images/hotel.jpg` | Carte de la parallaxe, Noël, fond du formulaire, portfolio |
-| `public/media/images/premier-plan.jpg` | Premier plan de la parallaxe (bas d'image, fondu vers le haut) |
+1. **Hero (spectacle)** : descente pilotée au scroll, image par image dans un canvas.
+   Nuages, ville, une fenêtre, puis l'intérieur. Au centre : le logo et une phrase.
+2. **Studio (calme, papier)** : une image et deux lignes.
+3. **ESTALIA (spectacle)** : le ciel dans les lettres ; on traverse le « I ».
+4. **Métiers (spectacle)** : un univers plein écran par métier, en fondu, avec le nom seul.
+5. **Ce que nous faisons (calme, nuit)** : trois lignes typographiques, aperçu vidéo au survol.
+6. **Films (spectacle)** : le cadre s'ouvre jusqu'au plein écran ; chaque film se lance en grand.
+7. **Saisons (calme, papier)**, **Tarifs (calme, nuit)**, **Questions (calme, papier)**.
+8. **Contact (spectacle)** : le formulaire en verre dépoli flotte dans le ciel.
 
-**Votre vidéo hero → images :** `npm run frames -- chemin/vers/hero.mp4`
-(ffmpeg requis). Le script produit les deux séquences ; si vous changez le nombre
-d'images, ajustez `FRAMES` dans `src/main.js`.
+## Médias : ce qu'il faut tourner
 
-**Vidéos :** MP4 H.264, sans son, 1280×720 à 1920×1080, 5 à 15 s en boucle, ≈ 1–3 Mo
-(`ffmpeg -i source.mov -vf scale=1600:-2 -c:v libx264 -crf 26 -preset slow -an -movflags +faststart sortie.mp4`).
-Le poster `.jpg` est la première image affichée avant lecture.
+Le seul vrai film est **Villa triplex, San Peïre** (`../public/videos/villa-san-peire.mp4`).
+Tout le reste est **temporaire**, généré par `python3 scripts/gen_media.py` :
+nuages procéduraux (`scripts/clouds.py`) et plans lents à partir des photos de `../public/images/`.
+Chaque fichier porte le nom du plan à tourner. Dans le code, les emplacements sont marqués `À REMPLACER`.
 
-## Autres réglages (`src/main.js`, en tête de fichier)
+| Fichier (`public/media/…`) | Plan à tourner | Où |
+| --- | --- | --- |
+| `videos/hero-descente-nuages-ville-interieur.mp4` | Drone/avion : au-dessus des nuages → la ville → une rue → la vitrine → on entre | Hero (voir ci-dessous) |
+| `videos/ciel-nuages-boucle.mp4` | Ciel au-dessus des nuages, en boucle, 15–20 s | Lettres d'ESTALIA, transition, contact |
+| `videos/metier-commerce-vitrine-et-produits.mp4` | Vitrine, produits, équipe d'un commerce | Univers Commerces, Saisons |
+| `videos/metier-agence-immobiliere-visite-villa.mp4` | **Réel** (extrait du film de la villa) | Univers Agences immobilières |
+| `videos/metier-camping-hotel-piscine-terrasse.mp4` | Piscine, terrasse, chambres au matin | Univers Campings & hôtels |
+| `videos/metier-notaire-facade-de-l-etude.mp4` | Façade et intérieur d'une étude, portraits | Univers Notaires |
+| `films/villa-san-peire.mp4` + `-extrait.mp4` | **Réel** | Film à la une (avec le son) |
+| `films/film-hotel-domaine-et-jardins.mp4`, `films/film-camping-vallee-au-matin.mp4` | Vos prochains films | Portfolio |
+| `images/calme-*.jpg` | **Réel** (images du film de la villa) | Respirations calmes |
 
-- `FORM_ENDPOINT` : URL de votre service de formulaire (Formspree, Getform…). Vide = le
-  formulaire ouvre un e-mail prérempli vers `CONTACT_EMAIL`.
-- `MOMENTS` : textes et vidéo de chaque temps fort du calendrier.
-- Tarifs : dans `index.html`, section `#tarifs` (montants indicatifs **à valider**).
+Chaque vidéo a son poster `.jpg` du même nom (première image affichée).
+Format conseillé : MP4 H.264, sans son (sauf films du portfolio), 1280–1920 px, 1–3 Mo,
+`ffmpeg -i source.mov -vf scale=1600:-2 -c:v libx264 -crf 26 -preset slow -an -movflags +faststart sortie.mp4`.
 
-## Effets et version allégée
+**Hero → images du canvas** : remplacez `public/media/hero/desktop/f_001…150.webp` (16:9)
+et `public/media/hero/mobile/f_001…090.webp` (9:16) :
 
-- Hero en canvas image par image, portail « zoom à travers », métiers épinglés,
-  parallaxe 3 calques, mot ESTALIA masqué sur vidéo, cartes en verre dépoli.
-- Téléphone : séquence hero plus légère (72 images 720 px), épinglages plus courts,
-  parallaxe divisée par deux, scroll natif (Lenis ne lisse que la molette), timecode masqué.
-- `prefers-reduced-motion` : pas de scroll lissé, pas d'épinglage ni de scrub, vidéos
-  non lues automatiquement (posters), contenus affichés dans leur état final.
+```bash
+ffmpeg -i descente.mp4 -vf "fps=150/DUREE,scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720" -frames:v 150 -c:v libwebp -quality 60 public/media/hero/desktop/f_%03d.webp
+ffmpeg -i descente.mp4 -vf "fps=90/DUREE,scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280" -frames:v 90 -c:v libwebp -quality 55 public/media/hero/mobile/f_%03d.webp
+```
+
+Si le nombre d'images change, ajustez `FRAMES`, et les légendes de la descente dans `CHAPTERS` (`src/main.js`).
+
+## Réglages (`src/main.js`, en tête)
+
+- `FORM_ENDPOINT` : service d'envoi du formulaire (Formspree, Getform…). Vide = e-mail prérempli vers `CONTACT_EMAIL`.
+- `MOMENTS` : texte et vidéo de chaque temps fort.
+- Tarifs : `index.html`, section `#tarifs` (montants **à valider**).
+
+## Mobile et mouvement réduit
+
+- Téléphone : même récit, effets allégés : séquence hero de 90 images en 720 px,
+  épinglages plus courts, scroll tactile natif, pas d'aperçu vidéo au survol.
+- `prefers-reduced-motion` : ni scroll lissé ni épinglage. Les univers deviennent des panneaux
+  fixes, les vidéos ne se lancent pas seules et tout le texte est visible d'emblée.
