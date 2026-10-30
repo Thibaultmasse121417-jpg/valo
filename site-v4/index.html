@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0c11" />
+  <meta name="color-scheme" content="dark" />
+  <title>Estalia Studio — Films promo & sites web pour les lieux qui ont une âme</title>
+  <meta name="description" content="Estalia Studio crée des films de promotion et des sites web sur mesure pour les commerces, agences immobilières, campings, hôtels et notaires." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230a0c11'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-family='Georgia,serif' font-size='36' fill='%23f3eee6'%3EE%3C/text%3E%3C/svg%3E" />
+  <link rel="preload" as="image" href="media/hero/desktop/f_001.webp" media="(min-width: 768px)" />
+  <link rel="preload" as="image" href="media/hero/mobile/f_001.webp" media="(max-width: 767.98px)" />
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body>
+  <a class="skip" href="#contenu">Aller au contenu</a>
+
+  <div class="loader" aria-hidden="true"><span class="loader__word">Estalia</span><span class="loader__bar"><i></i></span></div>
+
+  <header class="nav at-hero" data-nav>
+    <a class="nav__brand" href="#top" aria-label="Estalia Studio, retour au début">Estalia</a>
+    <nav class="nav__links" aria-label="Navigation principale"><a href="commerces.html">Commerces</a><a href="immobilier.html">Immobilier</a><a href="hotels-campings.html">Hôtels &amp; campings</a><a href="notaires.html">Notaires</a><a href="tarifs.html">Tarifs</a></nav>
+    <a class="nav__cta" href="#devis">Devis</a>
+    <button class="nav__menu" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+  </header>
+
+  <div class="menu" id="menu" hidden>
+    <nav aria-label="Menu">
+      <a href="#metiers">Métiers</a>
+      <a href="commerces.html">Commerces</a>
+      <a href="immobilier.html">Agences immobilières</a>
+      <a href="hotels-campings.html">Campings &amp; hôtels</a>
+      <a href="notaires.html">Notaires</a>
+      <a href="#films">Films</a>
+      <a href="tarifs.html">Tarifs</a>
+      <a href="#devis">Devis</a>
+    </nav>
+    <p class="menu__mail">contact@estalia-studio.com</p>
+  </div>
+
+  <main id="contenu">
+
+    <!-- ═══ 1. HERO — une seule descente : nuages → ville → fenêtre → intérieur ═══
+         À REMPLACER : media/hero/… (plan à tourner : media/videos/hero-descente-nuages-ville-interieur.mp4) -->
+    <section class="hero scene" id="top" aria-label="Estalia Studio">
+      <div class="hero__stage">
+        <canvas class="hero__canvas" aria-hidden="true"></canvas>
+        <div class="hero__veil" aria-hidden="true"></div>
+        <div class="hero__center">
+          <p class="logo" aria-hidden="true">Estalia<span>Studio</span></p>
+          <h1 class="hero__title">Des images qui se <em>ressentent.</em></h1>
+        </div>
+        <p class="hero__end" aria-hidden="true">Votre lieu, comme on rêve<br />d’y entrer.</p>
+        <p class="hero__chapter" aria-hidden="true"><span data-chapter>Au-dessus des nuages</span></p>
+        <span class="hero__cue" aria-hidden="true"></span>
+      </div>
+    </section>
+
+    <!-- ═══ 2. CALME — une image, deux lignes ═══ -->
+    <section class="calm calm--paper studio" aria-labelledby="studio-title">
+      <h2 id="studio-title" class="calm__title" data-lines>Nous filmons les lieux.<br /><em>Pour qu’on ait envie d’y entrer.</em></h2>
+      <figure class="studio__img" data-clip>
+        <img src="media/images/calme-interieur-jour.jpg" alt="Salon lumineux d’une villa, vu depuis la terrasse et la piscine" width="1600" height="666" loading="lazy" />
+      </figure>
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee__track">
+          <span>Commerces</span><i></i><span><em>Agences immobilières</em></span><i></i><span>Campings</span><i></i><span><em>Hôtels</em></span><i></i><span>Notaires</span><i></i>
+          <span>Commerces</span><i></i><span><em>Agences immobilières</em></span><i></i><span>Campings</span><i></i><span><em>Hôtels</em></span><i></i><span>Notaires</span><i></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 3. SPECTACLE — ESTALIA, le ciel dans les lettres ; on plonge à travers le « I » ═══
+         À REMPLACER : media/videos/ciel-nuages-boucle.mp4 -->
+    <section class="sign scene" aria-label="Estalia">
+      <div class="sign__stage">
+        <video class="sign__video" muted loop playsinline preload="none" poster="media/videos/ciel-nuages-boucle.jpg" data-src="media/videos/ciel-nuages-boucle.mp4" aria-hidden="true"></video>
+        <svg class="sign__mask" viewBox="0 0 1000 220" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <defs>
+            <mask id="sign-cut" maskUnits="userSpaceOnUse" x="-2000" y="-2000" width="5000" height="4220">
+              <rect x="-2000" y="-2000" width="5000" height="4220" fill="#fff" />
+              <text x="500" y="168" text-anchor="middle" textLength="900" lengthAdjust="spacingAndGlyphs">ESTALIA</text>
+            </mask>
+          </defs>
+          <rect x="-2000" y="-2000" width="5000" height="4220" mask="url(#sign-cut)" />
+        </svg>
+        <p class="sign__caption">Le ciel, la ville, votre porte.</p>
+      </div>
+    </section>
+
+    <!-- ═══ 4. SPECTACLE — un univers par métier, en fondu ═══
+         À REMPLACER : media/videos/metier-*.mp4 -->
+    <section class="trades scene" id="metiers" aria-label="Nos métiers">
+      <div class="trades__stage">
+        <div class="trades__layer is-sky" aria-hidden="true">
+          <video muted loop playsinline preload="none" poster="media/videos/ciel-nuages-boucle.jpg" data-src="media/videos/ciel-nuages-boucle.mp4"></video>
+        </div>
+        <div class="trades__layer" data-trade aria-hidden="true">
+          <video muted loop playsinline preload="none" poster="media/videos/metier-commerce-vitrine-et-produits.jpg" data-src="media/videos/metier-commerce-vitrine-et-produits.mp4"></video>
+        </div>
+        <div class="trades__layer" data-trade aria-hidden="true">
+          <video muted loop playsinline preload="none" poster="media/videos/metier-agence-immobiliere-visite-villa.jpg" data-src="media/videos/metier-agence-immobiliere-visite-villa.mp4"></video>
+        </div>
+        <div class="trades__layer" data-trade aria-hidden="true">
+          <video muted loop playsinline preload="none" poster="media/videos/metier-camping-hotel-piscine-terrasse.jpg" data-src="media/videos/metier-camping-hotel-piscine-terrasse.mp4"></video>
+        </div>
+        <div class="trades__layer" data-trade aria-hidden="true">
+          <video muted loop playsinline preload="none" poster="media/videos/metier-notaire-facade-de-l-etude.jpg" data-src="media/videos/metier-notaire-facade-de-l-etude.mp4"></video>
+        </div>
+        <div class="trades__names">
+          <h2 class="trades__name" data-name><span>Commerces</span></h2>
+          <h2 class="trades__name" data-name><span>Agences immobilières</span></h2>
+          <h2 class="trades__name" data-name><span>Campings &amp; hôtels</span></h2>
+          <h2 class="trades__name" data-name><span>Notaires</span></h2>
+        </div>
+        <p class="trades__count" aria-hidden="true"><span data-count>01</span> — 04</p>
+        <a class="trades__more" href="commerces.html" data-trade-link>Voir l’offre</a>
+      </div>
+    </section>
+
+    <!-- ═══ 5. CALME — ce que nous faisons, en typographie ═══ -->
+    <section class="calm calm--night offers" id="offres" aria-labelledby="offres-title">
+      <h2 id="offres-title" class="label">Ce que nous faisons</h2>
+      <ul class="offers__list">
+        <li data-preview="media/videos/metier-agence-immobiliere-visite-villa.mp4">
+          <span class="offers__name">Films promo</span>
+          <span class="offers__line">30 à 90 secondes, tournées chez vous.</span>
+        </li>
+        <li data-preview="media/videos/hero-descente-nuages-ville-interieur.mp4">
+          <span class="offers__name">Sites web <em>sur mesure</em></span>
+          <span class="offers__line">Vos films en plein écran, pensés pour convertir.</span>
+        </li>
+        <li data-preview="media/videos/metier-camping-hotel-piscine-terrasse.mp4">
+          <span class="offers__name">Packs saisonniers</span>
+          <span class="offers__line">Un film prêt pour chaque temps fort.</span>
+        </li>
+      </ul>
+      <div class="offers__preview" aria-hidden="true"><video muted loop playsinline preload="none"></video></div>
+    </section>
+
+    <!-- ═══ 4 bis. SPECTACLE — la visite pilotée au scroll (vrai film, image par image) ═══ -->
+    <section class="visit scene" id="visite" aria-label="Visite filmée de la villa San Peïre">
+      <div class="visit__stage">
+        <canvas class="visit__canvas" aria-hidden="true"></canvas>
+        <p class="visit__title label">Visite · Villa triplex, San Peïre</p>
+        <p class="visit__room" aria-hidden="true"><span data-room>Le séjour</span></p>
+        <p class="visit__hint" aria-hidden="true">La visite avance avec vous.</p>
+        <p class="visit__time" aria-hidden="true" data-visit-time>00:00</p>
+      </div>
+    </section>
+
+    <!-- ═══ 7. CALME — saisons en galerie horizontale ═══
+         À REMPLACER : une vidéo par temps fort -->
+    <section class="season calm--paper" id="saisons" aria-labelledby="saisons-title">
+      <div class="season__pin">
+        <h2 id="saisons-title" class="calm__title">Un film pour chaque saison.<br /><em>Prêt avant vos clients.</em></h2>
+        <div class="season__track">
+          <article class="moment"><div class="moment__media"><video muted loop playsinline preload="none" poster="media/images/calme-interieur-nuit.jpg" data-src="media/films/villa-san-peire-extrait.mp4" style="filter:saturate(1.05) sepia(.12)"></video></div><p class="moment__when">Février</p><h3>Saint-Valentin</h3><p class="moment__film">Film 20 s « Pour deux »</p></article>
+          <article class="moment"><div class="moment__media"><video muted loop playsinline preload="none" poster="media/videos/metier-commerce-vitrine-et-produits.jpg" data-src="media/videos/metier-commerce-vitrine-et-produits.mp4"></video></div><p class="moment__when">Mai</p><h3>Fête des mères</h3><p class="moment__film">Portraits &amp; produits, 30 s</p></article>
+          <article class="moment"><div class="moment__media"><video muted loop playsinline preload="none" poster="media/videos/metier-camping-hotel-piscine-terrasse.jpg" data-src="media/videos/metier-camping-hotel-piscine-terrasse.mp4"></video></div><p class="moment__when">Juin – août</p><h3>Été</h3><p class="moment__film">Film séjour 45 s + formats verticaux</p></article>
+          <article class="moment"><div class="moment__media"><video muted loop playsinline preload="none" poster="media/videos/metier-agence-immobiliere-visite-villa.jpg" data-src="media/videos/metier-agence-immobiliere-visite-villa.mp4"></video></div><p class="moment__when">Septembre</p><h3>Rentrée</h3><p class="moment__film">Film « nouvelle saison », 30 s</p></article>
+          <article class="moment"><div class="moment__media"><video muted loop playsinline preload="none" poster="media/videos/metier-commerce-vitrine-et-produits.jpg" data-src="media/videos/metier-commerce-vitrine-et-produits.mp4" style="filter:grayscale(.7) contrast(1.15) brightness(.85)"></video></div><p class="moment__when">Novembre</p><h3>Black Friday</h3><p class="moment__film">3 teasers de 10 s</p></article>
+          <article class="moment"><div class="moment__media"><video muted loop playsinline preload="none" poster="media/films/film-hotel-domaine-et-jardins.jpg" data-src="media/films/film-hotel-domaine-et-jardins.mp4" style="filter:saturate(1.15) sepia(.2) brightness(.92)"></video></div><p class="moment__when">Décembre</p><h3>Noël</h3><p class="moment__film">Film des fêtes, 30 s</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 6. SPECTACLE — index des films : la vidéo de fond suit le titre actif ═══
+         À TOURNER : remplacer les exemples par vos prochains films -->
+    <section class="index" id="films" aria-labelledby="films-title">
+      <div class="index__bg" aria-hidden="true">
+        <div class="index__layer is-active"><video muted loop playsinline preload="none" poster="media/films/villa-san-peire-extrait.jpg" data-src="media/films/villa-san-peire-extrait.mp4"></video></div>
+        <div class="index__layer"><video muted loop playsinline preload="none" poster="media/films/film-hotel-domaine-et-jardins.jpg" data-src="media/films/film-hotel-domaine-et-jardins.mp4"></video></div>
+        <div class="index__layer"><video muted loop playsinline preload="none" poster="media/videos/metier-commerce-vitrine-et-produits.jpg" data-src="media/videos/metier-commerce-vitrine-et-produits.mp4"></video></div>
+        <div class="index__layer"><video muted loop playsinline preload="none" poster="media/films/film-camping-vallee-au-matin.jpg" data-src="media/films/film-camping-vallee-au-matin.mp4"></video></div>
+        <div class="index__layer"><video muted loop playsinline preload="none" poster="media/videos/metier-notaire-facade-de-l-etude.jpg" data-src="media/videos/metier-notaire-facade-de-l-etude.mp4"></video></div>
+      </div>
+      <div class="index__list">
+        <h2 id="films-title" class="label">Films</h2>
+        <ol>
+          <li><button type="button" data-film="media/films/villa-san-peire.mp4" data-title="Villa triplex, San Peïre"><span class="index__name">Villa triplex, <em>San Peïre</em></span><span class="index__meta">Immobilier · 0:50</span></button></li>
+          <li><button type="button" data-film="media/films/film-hotel-domaine-et-jardins.mp4" data-title="Domaine et jardins"><span class="index__name">Domaine &amp; jardins</span><span class="index__meta">Hôtel · exemple à tourner</span></button></li>
+          <li><button type="button" data-film="media/videos/metier-commerce-vitrine-et-produits.mp4" data-title="Une adresse parisienne"><span class="index__name">Une adresse <em>parisienne</em></span><span class="index__meta">Commerce · exemple à tourner</span></button></li>
+          <li><button type="button" data-film="media/films/film-camping-vallee-au-matin.mp4" data-title="La vallée au matin"><span class="index__name">La vallée au matin</span><span class="index__meta">Camping · exemple à tourner</span></button></li>
+          <li><button type="button" data-film="media/videos/metier-notaire-facade-de-l-etude.mp4" data-title="L’étude, au crépuscule"><span class="index__name">L’étude, <em>au crépuscule</em></span><span class="index__meta">Notaire · exemple à tourner</span></button></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="calm calm--paper method" aria-labelledby="method-title">
+      <h2 id="method-title" class="label">Comment nous travaillons</h2>
+      <ol class="steps"><li><span class="steps__n">01</span><b>Un appel de vingt minutes</b><span>Votre lieu, vos clients, vos objectifs. Devis sous 48 h.</span></li><li><span class="steps__n">02</span><b>Repérage et script</b><span>Les plans, la lumière, l’heure du tournage.</span></li><li><span class="steps__n">03</span><b>Le tournage</b><span>Une demi-journée à deux jours, sans fermer.</span></li><li><span class="steps__n">04</span><b>Montage et étalonnage</b><span>Première version sous 7 à 10 jours ouvrés.</span></li><li><span class="steps__n">05</span><b>Livraison</b><span>Tous les formats, révisions incluses, films à vous.</span></li></ol>
+      <ul class="promise"><li>Devis sous 48 h</li><li>Tournage sans fermer</li><li>Films à vous, sans limite de durée</li><li>Révisions incluses</li></ul>
+    </section>
+
+    <!-- ═══ 8. CALME — tarifs (à valider) ═══ -->
+    <section class="calm calm--night pricing" id="tarifs" aria-labelledby="tarifs-title">
+      <h2 id="tarifs-title" class="label">Tarifs de départ, hors taxes</h2>
+      <ol class="pricing__list">
+        <li>
+          <span class="pricing__name">Essentiel</span>
+          <span class="pricing__what">Un film de 30 secondes, deux formats</span>
+          <span class="pricing__price">490 €</span>
+          <a class="pricing__go" href="#devis" data-plan="Essentiel" aria-label="Demander un devis Essentiel"></a>
+        </li>
+        <li class="is-featured">
+          <span class="pricing__name">Signature</span>
+          <span class="pricing__what">Un film de 60 secondes et votre site sur mesure</span>
+          <span class="pricing__price">1 900 €</span>
+          <a class="pricing__go" href="#devis" data-plan="Signature" aria-label="Demander un devis Signature"></a>
+        </li>
+        <li>
+          <span class="pricing__name">Saisons</span>
+          <span class="pricing__what">Quatre temps forts filmés dans l’année</span>
+          <span class="pricing__price">190 €<small> / mois</small></span>
+          <a class="pricing__go" href="#devis" data-plan="Saisons" aria-label="Demander un devis Saisons"></a>
+        </li>
+      </ol>
+      <a class="phero__link" href="tarifs.html">Tous les tarifs, par secteur</a>
+    </section>
+
+    <!-- ═══ 9. CALME — questions ═══ -->
+    <section class="calm calm--paper faq" id="faq" aria-labelledby="faq-title">
+      <h2 id="faq-title" class="label">Questions</h2>
+      <div class="faq__list">
+        <details><summary>Combien de temps dure un tournage&nbsp;?</summary><div class="faq__a"><div><p>Une demi-journée pour un commerce ou un bien. Une journée pour un hôtel ou un camping, pour avoir la lumière du matin et du soir.</p></div></div></details>
+        <details><summary>Quand recevons-nous le film&nbsp;?</summary><div class="faq__a"><div><p>7 à 10 jours ouvrés après le tournage, puis 48 h par révision.</p></div></div></details>
+        <details><summary>Faut-il fermer pendant le tournage&nbsp;?</summary><div class="faq__a"><div><p>Non. Nous tournons tôt, entre deux services ou en fin de journée.</p></div></div></details>
+        <details><summary>À qui appartiennent les films&nbsp;?</summary><div class="faq__a"><div><p>À vous, pour tous vos usages. Les musiques sont sous licence commerciale.</p></div></div></details>
+        <details><summary>Le drone est-il possible partout&nbsp;?</summary><div class="faq__a"><div><p>Dans le respect de la réglementation. En zone restreinte, nous demandons les autorisations ou filmons autrement.</p></div></div></details>
+      </div>
+    </section>
+
+    <!-- ═══ 10. SPECTACLE — le contact flotte dans le ciel ═══
+         À REMPLACER : media/videos/ciel-nuages-boucle.mp4 -->
+    <section class="contact" id="devis" aria-labelledby="devis-title">
+      <div class="contact__sky" aria-hidden="true">
+        <video muted loop playsinline preload="none" poster="media/videos/ciel-nuages-boucle.jpg" data-src="media/videos/ciel-nuages-boucle.mp4"></video>
+      </div>
+      <div class="contact__inner">
+        <h2 id="devis-title" class="contact__title">Parlons de <em>votre&nbsp;lieu.</em></h2>
+        <!-- À REMPLACER : FORM_ENDPOINT dans src/main.js ; sans lui, le formulaire ouvre un e-mail prérempli -->
+        <form class="glass form" novalidate>
+          <div class="form__row">
+            <div class="field">
+              <label for="f-nom">Nom</label>
+              <input id="f-nom" name="nom" type="text" autocomplete="name" required />
+              <p class="field__err" id="f-nom-err"></p>
+            </div>
+            <div class="field">
+              <label for="f-email">E-mail</label>
+              <input id="f-email" name="email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" required />
+              <p class="field__err" id="f-email-err"></p>
+            </div>
+          </div>
+          <div class="form__row">
+            <div class="field">
+              <label for="f-metier">Activité</label>
+              <select id="f-metier" name="activite" required>
+                <option value="">Choisir…</option>
+                <option>Commerce</option>
+                <option>Agence immobilière</option>
+                <option>Camping</option>
+                <option>Hôtel</option>
+                <option>Étude notariale</option>
+                <option>Autre</option>
+              </select>
+              <p class="field__err" id="f-metier-err"></p>
+            </div>
+            <div class="field">
+              <label for="f-formule">Formule</label>
+              <select id="f-formule" name="formule">
+                <option value="">À définir ensemble</option>
+                <option>Essentiel</option>
+                <option>Signature</option>
+                <option>Saisons</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-msg">Votre projet <span class="opt">(facultatif)</span></label>
+            <textarea id="f-msg" name="message" rows="3" enterkeyhint="send"></textarea>
+          </div>
+          <label class="consent">
+            <input type="checkbox" name="consentement" required />
+            <span>J’accepte qu’Estalia Studio utilise ces informations pour me répondre.</span>
+          </label>
+          <p class="field__err" id="f-consent-err"></p>
+          <button class="btn" type="submit">Envoyer</button>
+          <p class="form__status" role="status" aria-live="polite"></p>
+        </form>
+        <p class="contact__mail">Réponse sous 48 h · <span>contact@estalia-studio.com</span></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <nav class="sector-links" aria-label="Secteurs"><a href="commerces.html">Commerces</a><a href="immobilier.html">Agences immobilières</a><a href="hotels-campings.html">Campings &amp; hôtels</a><a href="notaires.html">Notaires</a><a href="tarifs.html">Tous les tarifs</a></nav>
+    <p class="footer__word" aria-hidden="true">Estalia</p>
+    <div class="footer__base">
+      <p>© 2026 Estalia Studio · Films promo &amp; sites web</p>
+      <p><a href="#">Mentions légales</a> · <a href="#">Confidentialité</a></p>
+    </div>
+  </footer>
+
+  <a class="pill" href="#devis">Demander un devis</a>
+  <div class="cursor" aria-hidden="true"><span>Voir</span></div>
+
+  <dialog class="player" aria-label="Lecture du film">
+    <button class="player__close" type="button" aria-label="Fermer le film">Fermer</button>
+    <video controls playsinline></video>
+  </dialog>
+</body>
+</html>
