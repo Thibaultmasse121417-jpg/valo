@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#f7f6f2" />
   <title>Estalia Studio — Films promo créés avec l’IA, sans tournage</title>
-  <meta name="description" content="Estalia Studio réalise des films promotionnels avec l’IA à partir de vos photos, pour les commerces, l’hôtellerie et l’immobilier. Sans tournage, livrés en cinq jours." />
+  <meta name="description" content="Estalia Studio réalise des films promotionnels avec l’IA à partir de vos photos, pour les produits, les commerces, l’hôtellerie et l’immobilier. Sans tournage, livrés en cinq jours." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23161616'/%3E%3Ccircle cx='32' cy='32' r='9' fill='%23e5391f'/%3E%3C/svg%3E" />
   <script type="module" src="/src/main.js"></script>
 </head>
@@ -15,6 +15,7 @@
   <header class="nav" data-nav>
     <a class="logo" href="#top" aria-label="Estalia Studio, haut de page"><b>Estalia</b> Studio</a>
     <nav class="nav__links" aria-label="Navigation principale">
+      <a href="#offres">Offres</a>
       <a href="#realisations">Réalisations</a>
       <a href="#methode">Méthode</a>
       <a href="#tarifs">Tarifs</a>
@@ -25,13 +26,13 @@
     <button class="nav__menu" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu"><span></span><span></span></button>
   </header>
   <div class="menu" id="menu" hidden>
-    <nav aria-label="Menu"><a href="#realisations">Réalisations</a><a href="#methode">Méthode</a><a href="#tarifs">Tarifs</a><a href="#saisons">Saisons</a><a href="#faq">Questions</a><a href="#contact">Nous contacter</a></nav>
+    <nav aria-label="Menu"><a href="#offres">Offres</a><a href="#realisations">Réalisations</a><a href="#methode">Méthode</a><a href="#tarifs">Tarifs</a><a href="#saisons">Saisons</a><a href="#faq">Questions</a><a href="#contact">Nous contacter</a></nav>
   </div>
 
   <main id="contenu">
     <section class="hero" id="top">
       <div class="hero__text">
-        <h1 class="hero__title">Des films promo pour votre commerce ou votre bien, sans tournage.</h1>
+        <h1 class="hero__title">Des films promo pour vos produits, votre commerce ou votre bien, sans tournage.</h1>
         <div class="hero__side">
           <p class="hero__lead">Estalia est un studio de création vidéo. Nous réalisons vos films avec l’IA à partir de vos photos&nbsp;: écriture, plans, montage, étalonnage. Livrés en cinq jours, prêts pour votre site et vos réseaux.</p>
           <div class="hero__cta">
@@ -49,29 +50,57 @@
       </figure>
     </section>
 
-    <section class="sectors" aria-labelledby="sectors-title">
-      <div class="head">
-        <h2 id="sectors-title" class="h2">Pour les commerces, l’hôtellerie et l’immobilier.</h2>
+    <section class="offers" id="offres" aria-labelledby="offers-title">
+      <div class="head head--split">
+        <h2 id="offers-title" class="h2">Ce que nous réalisons</h2>
+        <p class="head__txt">Un film pour chaque besoin, à partir de ce que vous avez déjà&nbsp;: des photos de vos produits, de votre lieu ou de votre bien.</p>
       </div>
-      <div class="sectors__grid">
-        <a class="sector" href="#tarifs" data-tab="tab-com" data-activite="Commerce">
-          <span class="sector__img"><img src="media/tiles/boul-four.jpg" alt="" loading="lazy" width="640" height="640" /></span>
-          <span class="sector__title">Commerces et restaurants</span>
-          <span class="sector__txt">Des vidéos chaque mois pour vos réseaux, votre vitrine et chaque temps fort de l’année.</span>
-          <span class="sector__more">À partir de 490 € par mois</span>
+      <div class="offers__grid">
+        <a class="offer" href="#produit" data-activite="Marque ou e-commerce">
+          <span class="offer__img"><img src="media/product/pain.jpg" alt="" loading="lazy" width="1280" height="720" /></span>
+          <span class="offer__title">Présenter un produit</span>
+          <span class="offer__txt">Packshot animé, produit en situation, décor au choix. Pour votre boutique en ligne, vos réseaux et vos publicités.</span>
+          <span class="offer__more">À partir de 190 € par produit</span>
         </a>
-        <a class="sector" href="#tarifs" data-tab="tab-com" data-activite="Hôtel ou camping">
-          <span class="sector__img"><img src="media/tiles/domaine.jpg" alt="" loading="lazy" width="560" height="672" /></span>
-          <span class="sector__title">Hôtels, campings et gîtes</span>
-          <span class="sector__txt">Les chambres, la piscine, les environs&nbsp;: de quoi donner envie de réserver, saison après saison.</span>
-          <span class="sector__more">Packs à partir de 390 €</span>
+        <a class="offer" href="#tarifs" data-tab="tab-com" data-activite="Commerce">
+          <span class="offer__img"><img src="media/tiles/boul-comptoir.jpg" alt="" loading="lazy" width="560" height="672" /></span>
+          <span class="offer__title">Faire venir en boutique</span>
+          <span class="offer__txt">Votre lieu, votre savoir-faire, votre équipe. Des vidéos chaque mois pour les commerces et les restaurants.</span>
+          <span class="offer__more">À partir de 490 € par mois</span>
         </a>
-        <a class="sector" href="#tarifs" data-tab="tab-immo" data-activite="Agence immobilière">
-          <span class="sector__img"><img src="media/tiles/villa-salon.jpg" alt="" loading="lazy" width="640" height="640" /></span>
-          <span class="sector__title">Agences immobilières et notaires</span>
-          <span class="sector__txt">Une vidéo par bien, fidèle à la réalité, livrée en 48 heures pour les portails et les réseaux.</span>
-          <span class="sector__more">À partir de 149 € par bien</span>
+        <a class="offer" href="#saisons" data-activite="Hôtel ou camping">
+          <span class="offer__img"><img src="media/tiles/domaine.jpg" alt="" loading="lazy" width="560" height="672" /></span>
+          <span class="offer__title">Donner envie de réserver</span>
+          <span class="offer__txt">Chambres, piscine, environs. Pour les hôtels, campings et gîtes, saison après saison.</span>
+          <span class="offer__more">Packs à partir de 390 €</span>
         </a>
+        <a class="offer" href="#tarifs" data-tab="tab-immo" data-activite="Agence immobilière">
+          <span class="offer__img"><img src="media/tiles/villa-salon.jpg" alt="" loading="lazy" width="640" height="640" /></span>
+          <span class="offer__title">Vendre un bien</span>
+          <span class="offer__txt">Une vidéo par bien, fidèle à la réalité, livrée en 48 heures pour les agences et les notaires.</span>
+          <span class="offer__more">À partir de 149 € par bien</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="product" id="produit" aria-labelledby="product-title">
+      <div class="product__media">
+        <img src="media/product/pain.jpg" alt="Gros plan sur des pains dorés à la sortie du four" loading="lazy" width="1280" height="720" />
+        <p class="meta">Plan produit extrait du film Maison Luce</p>
+      </div>
+      <div class="product__text">
+        <h2 id="product-title" class="h2">La vidéo produit, sans studio ni shooting</h2>
+        <p>Envoyez-nous quelques photos nettes de votre produit, sous plusieurs angles. Nous le mettons en scène avec l’IA, puis nous vérifions plan par plan que sa forme, ses couleurs et son étiquette restent fidèles.</p>
+        <ul class="product__list">
+          <li><b>Packshot animé.</b> Le produit seul, en mouvement, sur fond neutre ou coloré.</li>
+          <li><b>Produit en situation.</b> Sur une table, en vitrine, entre les mains, en usage.</li>
+          <li><b>Décors à volonté.</b> Une cuisine, une plage, un studio, sans rien déplacer.</li>
+          <li><b>Tous les formats.</b> Fiche produit, Reels, publicité, écran en magasin.</li>
+        </ul>
+        <div class="product__cta">
+          <a class="btn btn--red" href="#contact" data-plan="Vidéo produit" data-activite="Marque ou e-commerce">Faire présenter un produit</a>
+          <a class="link" href="#tarifs" data-tab="tab-prod">Voir les tarifs</a>
+        </div>
       </div>
     </section>
 
@@ -136,7 +165,8 @@
       <div class="pricing__bar">
         <div class="tabs" role="tablist" aria-label="Type de client">
           <span class="tabs__pill" aria-hidden="true"></span>
-          <button role="tab" id="tab-com" aria-selected="true" aria-controls="panel-com">Commerces et hôtels</button>
+          <button role="tab" id="tab-com" aria-selected="true" aria-controls="panel-com">Commerces</button>
+          <button role="tab" id="tab-prod" aria-selected="false" aria-controls="panel-prod" tabindex="-1">Produits</button>
           <button role="tab" id="tab-immo" aria-selected="false" aria-controls="panel-immo" tabindex="-1">Immobilier</button>
         </div>
         <div class="billing" role="group" aria-label="Période de facturation" data-billing-group>
@@ -152,6 +182,15 @@
           <article class="plan"><h3>Studio</h3><p class="plan__price"><b data-m="1990" data-a="1690">1 990 €</b> par mois</p><p class="plan__for">Pour plusieurs établissements.</p><ul><li>Jusqu’à 20 vidéos par mois</li><li>Un directeur artistique dédié</li><li>Visuels IA, livraison en 48 h</li></ul><a class="btn btn--line" href="#contact" data-plan="Abonnement Studio">Choisir Studio</a></article>
         </div>
         <p class="note">Packs saisonniers en plus&nbsp;: 390 € l’unité.</p>
+      </div>
+
+      <div class="tabpanel" id="panel-prod" role="tabpanel" aria-labelledby="tab-prod" hidden>
+        <div class="plans">
+          <article class="plan"><h3>À l’unité</h3><p class="plan__price"><b>190 €</b> par produit</p><p class="plan__for">Pour tester sur un produit phare.</p><ul><li>1 vidéo de 10 à 15 s</li><li>Packshot ou produit en situation</li><li>Formats fiche produit, Reels et carré</li></ul><a class="btn btn--line" href="#contact" data-plan="Produit : à l’unité">Commander un produit</a></article>
+          <article class="plan plan--hot"><h3>Collection <span class="tag">Le plus choisi</span></h3><p class="plan__price"><b>790 €</b> les 5 produits</p><p class="plan__for">Soit 158 € par produit, dans un même univers.</p><ul><li>5 vidéos de 10 à 15 s</li><li>Un décor et une direction artistique communs</li><li>Tous formats, livraison en 5 jours</li></ul><a class="btn btn--red" href="#contact" data-plan="Produit : Collection 5">Choisir Collection</a></article>
+          <article class="plan"><h3>Lancement</h3><p class="plan__price"><b>1 490 €</b> par lancement</p><p class="plan__for">Pour un nouveau produit ou une gamme.</p><ul><li>1 film publicitaire de 30 s</li><li>5 vidéos courtes déclinées</li><li>Versions pour vos publicités en ligne</li></ul><a class="btn btn--line" href="#contact" data-plan="Produit : Lancement">Préparer un lancement</a></article>
+        </div>
+        <p class="note">Pour un catalogue complet, nous établissons un devis selon le nombre de références.</p>
       </div>
 
       <div class="tabpanel" id="panel-immo" role="tabpanel" aria-labelledby="tab-immo" hidden>
@@ -216,6 +255,7 @@
         <details><summary>Les films sont-ils vraiment réalisés avec l’IA&nbsp;?</summary><div class="faq__a"><div><p>Oui. Les plans sont générés par IA à partir de vos photos ou d’une description, puis sélectionnés, montés et étalonnés par notre équipe. Nous l’indiquons toujours clairement.</p></div></div></details>
         <details><summary>Le film ressemblera-t-il à mon établissement&nbsp;?</summary><div class="faq__a"><div><p>Nous partons de vos vraies photos pour rester fidèles à votre lieu et à vos produits. En immobilier, un bien n’est jamais modifié.</p></div></div></details>
         <details><summary>Je n’ai que des photos prises au téléphone.</summary><div class="faq__a"><div><p>Elles suffisent. Nous pouvons aussi créer des scènes d’ambiance entièrement par IA, comme dans notre film de boulangerie.</p></div></div></details>
+        <details><summary>Dois-je vous envoyer mon produit&nbsp;?</summary><div class="faq__a"><div><p>Non. Quelques photos nettes, prises sous plusieurs angles, suffisent. Nous vérifions que la forme, les couleurs et l’étiquette restent fidèles, et nous corrigeons tout plan qui s’en écarte.</p></div></div></details>
         <details><summary>Combien de temps cela me demande-t-il&nbsp;?</summary><div class="faq__a"><div><p>Une dizaine de minutes pour nous envoyer vos photos, puis deux validations&nbsp;: le découpage, et le film.</p></div></div></details>
         <details><summary>Et si le résultat ne me convient pas&nbsp;?</summary><div class="faq__a"><div><p>Deux séries de retouches sont comprises sur chaque film. Le premier plan est offert&nbsp;: vous jugez sur pièce avant de vous engager.</p></div></div></details>
         <details><summary>À qui appartiennent les vidéos&nbsp;?</summary><div class="faq__a"><div><p>À vous, pour tous vos usages&nbsp;: site, réseaux, vitrine, publicité, portails immobiliers.</p></div></div></details>
@@ -241,8 +281,8 @@
           <div class="field"><label for="f-tel">Téléphone <span class="opt">facultatif</span></label><input id="f-tel" name="telephone" type="tel" autocomplete="tel" inputmode="tel" /></div>
         </div>
         <div class="row">
-          <div class="field"><label for="f-metier">Activité</label><select id="f-metier" name="activite" required><option value="">Choisir</option><option>Commerce</option><option>Restaurant</option><option>Hôtel ou camping</option><option>Agence immobilière</option><option>Étude notariale</option><option>Autre</option></select><p class="err" id="f-metier-err"></p></div>
-          <div class="field"><label for="f-formule">Offre envisagée <span class="opt">facultatif</span></label><input id="f-formule" name="formule" type="text" placeholder="Abonnement, pack, bien…" /></div>
+          <div class="field"><label for="f-metier">Activité</label><select id="f-metier" name="activite" required><option value="">Choisir</option><option>Marque ou e-commerce</option><option>Commerce</option><option>Restaurant</option><option>Hôtel ou camping</option><option>Agence immobilière</option><option>Étude notariale</option><option>Autre</option></select><p class="err" id="f-metier-err"></p></div>
+          <div class="field"><label for="f-formule">Offre envisagée <span class="opt">facultatif</span></label><input id="f-formule" name="formule" type="text" placeholder="Produit, abonnement, pack, bien…" /></div>
         </div>
         <div class="field"><label for="f-msg">Votre projet <span class="opt">facultatif</span></label><textarea id="f-msg" name="message" rows="4"></textarea></div>
         <label class="consent"><input type="checkbox" name="consentement" required /><span>J’accepte qu’Estalia Studio utilise ces informations pour me recontacter.</span></label>
@@ -256,10 +296,10 @@
   <footer class="footer">
     <div class="footer__top">
       <p class="logo logo--lg"><b>Estalia</b> Studio</p>
-      <p class="footer__tag">Studio de création vidéo par IA, pour les commerces, l’hôtellerie et l’immobilier.</p>
+      <p class="footer__tag">Studio de création vidéo par IA, pour les marques, les commerces, l’hôtellerie et l’immobilier.</p>
     </div>
     <div class="footer__cols">
-      <div><p class="footer__h">Offres</p><ul><li><a href="#tarifs">Abonnements</a></li><li><a href="#tarifs">Immobilier</a></li><li><a href="#saisons">Packs saisonniers</a></li></ul></div>
+      <div><p class="footer__h">Offres</p><ul><li><a href="#produit">Vidéo produit</a></li><li><a href="#tarifs">Abonnements</a></li><li><a href="#tarifs">Immobilier</a></li><li><a href="#saisons">Packs saisonniers</a></li></ul></div>
       <div><p class="footer__h">Studio</p><ul><li><a href="#realisations">Réalisations</a></li><li><a href="#methode">Méthode</a></li><li><a href="#faq">Questions</a></li></ul></div>
       <div><p class="footer__h">Contact</p><ul><li><a href="mailto:contact@estalia-studio.com">contact@estalia-studio.com</a></li><li><a href="#contact">Demander un premier plan offert</a></li></ul></div>
     </div>

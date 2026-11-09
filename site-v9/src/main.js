@@ -48,7 +48,7 @@ if (hoverClips) {
 }
 
 /* Apparitions, discrètes */
-const els = $$('main .h2, .head__txt, .sector, .clip, .board__head, .shots li, .timeline li, .includes, .method__phone, .plans, .cal, .year, .table, .faq__list, .contact__text, .form')
+const els = $$('main .h2, .head__txt, .offer, .product__media, .product__text, .clip, .board__head, .shots li, .timeline li, .includes, .method__phone, .plans, .cal, .year, .table, .faq__list, .contact__text, .form')
 els.forEach((el) => el.setAttribute('data-reveal', ''))
 if (!reduce) {
   gsap.timeline({ defaults: { ease: 'expo.out' } })
