@@ -72,7 +72,7 @@ if (hoverClips) {
 }
 
 /* Apparitions */
-const els = $$('main .label, main h2, .principle__head .muted, .steps li, .phone, .clip, .films__note, .facts > div, .plans, .billing, .cal li, .year, .table, .faq details, .rdv__text > *, .form')
+const els = $$('main .label, main h2, .principle__head .muted, .steps li, .phone, .clip, .films__note, .board__head .muted, .shots li, .crafts .muted, .crafts__list > div, .promise__list li, .next li, .facts > div, .plans, .billing, .cal li, .year, .table, .faq details, .rdv__text > *, .form')
 els.forEach((el) => el.setAttribute('data-reveal', ''))
 if (!reduce) {
   gsap.timeline({ defaults: { ease: 'expo.out' } })
@@ -91,7 +91,7 @@ if (!reduce) {
 
 /* Barre de navigation sombre au-dessus des sections sombres */
 const navEl = $('[data-nav]')
-$$('.films, .rdv').forEach((sec) => ScrollTrigger.create({ trigger: sec, start: () => `top ${navEl.offsetHeight}`, end: () => `bottom ${navEl.offsetHeight}`, toggleClass: { targets: navEl, className: 'is-dark' } }))
+$$('.films, .crafts, .rdv').forEach((sec) => ScrollTrigger.create({ trigger: sec, start: () => `top ${navEl.offsetHeight}`, end: () => `bottom ${navEl.offsetHeight}`, toggleClass: { targets: navEl, className: 'is-dark' } }))
 
 /* Menu mobile et ancres */
 const menu = $('#menu'); const menuBtn = $('.nav__menu'); const nav = $('[data-nav]')

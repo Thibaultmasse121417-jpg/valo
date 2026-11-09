@@ -17,6 +17,7 @@
     <nav class="nav__links" aria-label="Navigation principale">
       <a href="#principe">Principe</a>
       <a href="#films">Films</a>
+      <a href="#studio">Studio</a>
       <a href="#tarifs">Tarifs</a>
       <a href="#saisons">Saisons</a>
       <a href="#faq">FAQ</a>
@@ -25,7 +26,7 @@
     <button class="nav__menu" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
   </header>
   <div class="menu" id="menu" hidden>
-    <nav aria-label="Menu"><a href="#principe">Principe</a><a href="#films">Films</a><a href="#tarifs">Tarifs</a><a href="#saisons">Saisons</a><a href="#faq">FAQ</a><a href="#rdv">Réserver un appel</a></nav>
+    <nav aria-label="Menu"><a href="#principe">Principe</a><a href="#films">Films</a><a href="#studio">Studio</a><a href="#tarifs">Tarifs</a><a href="#saisons">Saisons</a><a href="#faq">FAQ</a><a href="#rdv">Réserver un appel</a></nav>
   </div>
 
   <main id="contenu">
@@ -39,6 +40,11 @@
           <a class="btn btn--red" href="#rdv">Réserver un appel</a>
           <a class="link" href="#films">Voir les films</a>
         </div>
+        <ul class="hero__proof mono">
+          <li>Premier plan offert</li>
+          <li>Retouches comprises</li>
+          <li>Sans engagement</li>
+        </ul>
       </div>
       <figure class="viewfinder" data-viewfinder>
         <video autoplay muted loop playsinline preload="metadata" poster="media/demos/boulangerie-16x9.jpg" src="media/demos/boulangerie-16x9.mp4" aria-label="Exemple : film 100 % IA pour une boulangerie"></video>
@@ -102,6 +108,41 @@
         </div>
       </div>
       <p class="films__note muted">Envie de voir votre commerce&nbsp;? Nous faisons un premier plan gratuit à partir d’une de vos photos. <a class="link" href="#rdv">Le demander</a></p>
+    </section>
+
+    <!-- COULISSES : le storyboard du film -->
+    <section class="board" id="studio" aria-labelledby="board-title">
+      <header class="board__head">
+        <div>
+          <p class="label">Les coulisses</p>
+          <h2 id="board-title" class="display h2">Pas de caméra.<br />Mais un vrai découpage.</h2>
+        </div>
+        <p class="muted">L’IA ne fait pas le film toute seule. Chaque projet est écrit, découpé plan par plan, monté et étalonné, comme un tournage classique. Voici la feuille de montage de notre film Maison Luce.</p>
+      </header>
+      <ol class="shots">
+        <li><figure><img src="media/board/p1.jpg" alt="Plan 1 : façade de la boulangerie au petit matin" loading="lazy" width="640" height="360" /></figure><p class="mono shots__id"><b>Plan 01</b><span>0:00 · 5 s</span></p><h3>Ouverture, la rue</h3><p>Plan large fixe, lumière du matin. On installe le lieu avant de rentrer.</p></li>
+        <li><figure><img src="media/board/p2.jpg" alt="Plan 2 : gros plan sur des mains qui pétrissent la pâte" loading="lazy" width="640" height="360" /></figure><p class="mono shots__id"><b>Plan 02</b><span>0:05 · 3 s</span></p><h3>Le geste</h3><p>Gros plan, contre-jour. La farine accroche la lumière : c’est le savoir-faire.</p></li>
+        <li><figure><img src="media/board/p3.jpg" alt="Plan 3 : pains qui sortent du four à bois" loading="lazy" width="640" height="360" /></figure><p class="mono shots__id"><b>Plan 03</b><span>0:08 · 6 s</span></p><h3>Le four</h3><p>Travelling lent vers la flamme. Couleurs chaudes, rythme posé.</p></li>
+        <li><figure><img src="media/board/p4.jpg" alt="Plan 4 : le boulanger tend un pain à une cliente" loading="lazy" width="640" height="360" /></figure><p class="mono shots__id"><b>Plan 04</b><span>0:14 · 4 s</span></p><h3>La rencontre</h3><p>Plan moyen au comptoir. Le sourire, l’échange : ce que le client vient chercher.</p></li>
+        <li><figure><img src="media/board/p5.jpg" alt="Plan 5 : carton de fin Maison Luce, boulangerie artisanale" loading="lazy" width="640" height="360" /></figure><p class="mono shots__id"><b>Plan 05</b><span>0:18 · 3 s</span></p><h3>La signature</h3><p>Carton de fin aux couleurs de la marque, prêt pour l’adresse et l’offre.</p></li>
+      </ol>
+    </section>
+
+    <!-- MÉTIERS -->
+    <section class="crafts" aria-labelledby="crafts-title">
+      <div class="crafts__head">
+        <p class="label">Le studio</p>
+        <h2 id="crafts-title" class="display h2">Des métiers de l’image.<br />L’IA comme outil.</h2>
+        <p class="muted">Derrière chaque film, les mêmes étapes qu’en production vidéo. L’IA remplace la caméra, pas le regard.</p>
+      </div>
+      <dl class="crafts__list">
+        <div><dt><span class="mono">01</span>Direction artistique</dt><dd>Ton, couleurs, références : le film ressemble à votre marque, pas à une banque d’images.</dd></div>
+        <div><dt><span class="mono">02</span>Écriture et storyboard</dt><dd>Un message, un public, un découpage plan par plan validé avec vous avant de produire.</dd></div>
+        <div><dt><span class="mono">03</span>Génération des plans</dt><dd>Plans créés à partir de vos photos avec les meilleurs modèles vidéo du moment, et triés à l’œil.</dd></div>
+        <div><dt><span class="mono">04</span>Montage et rythme</dt><dd>Durées, enchaînements, accroche dans les deux premières secondes pour les réseaux.</dd></div>
+        <div><dt><span class="mono">05</span>Étalonnage et son</dt><dd>Couleurs harmonisées d’un plan à l’autre, musique libre de droits pour tous vos usages, mixage.</dd></div>
+        <div><dt><span class="mono">06</span>Titres et déclinaisons</dt><dd>Textes animés, logo, offre, puis exports 16:9, 9:16 et 1:1 prêts à publier.</dd></div>
+      </dl>
     </section>
 
     <!-- CHIFFRES -->
@@ -194,6 +235,22 @@
       <p class="muted compare__note">Ordres de grandeur constatés sur le marché, à titre indicatif.</p>
     </section>
 
+    <!-- ENGAGEMENTS -->
+    <section class="promise" aria-labelledby="promise-title">
+      <header class="promise__head">
+        <p class="label">Nos engagements</p>
+        <h2 id="promise-title" class="display h2">Vous ne prenez<br />aucun risque.</h2>
+      </header>
+      <ul class="promise__list">
+        <li><b class="display">Vous voyez avant de payer</b><p>Un premier plan offert, fait à partir de votre photo, avant toute commande.</p></li>
+        <li><b class="display">Retouches comprises</b><p>Deux allers-retours inclus sur chaque film. Vous validez la version finale.</p></li>
+        <li><b class="display">Délais tenus</b><p>5 jours pour un film, 48 h pour un bien immobilier, packs livrés avant le temps fort.</p></li>
+        <li><b class="display">Les vidéos sont à vous</b><p>Site, réseaux, vitrine, publicité, portails : aucun droit supplémentaire à payer.</p></li>
+        <li><b class="display">Sans engagement</b><p>Abonnement mensuel arrêtable à tout moment, avec un mois de préavis.</p></li>
+        <li><b class="display">Une IA honnête</b><p>Nous disons ce qui est généré. Un bien n’est jamais agrandi ni embelli, aucune vue n’est inventée.</p></li>
+      </ul>
+    </section>
+
     <!-- FAQ -->
     <section class="faq" id="faq" aria-labelledby="faq-title">
       <h2 id="faq-title" class="display h2">Questions</h2>
@@ -213,6 +270,11 @@
         <h2 id="rdv-title" class="display h2">Parlons de<br />votre prochaine vidéo.</h2>
         <p>Un appel de 20 minutes. Nous regardons vos photos, vous conseillons la bonne formule, et vous recevez un premier plan gratuit.</p>
         <p class="rdv__mail">Ou écrivez-nous : <span class="select">contact@estalia-studio.com</span></p>
+        <ol class="next">
+          <li><span class="mono">01</span>Nous vous répondons sous 48 h ouvrées.</li>
+          <li><span class="mono">02</span>Appel de 20 minutes, en visio ou au téléphone.</li>
+          <li><span class="mono">03</span>Vous recevez votre premier plan offert, sans engagement.</li>
+        </ol>
       </div>
       <!-- À REMPLACER : FORM_ENDPOINT dans src/form.js ; sans lui, le formulaire ouvre un e-mail prérempli -->
       <form class="form" novalidate>
@@ -234,6 +296,12 @@
   </main>
 
   <footer class="footer">
+    <div class="footer__cols">
+      <div><p class="mono">Studio</p><p>Estalia Studio, studio de création vidéo par IA pour les commerces et l’immobilier.</p><p><a href="mailto:contact@estalia-studio.com">contact@estalia-studio.com</a></p></div>
+      <div><p class="mono">Offres</p><ul><li><a href="#tarifs">Abonnements commerces</a></li><li><a href="#tarifs">Vidéos immobilières</a></li><li><a href="#saisons">Packs saisonniers</a></li></ul></div>
+      <div><p class="mono">Le studio</p><ul><li><a href="#studio">Coulisses</a></li><li><a href="#films">Films</a></li><li><a href="#faq">Questions</a></li></ul></div>
+      <div><p class="mono">Démarrer</p><p>Un appel de 20 minutes et un premier plan offert.</p><p><a class="link" href="#rdv">Réserver un appel</a></p></div>
+    </div>
     <p class="footer__word display" aria-hidden="true"><span class="dot"></span>estalia</p>
     <div class="footer__base mono">
       <p>© 2026 Estalia Studio · Vidéos promo par IA</p>
