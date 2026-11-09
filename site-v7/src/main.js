@@ -74,13 +74,28 @@ document.addEventListener('click', (e) => {
 $$('[data-billing]').forEach((b) => b.addEventListener('click', () => {
   const annual = b.dataset.billing === 'a'
   $$('[data-billing]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)))
-  $$('.plan__price b').forEach((p) => {
+  $$('.plan__price b[data-m]').forEach((p) => {
     const to = +(annual ? p.dataset.a : p.dataset.m)
     const n = { v: parseInt(p.textContent.replace(/\D/g, ''), 10) }
     if (reduce) { p.textContent = to.toLocaleString('fr-FR') + ' €'; return }
     gsap.to(n, { v: to, duration: 0.5, ease: 'power2.out', onUpdate: () => { p.textContent = Math.round(n.v).toLocaleString('fr-FR') + ' €' } })
   })
 }))
+
+/* Onglets Commerces / Immobilier */
+const tabs = $$('[role="tab"]')
+const selectTab = (t, focus) => {
+  tabs.forEach((x) => { const on = x === t; x.setAttribute('aria-selected', String(on)); x.tabIndex = on ? 0 : -1; $('#' + x.getAttribute('aria-controls')).hidden = !on })
+  if (focus) t.focus()
+  ScrollTrigger.refresh()
+}
+tabs.forEach((t, i) => {
+  t.addEventListener('click', () => selectTab(t))
+  t.addEventListener('keydown', (e) => {
+    const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key]
+    if (step) { e.preventDefault(); selectTab(tabs[(i + step + tabs.length) % tabs.length], true) }
+  })
+})
 
 /* Lecteur */
 const dlg = $('.player'); const pv = $('video', dlg); let opener = null
@@ -91,3 +106,7 @@ dlg.addEventListener('close', () => { pv.pause(); pv.removeAttribute('src'); pv.
 
 form()
 document.fonts.ready.then(() => ScrollTrigger.refresh())
+
+window.addEventListener('load', () => ScrollTrigger.refresh())
+let rf = 0
+document.querySelectorAll('img[loading="lazy"]').forEach((img) => img.addEventListener('load', () => { clearTimeout(rf); rf = setTimeout(() => ScrollTrigger.refresh(), 200) }))

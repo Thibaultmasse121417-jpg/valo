@@ -110,7 +110,7 @@
       <h2 id="numbers-title" class="h2 center">Le meilleur rendu <em>pour votre budget</em></h2>
       <div class="numbers__row">
         <div><b data-count="5">5</b><span><strong>jours ouvrés</strong> pour recevoir votre vidéo, retouches comprises.</span></div>
-        <div><b>290 €</b><span><strong>pour un pack saisonnier</strong>, contre 1 500 € et plus pour un tournage classique.</span></div>
+        <div><b>390 €</b><span><strong>pour un pack saisonnier</strong>, contre 1 500 € et plus pour un tournage classique.</span></div>
         <div><b data-count="3">3</b><span><strong>formats livrés</strong> à chaque fois : site, Reels et carré.</span></div>
       </div>
       <div class="stories">
@@ -158,7 +158,7 @@
     <section class="packs" id="packs" aria-labelledby="packs-title">
       <header class="work__head">
         <div><p class="kicker">Packs saisonniers</p><h2 id="packs-title" class="h2">Un temps fort, <em>un pack prêt à publier</em></h2></div>
-        <p class="packs__lead">1 film de 20 s, 3 formats verticaux et 6 visuels réseaux. <strong>290 € HT</strong> le pack, livré en 5 jours.</p>
+        <p class="packs__lead">1 film de 20 s, 3 formats verticaux et 6 visuels réseaux. <strong>390 € HT</strong> le pack, livré en 5 jours.</p>
       </header>
       <div class="packs__track">
         <article class="pack"><span>Janvier</span><h3>Nouvel An</h3><p>Vœux, nouvelle carte, offres de début d’année.</p></article>
@@ -172,7 +172,7 @@
         <article class="pack"><span>Décembre</span><h3>Noël</h3><p>Vitrines, menus de fêtes, cartes cadeaux.</p></article>
       </div>
       <div class="year">
-        <p><strong>L’année complète :</strong> les 9 packs, planifiés et livrés à temps. <s>2 610 €</s> <b>1 990 € HT</b></p>
+        <p><strong>L’année complète :</strong> les 9 packs, planifiés et livrés à temps. <s>3 510 €</s> <b>2 790 € HT</b></p>
         <a class="btn btn--lime" href="#rdv" data-plan="Packs : année complète">Réserver l’année</a>
       </div>
     </section>
@@ -198,14 +198,31 @@
     <section class="pricing" id="tarifs" aria-labelledby="tarifs-title">
       <p class="kicker kicker--center">Tarifs</p>
       <h2 id="tarifs-title" class="h2 center">Un prix fixe, <em>chaque mois</em></h2>
-      <div class="billing" role="group" aria-label="Période de facturation">
-        <button type="button" aria-pressed="true" data-billing="m">Mensuel</button>
-        <button type="button" aria-pressed="false" data-billing="a">Annuel −15 %</button>
+      <div class="tabs" role="tablist" aria-label="Type de client">
+        <button role="tab" id="tab-com" aria-selected="true" aria-controls="panel-com">Commerces &amp; hôtellerie</button>
+        <button role="tab" id="tab-immo" aria-selected="false" aria-controls="panel-immo" tabindex="-1">Agences immobilières</button>
       </div>
-      <div class="plans">
-        <article class="plan"><h3>Essentiel</h3><p>Pour être présent chaque semaine.</p><p class="plan__price"><b data-m="390" data-a="330">390 €</b> HT / mois</p><ul><li>4 vidéos courtes par mois</li><li>Formats Reels et carré</li><li>Livraison en 5 jours</li></ul><a class="btn btn--outline-dark" href="#rdv" data-plan="Abonnement Essentiel">Choisir Essentiel</a></article>
-        <article class="plan plan--featured"><span class="plan__badge">Le plus choisi</span><h3>Croissance</h3><p>Pour ne rater aucun temps fort.</p><p class="plan__price"><b data-m="790" data-a="670">790 €</b> HT / mois</p><ul><li>8 vidéos courtes + 1 film de 30 s</li><li>1 pack saisonnier inclus chaque mois</li><li>Tous formats, livraison en 3 jours</li></ul><a class="btn btn--lime" href="#rdv" data-plan="Abonnement Croissance">Choisir Croissance</a></article>
-        <article class="plan"><h3>Studio</h3><p>Pour plusieurs établissements.</p><p class="plan__price"><b data-m="1590" data-a="1350">1 590 €</b> HT / mois</p><ul><li>Jusqu’à 20 vidéos par mois</li><li>Directeur artistique dédié</li><li>Visuels IA, livraison en 48 h</li></ul><a class="btn btn--outline-dark" href="#rdv" data-plan="Abonnement Studio">Choisir Studio</a></article>
+
+      <div class="tabpanel" id="panel-com" role="tabpanel" aria-labelledby="tab-com">
+        <div class="billing" role="group" aria-label="Période de facturation">
+          <button type="button" aria-pressed="true" data-billing="m">Mensuel</button>
+          <button type="button" aria-pressed="false" data-billing="a">Annuel −15 %</button>
+        </div>
+        <div class="plans">
+          <article class="plan"><h3>Essentiel</h3><p>Pour être présent chaque semaine.</p><p class="plan__price"><b data-m="490" data-a="420">490 €</b> HT / mois</p><ul><li>4 vidéos courtes par mois</li><li>Formats Reels et carré</li><li>Livraison en 5 jours</li></ul><a class="btn btn--outline-dark" href="#rdv" data-plan="Abonnement Essentiel">Choisir Essentiel</a></article>
+          <article class="plan plan--featured"><span class="plan__badge">Le plus choisi</span><h3>Croissance</h3><p>Pour ne rater aucun temps fort.</p><p class="plan__price"><b data-m="990" data-a="840">990 €</b> HT / mois</p><ul><li>8 vidéos courtes + 1 film de 30 s</li><li>1 pack saisonnier inclus chaque mois</li><li>Tous formats, livraison en 3 jours</li></ul><a class="btn btn--lime" href="#rdv" data-plan="Abonnement Croissance">Choisir Croissance</a></article>
+          <article class="plan"><h3>Studio</h3><p>Pour plusieurs établissements.</p><p class="plan__price"><b data-m="1990" data-a="1690">1 990 €</b> HT / mois</p><ul><li>Jusqu’à 20 vidéos par mois</li><li>Directeur artistique dédié</li><li>Visuels IA, livraison en 48 h</li></ul><a class="btn btn--outline-dark" href="#rdv" data-plan="Abonnement Studio">Choisir Studio</a></article>
+        </div>
+        <p class="plans__note">Sans engagement en formule mensuelle. Packs saisonniers en plus : 390 € HT l’unité.</p>
+      </div>
+
+      <div class="tabpanel" id="panel-immo" role="tabpanel" aria-labelledby="tab-immo" hidden>
+        <div class="plans">
+          <article class="plan"><h3>À l’annonce</h3><p>Pour un bien, quand vous en avez besoin.</p><p class="plan__price"><b>149 €</b> HT / bien</p><ul><li>Vidéo de 30 à 45 s, horizontale et verticale</li><li>Informations du bien à l’écran</li><li>Photos retouchées et page web du bien</li></ul><a class="btn btn--outline-dark" href="#rdv" data-plan="Immobilier : vidéo à l’annonce">Commander un bien</a></article>
+          <article class="plan plan--featured"><span class="plan__badge">Le plus choisi</span><h3>Agence 10</h3><p>Pour les agences actives.</p><p class="plan__price"><b>990 €</b> HT / mois</p><ul><li>10 biens par mois, soit 99 € le bien</li><li>Livraison en 48 h</li><li>Tout le contenu « À l’annonce » inclus</li></ul><a class="btn btn--lime" href="#rdv" data-plan="Immobilier : Agence 10">Choisir Agence 10</a></article>
+          <article class="plan"><h3>Agence 20</h3><p>Pour les réseaux et les grosses agences.</p><p class="plan__price"><b>1 690 €</b> HT / mois</p><ul><li>20 biens par mois, soit 85 € le bien</li><li>Livraison en 48 h, priorité de traitement</li><li>Film de l’agence offert chaque année</li></ul><a class="btn btn--outline-dark" href="#rdv" data-plan="Immobilier : Agence 20">Choisir Agence 20</a></article>
+        </div>
+        <p class="plans__note">Agence 5 : 590 € HT / mois (5 biens). Bien de prestige : film de 60 s dès 790 € HT. Toujours fidèle au bien : aucune pièce agrandie, aucune vue inventée.</p>
       </div>
     </section>
 

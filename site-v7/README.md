@@ -11,8 +11,7 @@ cd site-v7 && npm install && npm run dev
 npm run build
 ```
 
-- Offre : abonnements (Essentiel / Croissance / Studio, bascule mensuel–annuel), 9 packs saisonniers à 290 € HT
-  ou 1 990 € HT l'année. **Montants à valider.**
+- Offre : onglet Commerces (Essentiel 490 €, Croissance 990 €, Studio 1 990 € par mois, −15 % en annuel ; packs saisonniers 390 € ou 2 790 € l'année) et onglet Immobilier (149 € par bien, Agence 5 à 590 €, Agence 10 à 990 €, Agence 20 à 1 690 € par mois, prestige dès 790 €). Prix HT **à valider**.
 - Démo : `public/media/demos/boulangerie-*` (film 100 % IA généré avec Higgsfield). Les vignettes
   `public/media/tiles/` viennent de cette démo, du film de la villa et des photos du dépôt.
 - Formulaire : `FORM_ENDPOINT` dans `src/form.js` (vide = e-mail prérempli).
