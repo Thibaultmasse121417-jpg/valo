@@ -22,22 +22,22 @@
       <a href="#saisons">Saisons</a>
       <a href="#faq">FAQ</a>
     </nav>
-    <a class="btn btn--red nav__cta" href="#rdv">Réserver un appel</a>
+    <a class="btn btn--red nav__cta" href="#rdv">Mon plan offert</a>
     <button class="nav__menu" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
   </header>
   <div class="menu" id="menu" hidden>
-    <nav aria-label="Menu"><a href="#principe">Principe</a><a href="#films">Films</a><a href="#studio">Studio</a><a href="#tarifs">Tarifs</a><a href="#saisons">Saisons</a><a href="#faq">FAQ</a><a href="#rdv">Réserver un appel</a></nav>
+    <nav aria-label="Menu"><a href="#principe">Principe</a><a href="#films">Films</a><a href="#studio">Studio</a><a href="#tarifs">Tarifs</a><a href="#saisons">Saisons</a><a href="#faq">FAQ</a><a href="#rdv">Recevoir mon plan offert</a></nav>
   </div>
 
   <main id="contenu">
     <!-- HERO -->
     <section class="hero" id="top">
-      <p class="mono hero__rec" aria-hidden="true"><span class="dot dot--live"></span>REC <span data-clock>00:00:00:00</span></p>
+      <div class="hero__top"><p class="mono hero__rec" aria-hidden="true"><span class="dot dot--live"></span>REC <span data-clock>00:00:00:00</span></p><a class="hero__news mono" href="#saisons" data-next-short hidden></a></div>
       <h1 class="display hero__title">Des vidéos<br />qui vendent.<br /><span class="red">Sans tournage.</span></h1>
       <div class="hero__side">
-        <p class="hero__lead">Envoyez vos photos. Nous en faisons des films promo avec l’IA, montés et vérifiés par un directeur artistique. Prêts à publier en 5 jours.</p>
+        <p class="hero__lead">Envoyez quelques photos de votre commerce ou de votre bien. Nous en faisons des films promo avec l’IA, écrits, montés et vérifiés par un directeur artistique. Prêts à publier en 5 jours.</p>
         <div class="hero__cta">
-          <a class="btn btn--red" href="#rdv">Réserver un appel</a>
+          <a class="btn btn--red btn--lg" href="#rdv">Recevoir mon plan offert</a>
           <a class="link" href="#films">Voir les films</a>
         </div>
         <ul class="hero__proof mono">
@@ -63,6 +63,29 @@
         <span>Boulangeries</span><span>Restaurants</span><span>Boutiques</span><span>Agences immobilières</span><span>Hôtels</span><span>Campings</span><span>Notaires</span><span>Instituts</span><span>Cavistes</span>
       </div>
       <p class="sr-only">Boulangeries, restaurants, boutiques, agences immobilières, hôtels, campings, notaires, instituts, cavistes.</p>
+    </section>
+
+
+    <!-- POUR QUI -->
+    <section class="who" aria-labelledby="who-title">
+      <header class="who__head">
+        <p class="label">Pour qui</p>
+        <h2 id="who-title" class="display h2">Vous êtes…</h2>
+      </header>
+      <div class="who__grid">
+        <a class="who__card" href="#tarifs" data-tab="tab-com" data-activite="Commerce">
+          <span class="who__img"><img src="media/tiles/boul-four.jpg" alt="" loading="lazy" width="640" height="640" /></span>
+          <span class="who__body"><span class="mono">01</span><b class="display">Commerce ou restaurant</b><span class="who__txt">Boulangerie, boutique, caviste, institut, restaurant. Des vidéos chaque semaine pour vos réseaux, et pour chaque temps fort de l’année.</span><span class="who__go mono">Abonnements dès 490 € / mois<i aria-hidden="true">→</i></span></span>
+        </a>
+        <a class="who__card" href="#tarifs" data-tab="tab-com" data-activite="Hôtel ou camping">
+          <span class="who__img"><img src="media/tiles/domaine.jpg" alt="" loading="lazy" width="560" height="672" /></span>
+          <span class="who__body"><span class="mono">02</span><b class="display">Hôtel, camping ou gîte</b><span class="who__txt">Donnez envie de réserver avant même l’arrivée : chambres, piscine, environs, saison par saison.</span><span class="who__go mono">Packs dès 390 €<i aria-hidden="true">→</i></span></span>
+        </a>
+        <a class="who__card" href="#tarifs" data-tab="tab-immo" data-activite="Agence immobilière">
+          <span class="who__img"><img src="media/tiles/villa-salon.jpg" alt="" loading="lazy" width="640" height="640" /></span>
+          <span class="who__body"><span class="mono">03</span><b class="display">Agence immobilière ou notaire</b><span class="who__txt">Une vidéo par bien, fidèle à la réalité, livrée en 48 h. Pour les portails, les réseaux et vos mandats.</span><span class="who__go mono">Dès 149 € le bien<i aria-hidden="true">→</i></span></span>
+        </a>
+      </div>
     </section>
 
     <!-- PRINCIPE -->
@@ -98,16 +121,13 @@
           <span class="clip__media"><video muted loop playsinline preload="none" poster="media/demos/boulangerie-9x16.jpg" data-src="media/demos/boulangerie-9x16.mp4" aria-hidden="true"></video><span class="clip__bar" aria-hidden="true"></span></span>
           <span class="clip__meta"><b class="display">Version Reels</b><span class="mono">9:16 · 0:17</span></span>
         </button>
-        <div class="clip clip--c is-soon">
-          <span class="clip__media"><img src="media/tiles/wide-villa.jpg" alt="" loading="lazy" /></span>
-          <span class="clip__meta"><b class="display">Villa triplex</b><span class="mono">Immobilier · prochaine démo</span></span>
-        </div>
-        <div class="clip clip--d is-soon">
-          <span class="clip__media"><img src="media/tiles/paris.jpg" alt="" loading="lazy" /></span>
-          <span class="clip__meta"><b class="display">Adresse parisienne</b><span class="mono">Commerce · prochaine démo</span></span>
+        <div class="clip clip--cta">
+          <p class="mono"><span class="dot"></span>Votre film, ici</p>
+          <p class="clip__big display">Envoyez une photo.<br />Recevez un premier plan.<br /><span class="red">Offert.</span></p>
+          <p class="clip__sub">Avant de vous engager, vous voyez ce que l’IA fait de votre lieu. Sans carte bancaire, sans rendez-vous obligatoire.</p>
+          <a class="btn btn--red btn--lg" href="#rdv">Recevoir mon plan offert</a>
         </div>
       </div>
-      <p class="films__note muted">Envie de voir votre commerce&nbsp;? Nous faisons un premier plan gratuit à partir d’une de vos photos. <a class="link" href="#rdv">Le demander</a></p>
     </section>
 
     <!-- COULISSES : le storyboard du film -->
@@ -196,19 +216,20 @@
         <div><p class="label">Packs saisonniers</p><h2 id="saisons-title" class="display h2">Douze mois.<br />Neuf temps forts.</h2></div>
         <p class="muted">Un film de 20 s, trois formats verticaux et six visuels. <strong>390 €</strong> le pack, livré en 5 jours. Commandez trois semaines avant.</p>
       </header>
+      <p class="seasons__next" data-deadline hidden></p>
       <ol class="cal">
-        <li><span class="mono">01 · Janv.</span><b>Nouvel An</b></li>
-        <li><span class="mono">02 · Févr.</span><b>Saint-Valentin</b></li>
+        <li data-ev="nouvel-an"><span class="mono">01 · Janv.</span><b>Nouvel An</b></li>
+        <li data-ev="saint-valentin"><span class="mono">02 · Févr.</span><b>Saint-Valentin</b></li>
         <li class="is-off"><span class="mono">03 · Mars</span><b>—</b></li>
         <li class="is-off"><span class="mono">04 · Avril</span><b>—</b></li>
-        <li><span class="mono">05 · Mai</span><b>Fête des mères</b></li>
-        <li><span class="mono">06 · Juin</span><b>Fête des pères</b></li>
-        <li><span class="mono">07 · Juil.</span><b>Été &amp; soldes</b></li>
+        <li data-ev="meres"><span class="mono">05 · Mai</span><b>Fête des mères</b></li>
+        <li data-ev="peres"><span class="mono">06 · Juin</span><b>Fête des pères</b></li>
+        <li data-ev="soldes"><span class="mono">07 · Juil.</span><b>Été &amp; soldes</b></li>
         <li class="is-off"><span class="mono">08 · Août</span><b>—</b></li>
-        <li><span class="mono">09 · Sept.</span><b>Rentrée</b></li>
-        <li><span class="mono">10 · Oct.</span><b>Halloween</b></li>
-        <li class="is-hot"><span class="mono">11 · Nov.</span><b>Black Friday</b></li>
-        <li><span class="mono">12 · Déc.</span><b>Noël</b></li>
+        <li data-ev="rentree"><span class="mono">09 · Sept.</span><b>Rentrée</b></li>
+        <li data-ev="halloween"><span class="mono">10 · Oct.</span><b>Halloween</b></li>
+        <li data-ev="black-friday"><span class="mono">11 · Nov.</span><b>Black Friday</b></li>
+        <li data-ev="noel"><span class="mono">12 · Déc.</span><b>Noël</b></li>
       </ol>
       <div class="year">
         <p><b class="display">L’année complète</b><span>Les 9 packs, planifiés et livrés à temps.</span></p>
@@ -219,7 +240,20 @@
 
     <!-- COMPARATIF -->
     <section class="compare" aria-labelledby="compare-title">
-      <h2 id="compare-title" class="display h2">Pourquoi pas un tournage&nbsp;?<br />Ou un outil IA tout seul&nbsp;?</h2>
+      <header class="compare__head"><p class="label">Faites le calcul</p><h2 id="compare-title" class="display h2">Pourquoi pas un tournage&nbsp;?<br />Ou un outil IA tout seul&nbsp;?</h2></header>
+      <div class="calc" data-calc>
+        <div class="calc__in">
+          <label class="mono" for="calc-n">Vidéos courtes par mois</label>
+          <output class="display" for="calc-n" data-calc-n>4</output>
+          <input type="range" id="calc-n" min="1" max="20" value="4" step="1" />
+          <div class="calc__scale mono" aria-hidden="true"><span>1</span><span>20</span></div>
+        </div>
+        <div class="calc__out">
+          <div class="calc__us"><span class="mono">Avec Estalia</span><b class="display" data-calc-us>490 €</b><span data-calc-plan>Abonnement Essentiel</span></div>
+          <div class="calc__them"><span class="mono">Avec un vidéaste</span><b class="display" data-calc-them>1 600 €</b><span>Estimation basse : 400 € la vidéo courte, hors déplacement</span></div>
+          <p class="calc__save">Vous gardez <b data-calc-save>1 110 €</b> par mois.</p>
+        </div>
+      </div>
       <div class="table" role="region" aria-labelledby="compare-title" tabindex="0">
         <table>
           <thead><tr><th scope="col"><span class="sr-only">Critère</span></th><th scope="col" class="us">Estalia</th><th scope="col">Tournage</th><th scope="col">Outil IA seul</th></tr></thead>
@@ -258,6 +292,8 @@
         <details><summary>C’est vraiment fait avec l’IA&nbsp;?</summary><div class="faq__a"><div><p>Oui. Les plans sont générés par IA à partir de vos photos ou d’une description, puis montés et vérifiés par un humain. Nous vous le disons toujours clairement.</p></div></div></details>
         <details><summary>La vidéo ressemblera-t-elle à mon commerce&nbsp;?</summary><div class="faq__a"><div><p>Nous partons de vos vraies photos pour rester fidèles à votre lieu et à vos produits. En immobilier, nous ne modifions jamais un bien.</p></div></div></details>
         <details><summary>Je n’ai que des photos de téléphone.</summary><div class="faq__a"><div><p>Ça suffit. Nous pouvons aussi créer des scènes d’ambiance entièrement par IA, comme notre film de boulangerie.</p></div></div></details>
+        <details><summary>Combien de temps ça me prend&nbsp;?</summary><div class="faq__a"><div><p>Une dizaine de minutes pour nous envoyer vos photos et vos idées, puis deux validations : le découpage, et le film. Nous nous occupons du reste.</p></div></div></details>
+        <details><summary>Et si le résultat ne me plaît pas&nbsp;?</summary><div class="faq__a"><div><p>Deux allers-retours de retouches sont compris sur chaque film. Et le premier plan est offert : vous jugez sur pièce avant de payer quoi que ce soit.</p></div></div></details>
         <details><summary>À qui appartiennent les vidéos&nbsp;?</summary><div class="faq__a"><div><p>À vous, pour tous vos usages : site, réseaux, vitrine, publicité, portails immobiliers.</p></div></div></details>
         <details><summary>Puis-je arrêter mon abonnement&nbsp;?</summary><div class="faq__a"><div><p>Oui, à tout moment en mensuel, avec un mois de préavis. L’annuel est payé d’avance avec 15 % de remise.</p></div></div></details>
       </div>
@@ -266,30 +302,82 @@
     <!-- RENDEZ-VOUS -->
     <section class="rdv" id="rdv" aria-labelledby="rdv-title">
       <div class="rdv__text">
-        <p class="mono"><span class="dot dot--white"></span>Prochain film : dans 5 jours</p>
-        <h2 id="rdv-title" class="display h2">Parlons de<br />votre prochaine vidéo.</h2>
-        <p>Un appel de 20 minutes. Nous regardons vos photos, vous conseillons la bonne formule, et vous recevez un premier plan gratuit.</p>
+        <p class="mono"><span class="dot dot--white"></span>Sans engagement · Réponse sous 48 h</p>
+        <h2 id="rdv-title" class="display h2">Votre premier plan,<br />offert.</h2>
+        <p>Quatre questions, trente secondes. Nous vous recommandons la bonne formule et préparons un premier plan à partir de votre lieu. Vous jugez sur pièce, sans engagement.</p>
         <p class="rdv__mail">Ou écrivez-nous : <span class="select">contact@estalia-studio.com</span></p>
         <ol class="next">
           <li><span class="mono">01</span>Nous vous répondons sous 48 h ouvrées.</li>
-          <li><span class="mono">02</span>Appel de 20 minutes, en visio ou au téléphone.</li>
+          <li><span class="mono">02</span>Si vous le souhaitez, un appel de 20 minutes pour cadrer le film.</li>
           <li><span class="mono">03</span>Vous recevez votre premier plan offert, sans engagement.</li>
         </ol>
       </div>
       <!-- À REMPLACER : FORM_ENDPOINT dans src/form.js ; sans lui, le formulaire ouvre un e-mail prérempli -->
       <form class="form" novalidate>
-        <div class="row">
-          <div class="field"><label for="f-nom">Nom</label><input id="f-nom" name="nom" type="text" autocomplete="name" required /><p class="err" id="f-nom-err"></p></div>
-          <div class="field"><label for="f-email">E-mail</label><input id="f-email" name="email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" required /><p class="err" id="f-email-err"></p></div>
+        <div class="form__top">
+          <p class="mono form__count">Étape <span data-step-n>1</span> sur 4</p>
+          <div class="form__bar" aria-hidden="true"><i data-step-bar></i></div>
         </div>
-        <div class="row">
-          <div class="field"><label for="f-metier">Activité</label><select id="f-metier" name="activite" required><option value="">Choisir…</option><option>Commerce</option><option>Restaurant</option><option>Agence immobilière</option><option>Hôtel</option><option>Camping</option><option>Étude notariale</option><option>Autre</option></select><p class="err" id="f-metier-err"></p></div>
-          <div class="field"><label for="f-formule">Ce qui vous intéresse</label><input id="f-formule" name="formule" type="text" placeholder="Abonnement, pack, bien…" /></div>
+        <p class="form__picked mono" data-picked hidden></p>
+        <input type="hidden" id="f-formule" name="formule" />
+
+        <fieldset class="step" data-step="1">
+          <legend class="display">Vous êtes…</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="activite" value="Commerce" /><span>Commerce</span></label>
+            <label class="chip"><input type="radio" name="activite" value="Restaurant" /><span>Restaurant</span></label>
+            <label class="chip"><input type="radio" name="activite" value="Hôtel ou camping" /><span>Hôtel ou camping</span></label>
+            <label class="chip"><input type="radio" name="activite" value="Agence immobilière" /><span>Agence immobilière</span></label>
+            <label class="chip"><input type="radio" name="activite" value="Étude notariale" /><span>Étude notariale</span></label>
+            <label class="chip"><input type="radio" name="activite" value="Autre" /><span>Autre</span></label>
+          </div>
+          <p class="err" id="f-activite-err"></p>
+        </fieldset>
+
+        <fieldset class="step" data-step="2" hidden>
+          <legend class="display">Vous voulez surtout…</legend>
+          <p class="step__hint">Plusieurs réponses possibles.</p>
+          <div class="chips chips--col">
+            <label class="chip"><input type="checkbox" name="objectif" value="Être visible sur les réseaux" /><span>Être visible sur les réseaux</span></label>
+            <label class="chip"><input type="checkbox" name="objectif" value="Une vidéo pour mon site" /><span>Une vidéo pour mon site ou ma vitrine</span></label>
+            <label class="chip"><input type="checkbox" name="objectif" value="Vendre ou louer un bien plus vite" /><span>Vendre ou louer un bien plus vite</span></label>
+            <label class="chip"><input type="checkbox" name="objectif" value="Préparer un temps fort" /><span>Préparer un temps fort (Noël, soldes…)</span></label>
+          </div>
+          <p class="err" id="f-objectif-err"></p>
+        </fieldset>
+
+        <fieldset class="step" data-step="3" hidden>
+          <legend class="display">À quel rythme&nbsp;?</legend>
+          <div class="chips chips--col">
+            <label class="chip"><input type="radio" name="rythme" value="Une vidéo pour tester" /><span>Une vidéo, pour tester</span></label>
+            <label class="chip"><input type="radio" name="rythme" value="Pour un temps fort" /><span>Pour un temps fort de l’année</span></label>
+            <label class="chip"><input type="radio" name="rythme" value="Chaque mois" /><span>Chaque mois, régulièrement</span></label>
+            <label class="chip"><input type="radio" name="rythme" value="À chaque nouveau bien" /><span>À chaque nouveau bien</span></label>
+          </div>
+          <p class="err" id="f-rythme-err"></p>
+        </fieldset>
+
+        <fieldset class="step" data-step="4" hidden>
+          <legend class="display">Où envoyer votre plan offert&nbsp;?</legend>
+          <div class="reco" data-reco hidden></div>
+          <div class="row">
+            <div class="field"><label for="f-nom">Nom</label><input id="f-nom" name="nom" type="text" autocomplete="name" required /><p class="err" id="f-nom-err"></p></div>
+            <div class="field"><label for="f-lieu">Établissement <span class="opt">(facultatif)</span></label><input id="f-lieu" name="etablissement" type="text" autocomplete="organization" /></div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="f-email">E-mail</label><input id="f-email" name="email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" required /><p class="err" id="f-email-err"></p></div>
+            <div class="field"><label for="f-tel">Téléphone <span class="opt">(facultatif)</span></label><input id="f-tel" name="telephone" type="tel" autocomplete="tel" inputmode="tel" /></div>
+          </div>
+          <div class="field"><label for="f-msg">Un mot sur votre projet <span class="opt">(facultatif)</span></label><textarea id="f-msg" name="message" rows="3"></textarea></div>
+          <label class="consent"><input type="checkbox" name="consentement" required /><span>J’accepte qu’Estalia Studio utilise ces informations pour me recontacter.</span></label>
+          <p class="err" id="f-consent-err"></p>
+        </fieldset>
+
+        <div class="form__nav">
+          <button class="btn btn--line" type="button" data-prev hidden>Retour</button>
+          <button class="btn btn--ink" type="button" data-next>Continuer</button>
+          <button class="btn btn--red" type="submit" hidden>Recevoir mon plan offert</button>
         </div>
-        <div class="field"><label for="f-msg">Votre projet <span class="opt">(facultatif)</span></label><textarea id="f-msg" name="message" rows="3" enterkeyhint="send"></textarea></div>
-        <label class="consent"><input type="checkbox" name="consentement" required /><span>J’accepte qu’Estalia Studio utilise ces informations pour me recontacter.</span></label>
-        <p class="err" id="f-consent-err"></p>
-        <button class="btn btn--ink btn--full" type="submit">Réserver mon appel</button>
         <p class="status" role="status" aria-live="polite"></p>
       </form>
     </section>
@@ -300,7 +388,7 @@
       <div><p class="mono">Studio</p><p>Estalia Studio, studio de création vidéo par IA pour les commerces et l’immobilier.</p><p><a href="mailto:contact@estalia-studio.com">contact@estalia-studio.com</a></p></div>
       <div><p class="mono">Offres</p><ul><li><a href="#tarifs">Abonnements commerces</a></li><li><a href="#tarifs">Vidéos immobilières</a></li><li><a href="#saisons">Packs saisonniers</a></li></ul></div>
       <div><p class="mono">Le studio</p><ul><li><a href="#studio">Coulisses</a></li><li><a href="#films">Films</a></li><li><a href="#faq">Questions</a></li></ul></div>
-      <div><p class="mono">Démarrer</p><p>Un appel de 20 minutes et un premier plan offert.</p><p><a class="link" href="#rdv">Réserver un appel</a></p></div>
+      <div><p class="mono">Démarrer</p><p>Quatre questions et un premier plan offert.</p><p><a class="link" href="#rdv">Recevoir mon plan offert</a></p></div>
     </div>
     <p class="footer__word display" aria-hidden="true"><span class="dot"></span>estalia</p>
     <div class="footer__base mono">
@@ -308,6 +396,8 @@
       <p><a href="#">Mentions légales</a> · <a href="#">Confidentialité</a></p>
     </div>
   </footer>
+
+  <a class="dock btn btn--red" href="#rdv" data-dock aria-hidden="true" tabindex="-1">Recevoir mon plan offert</a>
 
   <dialog class="player" aria-label="Lecture de la vidéo">
     <button class="player__close mono" type="button">Fermer</button>

@@ -7,7 +7,7 @@ import './style.css'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
-import { form } from './form.js'
+import { form, pickPlan, pickActivite } from './form.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -72,7 +72,7 @@ if (hoverClips) {
 }
 
 /* Apparitions */
-const els = $$('main .label, main h2, .principle__head .muted, .steps li, .phone, .clip, .films__note, .board__head .muted, .shots li, .crafts .muted, .crafts__list > div, .promise__list li, .next li, .facts > div, .plans, .billing, .cal li, .year, .table, .faq details, .rdv__text > *, .form')
+const els = $$('main .label, main h2, .who__card, .calc, .principle__head .muted, .steps li, .phone, .clip, .films__note, .board__head .muted, .shots li, .crafts .muted, .crafts__list > div, .promise__list li, .next li, .facts > div, .plans, .billing, .cal li, .year, .table, .faq details, .rdv__text > *, .form')
 els.forEach((el) => el.setAttribute('data-reveal', ''))
 if (!reduce) {
   gsap.timeline({ defaults: { ease: 'expo.out' } })
@@ -109,7 +109,9 @@ document.addEventListener('click', (e) => {
   const id = a.getAttribute('href'); const target = id === '#top' ? 0 : id.length > 1 ? $(id) : null
   if (target === null) return
   e.preventDefault()
-  if (a.dataset.plan) $('#f-formule').value = a.dataset.plan
+  if (a.dataset.plan) pickPlan(a.dataset.plan)
+  if (a.dataset.activite) pickActivite(a.dataset.activite)
+  if (a.dataset.tab) selectTab($('#' + a.dataset.tab))
   if (menuOpen) setMenu(false)
   const offset = -nav.offsetHeight
   lenis ? lenis.scrollTo(target, { offset, duration: 1.3 }) : (target === 0 ? window.scrollTo(0, 0) : window.scrollTo(0, target.getBoundingClientRect().top + scrollY + offset))
@@ -160,6 +162,65 @@ dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close() })
 dlg.addEventListener('close', () => { pv.pause(); pv.removeAttribute('src'); pv.load(); lenis?.start(); opener?.focus({ preventScroll: true }) })
 
 form()
+
+/* Calculateur : Estalia contre un vidéaste */
+const calc = $('[data-calc]')
+if (calc) {
+  const range = $('input', calc); const fr = (n) => n.toLocaleString('fr-FR') + ' €'
+  const upd = () => {
+    const n = +range.value
+    const [plan, price] = n <= 4 ? ['Abonnement Essentiel', 490] : n <= 8 ? ['Abonnement Croissance', 990] : ['Abonnement Studio', 1990]
+    const them = n * 400
+    $('[data-calc-n]', calc).textContent = n
+    $('[data-calc-us]', calc).textContent = fr(price)
+    $('[data-calc-plan]', calc).textContent = plan
+    $('[data-calc-them]', calc).textContent = fr(them)
+    $('[data-calc-save]', calc).textContent = fr(Math.max(0, them - price))
+    range.style.setProperty('--p', ((n - 1) / 19) * 100 + '%')
+  }
+  range.addEventListener('input', upd); upd()
+}
+
+/* Prochain temps fort : échéance réelle (commande 3 semaines avant) */
+{
+  const nth = (y, m, dow, k) => { const d = new Date(y, m, 1); d.setDate(1 + ((dow - d.getDay() + 7) % 7) + 7 * (k - 1)); return d }
+  const last = (y, m, dow) => { const d = new Date(y, m + 1, 0); d.setDate(d.getDate() - ((d.getDay() - dow + 7) % 7)); return d }
+  const evs = (y) => [
+    ['nouvel-an', 'le Nouvel An', new Date(y, 0, 1)], ['saint-valentin', 'la Saint-Valentin', new Date(y, 1, 14)],
+    ['meres', 'la fête des mères', last(y, 4, 0)], ['peres', 'la fête des pères', nth(y, 5, 0, 3)],
+    ['soldes', 'les soldes d’été', last(y, 5, 3)], ['rentree', 'la rentrée', new Date(y, 8, 1)],
+    ['halloween', 'Halloween', new Date(y, 9, 31)], ['black-friday', 'le Black Friday', new Date(nth(y, 10, 4, 4).getTime() + 864e5)],
+    ['noel', 'Noël', new Date(y, 11, 25)]
+  ]
+  const today = new Date(); today.setHours(0, 0, 0, 0)
+  const all = [...evs(today.getFullYear()), ...evs(today.getFullYear() + 1)].map(([k, n, d]) => ({ k, n, d, dl: new Date(d.getTime() - 21 * 864e5) }))
+  const nx = all.find((e) => e.dl >= today)
+  const soon = all.find((e) => e.d >= today && e.dl < today)
+  const day = (d) => d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })
+  if (nx) {
+    const left = Math.round((nx.dl - today) / 864e5)
+    const box = $('[data-deadline]')
+    if (box) {
+      box.hidden = false
+      box.innerHTML = `<span class="dot dot--live" aria-hidden="true"></span><span><b>Prochain pack à commander : ${nx.n}, le ${day(nx.d)}.</b> Commandez avant le ${day(nx.dl)}, ${left === 0 ? 'aujourd’hui' : `dans ${left} jour${left > 1 ? 's' : ''}`}.${soon ? ` ${soon.n.charAt(0).toUpperCase() + soon.n.slice(1)} arrive le ${day(soon.d)} : délai court, écrivez-nous vite.` : ''}</span>`
+    }
+    $(`[data-ev="${nx.k}"]`)?.classList.add('is-hot')
+    const short = $('[data-next-short]')
+    if (short) { short.hidden = false; short.textContent = `${nx.n.replace(/^(le |la |les )/, '')} : commandez avant le ${day(nx.dl)} →` }
+  }
+}
+
+/* Barre d'action mobile : visible entre le hero et le formulaire */
+const dock = $('[data-dock]')
+if (dock) {
+  const seen = new Map()
+  const dio = new IntersectionObserver((es) => {
+    es.forEach((e) => seen.set(e.target, e.isIntersecting))
+    const on = ![...seen.values()].some(Boolean)
+    dock.classList.toggle('is-on', on); dock.setAttribute('aria-hidden', String(!on)); dock.tabIndex = on ? 0 : -1
+  })
+  ;['.hero', '.rdv', '.footer'].forEach((s) => { const el = $(s); if (el) { seen.set(el, true); dio.observe(el) } })
+}
 document.fonts.ready.then(() => { placePill(); ScrollTrigger.refresh() })
 window.addEventListener('load', () => ScrollTrigger.refresh())
 let rf = 0
