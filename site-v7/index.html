@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a211f" />
+  <title>Estalia Studio — Votre studio vidéo IA, sans tournage</title>
+  <meta name="description" content="Estalia Studio crée vos vidéos promo par IA à partir de vos photos : abonnements mensuels et packs saisonniers pour commerces, immobilier et hôtellerie. Sans tournage, livrées en 5 jours." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230a211f'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-family='Georgia' font-style='italic' font-size='38' fill='%23d8ff85'%3EE%3C/text%3E%3C/svg%3E" />
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body>
+  <a class="skip" href="#contenu">Aller au contenu</a>
+
+  <header class="nav" data-nav>
+    <a class="logo" href="#top" aria-label="Estalia Studio, haut de page">Estalia<i>.</i></a>
+    <nav class="nav__links" aria-label="Navigation principale">
+      <a href="#services">Services</a>
+      <a href="#realisations">Réalisations</a>
+      <a href="#pourquoi">Pourquoi nous</a>
+      <a href="#packs">Packs</a>
+      <a href="#tarifs">Tarifs</a>
+    </nav>
+    <div class="nav__cta">
+      <a class="btn btn--lime" href="#rdv">Réserver un appel</a>
+      <a class="btn btn--outline nav__secondary" href="mailto:contact@estalia-studio.com">Nous écrire</a>
+      <button class="nav__menu" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu"><span></span><span></span></button>
+    </div>
+  </header>
+  <div class="menu" id="menu" hidden>
+    <nav aria-label="Menu">
+      <a href="#services">Services</a><a href="#realisations">Réalisations</a><a href="#pourquoi">Pourquoi nous</a><a href="#packs">Packs saisonniers</a><a href="#tarifs">Tarifs</a><a href="#rdv">Réserver un appel</a>
+    </nav>
+  </div>
+
+  <main id="contenu">
+    <!-- 1. HERO : texte à gauche, mosaïque de réalisations qui défile à droite -->
+    <section class="hero dark" id="top">
+      <div class="hero__text">
+        <h1 class="hero__title">Votre studio vidéo, <em>sans tournage</em></h1>
+        <p class="hero__lead">Des vidéos promo créées par IA à partir de vos photos, avec une vraie direction artistique. Pour les commerces, l’immobilier et l’hôtellerie, livrées en 5 jours.</p>
+        <a class="btn btn--lime" href="#rdv">Réserver un appel</a>
+      </div>
+      <div class="hero__wall" aria-hidden="true">
+        <div class="col col--up">
+          <img src="media/tiles/boul-vitrine.jpg" alt="" /><img src="media/tiles/villa-salon.jpg" alt="" /><img src="media/tiles/domaine.jpg" alt="" /><img src="media/tiles/chateau.jpg" alt="" />
+          <img src="media/tiles/boul-vitrine.jpg" alt="" /><img src="media/tiles/villa-salon.jpg" alt="" /><img src="media/tiles/domaine.jpg" alt="" /><img src="media/tiles/chateau.jpg" alt="" />
+        </div>
+        <div class="col col--down">
+          <video autoplay muted loop playsinline src="media/demos/boulangerie-9x16.mp4" poster="media/demos/boulangerie-9x16.jpg"></video><img src="media/tiles/paris.jpg" alt="" /><img src="media/tiles/boul-four.jpg" alt="" /><img src="media/tiles/villa-cuisine.jpg" alt="" />
+          <video autoplay muted loop playsinline src="media/demos/boulangerie-9x16.mp4" poster="media/demos/boulangerie-9x16.jpg"></video><img src="media/tiles/paris.jpg" alt="" /><img src="media/tiles/boul-four.jpg" alt="" /><img src="media/tiles/villa-cuisine.jpg" alt="" />
+        </div>
+        <div class="col col--up col--slow">
+          <img src="media/tiles/villa-piscine.jpg" alt="" /><img src="media/tiles/boul-mains.jpg" alt="" /><img src="media/tiles/jardins.jpg" alt="" /><img src="media/tiles/villa-nuit.jpg" alt="" />
+          <img src="media/tiles/villa-piscine.jpg" alt="" /><img src="media/tiles/boul-mains.jpg" alt="" /><img src="media/tiles/jardins.jpg" alt="" /><img src="media/tiles/villa-nuit.jpg" alt="" />
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. POUR QUI (à la place d'un mur de logos) -->
+    <section class="sectors" aria-labelledby="sectors-title">
+      <p id="sectors-title" class="sectors__title">Pensé pour les commerces et les lieux qui veulent se démarquer</p>
+      <ul class="sectors__list">
+        <li>Boulangeries</li><li>Restaurants</li><li>Boutiques</li><li>Agences immobilières</li><li>Hôtels</li><li>Campings</li><li>Notaires</li><li>Instituts</li><li>Cavistes</li><li>Fleuristes</li><li>Artisans</li><li>Concept stores</li>
+      </ul>
+    </section>
+
+    <!-- 3. L'AVENIR DE LA VIDÉO LOCALE -->
+    <section class="split" aria-labelledby="futur-title">
+      <div class="split__text">
+        <p class="kicker">La vidéo, autrement</p>
+        <h2 id="futur-title" class="h3">Plus qu’un outil d’IA. <em>Une vraie direction artistique,</em> pour des vidéos qui donnent envie.</h2>
+        <p class="lead">Et si vos vidéos ne demandaient plus ni caméra, ni équipe, ni fermeture&nbsp;?</p>
+        <p>Vous nous envoyez vos photos et ce que vous voulez mettre en avant. Notre studio crée chaque plan avec l’IA, le monte, le met en musique et le vérifie à l’œil, comme une agence. Vous gardez le rendu d’un film de marque, au prix d’une publication.</p>
+      </div>
+      <figure class="split__img"><img src="media/tiles/wide-mains.jpg" alt="Mains d’un boulanger façonnant une miche, image générée par IA" loading="lazy" /></figure>
+    </section>
+
+    <!-- 4. VOTRE AVANTAGE -->
+    <section class="split split--reverse" aria-labelledby="avantage-title">
+      <figure class="split__phone"><video muted loop playsinline preload="none" poster="media/demos/boulangerie-9x16.jpg" data-src="media/demos/boulangerie-9x16.mp4" aria-label="Exemple de vidéo verticale pour les réseaux"></video></figure>
+      <div class="split__text">
+        <p class="kicker">Votre avantage</p>
+        <h2 id="avantage-title" class="h3">Le studio vidéo <em>que votre commerce attendait</em></h2>
+        <p>Estalia, c’est votre équipe vidéo dédiée : des films pour votre site, des Reels pour vos réseaux, et un temps fort préparé à chaque saison.</p>
+        <p class="small">Vous vous occupez de vos clients, nous nous occupons de les faire venir.</p>
+        <a class="btn btn--dark" href="#rdv">Réserver un appel</a>
+      </div>
+    </section>
+
+    <!-- 5. SECTION SOMBRE : trois images + trois cartes -->
+    <section class="trio dark" aria-labelledby="trio-title">
+      <p class="kicker kicker--center">Simple et sans effort</p>
+      <h2 id="trio-title" class="h3 center">Une IA de pointe. Un regard humain. <em>Pensé pour aller vite.</em></h2>
+      <div class="trio__imgs">
+        <img src="media/tiles/wide-four.jpg" alt="Pains sortant du four, image générée par IA" loading="lazy" />
+        <img src="media/tiles/wide-villa.jpg" alt="Salon d’une villa avec piscine" loading="lazy" />
+        <img src="media/tiles/wide-comptoir.jpg" alt="Boulanger servant une cliente, image générée par IA" loading="lazy" />
+      </div>
+      <div class="trio__cards">
+        <article class="card card--lime"><h3>Abonnement <em>flexible</em></h3><p>Un prix fixe chaque mois, sans engagement. Montez ou baissez selon la saison.</p></article>
+        <article class="card card--green"><h3>Direction artistique <em>humaine</em></h3><p>Chaque plan est choisi, monté et vérifié avant de vous être envoyé.</p></article>
+        <article class="card card--cream"><h3>Studio IA <em>sans tournage</em></h3><p>Vos photos suffisent. Pas de caméra, pas de déplacement, pas de fermeture.</p></article>
+      </div>
+    </section>
+
+    <!-- 6. CHIFFRES -->
+    <section class="numbers" aria-labelledby="numbers-title">
+      <p class="kicker kicker--center">En chiffres</p>
+      <h2 id="numbers-title" class="h2 center">Le meilleur rendu <em>pour votre budget</em></h2>
+      <div class="numbers__row">
+        <div><b data-count="5">5</b><span><strong>jours ouvrés</strong> pour recevoir votre vidéo, retouches comprises.</span></div>
+        <div><b>290 €</b><span><strong>pour un pack saisonnier</strong>, contre 1 500 € et plus pour un tournage classique.</span></div>
+        <div><b data-count="3">3</b><span><strong>formats livrés</strong> à chaque fois : site, Reels et carré.</span></div>
+      </div>
+      <div class="stories">
+        <a class="story" href="#realisations">
+          <img src="media/tiles/wide-comptoir.jpg" alt="" loading="lazy" />
+          <span class="story__tag">Démo</span>
+          <span class="story__text">« Le pain, comme il se doit » : un film de marque <em>100 % IA</em> pour une boulangerie, en 4 plans</span>
+        </a>
+        <a class="story" href="#realisations">
+          <img src="media/tiles/wide-villa.jpg" alt="" loading="lazy" />
+          <span class="story__tag">Immobilier</span>
+          <span class="story__text">Une villa présentée <em>pièce par pièce</em>, prête pour les portails et les réseaux</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 7. SERVICES -->
+    <section class="services" id="services" aria-labelledby="services-title">
+      <p class="kicker kicker--center">Nos services</p>
+      <h2 id="services-title" class="h2 center">Toutes vos vidéos, <em>pour chaque moment</em> de l’année</h2>
+      <ul class="chips" aria-label="Liste des services">
+        <li class="c1">Film promo</li><li class="c2">Reels &amp; TikTok</li><li class="c3">Vidéo produit</li><li class="c4">Visite immobilière</li>
+        <li class="c2">Packs saisonniers</li><li class="c1">Visuels IA</li><li class="c3">Vidéo de marque</li><li class="c4">Site web</li>
+        <li class="c3">Sous-titres</li><li class="c4">Musique sous licence</li><li class="c1">Publicités Meta</li><li class="c2">…et plus</li>
+      </ul>
+    </section>
+
+    <!-- 8. RÉALISATIONS -->
+    <section class="work" id="realisations" aria-labelledby="work-title">
+      <header class="work__head">
+        <div><p class="kicker">Réalisations</p><h2 id="work-title" class="h2">Ce que <em>l’IA</em> fait de vos photos</h2></div>
+        <a class="btn btn--outline-dark" href="#rdv">Demander un exemple gratuit</a>
+      </header>
+      <div class="work__grid">
+        <button class="item item--wide" type="button" data-film="media/demos/boulangerie-16x9.mp4"><span class="item__media"><video muted loop playsinline preload="none" poster="media/demos/boulangerie-16x9.jpg" data-src="media/demos/boulangerie-16x9.mp4" aria-hidden="true"></video></span><h3>Maison Luce</h3><p>Boulangerie · Film 100 % IA · Démo</p></button>
+        <button class="item" type="button" data-film="media/demos/boulangerie-9x16.mp4"><span class="item__media"><img src="media/tiles/boul-mains.jpg" alt="" loading="lazy" /></span><h3>Maison Luce, Reels</h3><p>Format vertical 9:16</p></button>
+        <div class="item"><span class="item__media"><img src="media/tiles/villa-piscine.jpg" alt="" loading="lazy" /></span><h3>Villa sur la côte</h3><p>Immobilier · Exemple à venir</p></div>
+        <div class="item"><span class="item__media"><img src="media/tiles/paris.jpg" alt="" loading="lazy" /></span><h3>Adresse parisienne</h3><p>Commerce · Exemple à venir</p></div>
+        <div class="item"><span class="item__media"><img src="media/tiles/jardins.jpg" alt="" loading="lazy" /></span><h3>Domaine &amp; jardins</h3><p>Hôtel · Exemple à venir</p></div>
+        <div class="item item--wide"><span class="item__media"><img src="media/tiles/wide-villa.jpg" alt="" loading="lazy" /></span><h3>Villa triplex</h3><p>Immobilier · Référence de rendu</p></div>
+      </div>
+    </section>
+
+    <!-- 9. PACKS SAISONNIERS (à valider) -->
+    <section class="packs" id="packs" aria-labelledby="packs-title">
+      <header class="work__head">
+        <div><p class="kicker">Packs saisonniers</p><h2 id="packs-title" class="h2">Un temps fort, <em>un pack prêt à publier</em></h2></div>
+        <p class="packs__lead">1 film de 20 s, 3 formats verticaux et 6 visuels réseaux. <strong>290 € HT</strong> le pack, livré en 5 jours.</p>
+      </header>
+      <div class="packs__track">
+        <article class="pack"><span>Janvier</span><h3>Nouvel An</h3><p>Vœux, nouvelle carte, offres de début d’année.</p></article>
+        <article class="pack"><span>Février</span><h3>Saint-Valentin</h3><p>Coffrets, dîners, week-ends à deux.</p></article>
+        <article class="pack"><span>Mai</span><h3>Fête des mères</h3><p>Idées cadeaux, bouquets, réservations.</p></article>
+        <article class="pack"><span>Juin</span><h3>Fête des pères</h3><p>Cadeaux, sorties, menus spéciaux.</p></article>
+        <article class="pack"><span>Juin – août</span><h3>Été &amp; soldes</h3><p>Terrasse, saison, soldes d’été.</p></article>
+        <article class="pack"><span>Septembre</span><h3>Rentrée</h3><p>Nouvelle saison, nouveaux horaires.</p></article>
+        <article class="pack"><span>Octobre</span><h3>Halloween</h3><p>Vitrines et animations du mois.</p></article>
+        <article class="pack pack--hot"><span>Novembre</span><h3>Black Friday</h3><p>Teasers, compte à rebours, offres.</p></article>
+        <article class="pack"><span>Décembre</span><h3>Noël</h3><p>Vitrines, menus de fêtes, cartes cadeaux.</p></article>
+      </div>
+      <div class="year">
+        <p><strong>L’année complète :</strong> les 9 packs, planifiés et livrés à temps. <s>2 610 €</s> <b>1 990 € HT</b></p>
+        <a class="btn btn--lime" href="#rdv" data-plan="Packs : année complète">Réserver l’année</a>
+      </div>
+    </section>
+
+    <!-- 10. COMPARATIF -->
+    <section class="compare dark" id="pourquoi" aria-labelledby="compare-title">
+      <p class="kicker kicker--center">Estalia face aux alternatives</p>
+      <h2 id="compare-title" class="h2 center">Tournage ou outil IA&nbsp;? <em>Ni l’un ni l’autre.</em></h2>
+      <div class="table" role="region" aria-labelledby="compare-title" tabindex="0">
+        <table>
+          <thead><tr><th scope="col"><span class="sr-only">Option</span></th><th scope="col">Rapidité</th><th scope="col">Prix</th><th scope="col">Qualité</th><th scope="col">Sans effort</th><th scope="col">Formats réseaux</th><th scope="col">Direction artistique</th></tr></thead>
+          <tbody>
+            <tr class="is-us"><th scope="row"><b>Estalia</b><span>Studio IA avec un vrai regard humain, à prix fixe.</span></th><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+            <tr><th scope="row"><b>Tournage classique</b><span>Beau rendu, mais cher, long et à organiser.</span></th><td>✕</td><td>✕</td><td>✓</td><td>✕</td><td>✕</td><td>✓</td></tr>
+            <tr><th scope="row"><b>Vidéaste freelance</b><span>Disponibilité et qualité variables d’un projet à l’autre.</span></th><td>✕</td><td>✓</td><td>✕</td><td>✕</td><td>✕</td><td>✓</td></tr>
+            <tr><th scope="row"><b>Outil IA seul</b><span>Rapide et pas cher, mais à faire soi-même, sans regard créatif.</span></th><td>✓</td><td>✓</td><td>✕</td><td>✕</td><td>✓</td><td>✕</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 11. TARIFS (à valider) -->
+    <section class="pricing" id="tarifs" aria-labelledby="tarifs-title">
+      <p class="kicker kicker--center">Tarifs</p>
+      <h2 id="tarifs-title" class="h2 center">Un prix fixe, <em>chaque mois</em></h2>
+      <div class="billing" role="group" aria-label="Période de facturation">
+        <button type="button" aria-pressed="true" data-billing="m">Mensuel</button>
+        <button type="button" aria-pressed="false" data-billing="a">Annuel −15 %</button>
+      </div>
+      <div class="plans">
+        <article class="plan"><h3>Essentiel</h3><p>Pour être présent chaque semaine.</p><p class="plan__price"><b data-m="390" data-a="330">390 €</b> HT / mois</p><ul><li>4 vidéos courtes par mois</li><li>Formats Reels et carré</li><li>Livraison en 5 jours</li></ul><a class="btn btn--outline-dark" href="#rdv" data-plan="Abonnement Essentiel">Choisir Essentiel</a></article>
+        <article class="plan plan--featured"><span class="plan__badge">Le plus choisi</span><h3>Croissance</h3><p>Pour ne rater aucun temps fort.</p><p class="plan__price"><b data-m="790" data-a="670">790 €</b> HT / mois</p><ul><li>8 vidéos courtes + 1 film de 30 s</li><li>1 pack saisonnier inclus chaque mois</li><li>Tous formats, livraison en 3 jours</li></ul><a class="btn btn--lime" href="#rdv" data-plan="Abonnement Croissance">Choisir Croissance</a></article>
+        <article class="plan"><h3>Studio</h3><p>Pour plusieurs établissements.</p><p class="plan__price"><b data-m="1590" data-a="1350">1 590 €</b> HT / mois</p><ul><li>Jusqu’à 20 vidéos par mois</li><li>Directeur artistique dédié</li><li>Visuels IA, livraison en 48 h</li></ul><a class="btn btn--outline-dark" href="#rdv" data-plan="Abonnement Studio">Choisir Studio</a></article>
+      </div>
+    </section>
+
+    <!-- 12. BENTO : le process -->
+    <section class="bento" aria-labelledby="bento-title">
+      <header class="work__head">
+        <div><p class="kicker">Simple, de A à Z</p><h2 id="bento-title" class="h2">Un process clair, <em>pensé pour vous</em></h2></div>
+        <p class="packs__lead">Brief, création, retouches, livraison : tout se fait en ligne, sans rendez-vous sur place.</p>
+      </header>
+      <div class="bento__grid">
+        <article class="tile tile--photo">
+          <img src="media/tiles/villa-patio.jpg" alt="" loading="lazy" />
+          <div class="tile__chat"><p class="tile__hello">Bonjour Claire, on prépare Noël&nbsp;?</p><p class="tile__input">Une vidéo pour nos bûches et nos coffrets…</p></div>
+          <p class="tile__cap">Votre brief en dix minutes, depuis votre téléphone.</p>
+        </article>
+        <article class="tile tile--green"><h3>Vos photos suffisent</h3><p>Photos de téléphone, logo, carte, vitrine : nous partons de ce que vous avez déjà.</p></article>
+        <article class="tile tile--blue"><h3>Fidèle à votre lieu</h3><p>Vos vrais produits, votre vraie vitrine. En immobilier, nous ne modifions jamais un bien.</p></article>
+        <article class="tile tile--sand"><h3>Livré dans tous les formats</h3><p>Site, Instagram, TikTok, Google, vitrine : prêt à publier, avec sous-titres et musique.</p></article>
+      </div>
+    </section>
+
+    <!-- 13. QUATRE ARGUMENTS -->
+    <section class="pillars" aria-labelledby="pillars-title">
+      <p class="kicker kicker--center">Notre différence</p>
+      <h2 id="pillars-title" class="h2 center">Pour les commerces qui <em>refusent de faire comme tout le monde</em></h2>
+      <div class="pillars__row">
+        <div><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l4-1 11-11-3-3L5 16l-1 4z"/></svg><p class="kicker">Créatif</p><h3>Un rendu de film de marque</h3><p>Lumière, cadrage, rythme : des vidéos qui ne ressemblent pas à un diaporama.</p></div>
+        <div><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M5 12h14M5 18h9"/></svg><p class="kicker">Flexible</p><h3>Plus de vidéos quand il faut</h3><p>Une saison chargée&nbsp;? Ajoutez un pack, sans changer d’abonnement.</p></div>
+        <div><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.6 5.6 6.1.6-4.6 4.1 1.3 6L12 16.4 6.6 19.3l1.3-6L3.3 9.2l6.1-.6z"/></svg><p class="kicker">Rapide</p><h3>Cinq jours, pas cinq semaines</h3><p>Le temps de préparer votre temps fort, pas de rater la saison.</p></div>
+        <div><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M12 4v16"/></svg><p class="kicker">Clair</p><h3>Un prix fixe, sans surprise</h3><p>Pas de devis à rallonge ni de frais de déplacement.</p></div>
+      </div>
+    </section>
+
+    <!-- 14. SECTION ROSE : le regard humain -->
+    <section class="talent" aria-labelledby="talent-title">
+      <div class="talent__text">
+        <p class="kicker">Travailler avec les meilleurs outils</p>
+        <h2 id="talent-title" class="h2"><em>Des créatifs</em> qui maîtrisent l’IA</h2>
+        <p class="lead">Montage, étalonnage, musique, texte : l’IA crée les images, nos créatifs en font un film.</p>
+        <p class="small">Chaque vidéo passe par un directeur artistique qui choisit les meilleurs plans, corrige les défauts de l’IA et garde votre identité d’un film à l’autre.</p>
+        <a class="btn btn--lime" href="#rdv">Réserver un appel</a>
+      </div>
+      <figure class="talent__img"><img src="media/tiles/villa-nuit.jpg" alt="Maison éclairée la nuit, vue depuis la terrasse" loading="lazy" /></figure>
+    </section>
+
+    <!-- 15. APPEL FINAL + FORMULAIRE -->
+    <section class="final" id="rdv" aria-labelledby="rdv-title">
+      <div class="final__text">
+        <h2 id="rdv-title" class="h2">Votre commerce mérite <em>mieux qu’une photo floue</em></h2>
+        <p class="lead">Réservez un appel de 20 minutes : nous regardons vos photos, nous vous conseillons la bonne formule, et vous recevez un exemple gratuit.</p>
+        <p class="small">Ou écrivez-nous : <span class="select">contact@estalia-studio.com</span></p>
+      </div>
+      <!-- À REMPLACER : FORM_ENDPOINT dans src/form.js ; sans lui, le formulaire ouvre un e-mail prérempli -->
+      <form class="form" novalidate>
+        <div class="row">
+          <div class="field"><label for="f-nom">Nom</label><input id="f-nom" name="nom" type="text" autocomplete="name" required /><p class="err" id="f-nom-err"></p></div>
+          <div class="field"><label for="f-email">E-mail</label><input id="f-email" name="email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" required /><p class="err" id="f-email-err"></p></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="f-metier">Activité</label><select id="f-metier" name="activite" required><option value="">Choisir…</option><option>Commerce</option><option>Restaurant</option><option>Agence immobilière</option><option>Hôtel</option><option>Camping</option><option>Étude notariale</option><option>Autre</option></select><p class="err" id="f-metier-err"></p></div>
+          <div class="field"><label for="f-formule">Ce qui vous intéresse</label><input id="f-formule" name="formule" type="text" placeholder="Abonnement, pack…" /></div>
+        </div>
+        <div class="field"><label for="f-msg">Votre projet <span class="opt">(facultatif)</span></label><textarea id="f-msg" name="message" rows="3" enterkeyhint="send"></textarea></div>
+        <label class="consent"><input type="checkbox" name="consentement" required /><span>J’accepte qu’Estalia Studio utilise ces informations pour me recontacter.</span></label>
+        <p class="err" id="f-consent-err"></p>
+        <button class="btn btn--lime btn--full" type="submit">Réserver mon appel</button>
+        <p class="status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer dark">
+    <div class="footer__cols">
+      <div><h3>Services</h3><a href="#services">Films promo</a><a href="#services">Reels &amp; TikTok</a><a href="#services">Vidéos produit</a><a href="#services">Visites immobilières</a><a href="#packs">Packs saisonniers</a><a href="#services">Visuels IA</a><a href="#services">Sites web</a></div>
+      <div><h3>Secteurs</h3><a href="#top">Commerces</a><a href="#top">Restaurants</a><a href="#top">Immobilier</a><a href="#top">Hôtels &amp; campings</a><a href="#top">Notaires</a></div>
+      <div><h3>Estalia</h3><a href="#realisations">Réalisations</a><a href="#pourquoi">Pourquoi nous</a><a href="#tarifs">Tarifs</a><a href="#rdv">Réserver un appel</a></div>
+    </div>
+    <div class="footer__base">
+      <a class="logo" href="#top">Estalia<i>.</i></a>
+      <p>© 2026 Estalia Studio · <a href="#">Mentions légales</a> · <a href="#">Confidentialité</a></p>
+    </div>
+  </footer>
+
+  <dialog class="player" aria-label="Lecture de la vidéo">
+    <button class="player__close" type="button">Fermer</button>
+    <video controls playsinline></video>
+  </dialog>
+</body>
+</html>
