@@ -42,6 +42,8 @@ export async function render(main, [id]) {
       <label class="f span2">Lien d’inscription <span class="hint">https://…, mailto:… ou tel:…</span><input class="in" name="booking_url" placeholder="mailto:commandes@librairiemartelle.com" value="${ev.booking_url || ""}"></label>
       <label class="check"><input type="checkbox" name="booking_required" ${ev.booking_required ? "checked" : ""}> Inscription recommandée</label>
       <label class="switch"><input type="checkbox" name="published" ${ev.published ? "checked" : ""}> Visible sur le site</label>
+      <div class="f span2" style="border-top:1px solid var(--line);padding-top:14px"><label class="check"><input type="checkbox" name="cancelled" ${ev.cancelled ? "checked" : ""}> Événement annulé <span class="hint" style="font-weight:400;color:var(--muted)">(reste affiché, barré, avec la mention « Annulé »)</span></label>
+        <label class="f" style="margin-top:8px">Motif ou information (facultatif)<input class="in" name="cancel_note" maxlength="300" placeholder="Ex. : reporté au printemps, nouvelle date à venir" value="${ev.cancel_note || ""}"></label></div>
     </div></section></div>
     <aside class="cover-box card"><div class="cover-prev" id="ip" style="aspect-ratio:4/3"></div>
       <label class="btn" style="cursor:pointer">${raw(I.upload)} Image (affiche, photo de l’auteur…)<input type="file" accept="image/jpeg,image/png,image/webp" id="file" hidden></label>
@@ -86,7 +88,7 @@ export async function render(main, [id]) {
     const url = v("booking_url");
     if (url && !/^(https:\/\/|mailto:|tel:)/.test(url)) { errs.push("Le lien d’inscription doit commencer par https://, mailto: ou tel:"); F("booking_url").classList.add("err"); }
     if (errs.length) { toast(errs[0], "bad", 6000); return; }
-    const rec = { title: v("title"), kind: v("kind"), guests: v("guests") || null, starts_at: starts, ends_at: ends, location: v("location") || "Librairie Martelle, 3 rue des Vergeaux, Amiens", description: v("description") || null, book_id: book ? book.id : null, booking_url: url || null, booking_required: F("booking_required").checked, published: F("published").checked };
+    const rec = { title: v("title"), kind: v("kind"), guests: v("guests") || null, starts_at: starts, ends_at: ends, location: v("location") || "Librairie Martelle, 3 rue des Vergeaux, Amiens", description: v("description") || null, book_id: book ? book.id : null, booking_url: url || null, booking_required: F("booking_required").checked, published: F("published").checked, cancelled: F("cancelled").checked, cancel_note: v("cancel_note") || null };
     const btn = f.querySelector("[type=submit]"); btn.disabled = true;
     const old = ev.image_path;
     try {

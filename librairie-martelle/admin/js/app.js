@@ -13,6 +13,8 @@ const NAV = [
   { href: "#/import", label: "Importer (CSV)", icon: I.upload, view: () => import("./views/import.js") },
   { href: "#/evenements", label: "Événements", icon: I.cal, view: () => import("./views/events.js") },
   { sep: true },
+  { href: "#/contenus", label: "Textes & pages", icon: I.edit, view: () => import("./views/content.js") },
+  { href: "#/photos", label: "Photos", icon: I.upload, view: () => import("./views/photos.js") },
   { href: "#/rayons", label: "Les 12 rayons", icon: I.shelf, view: () => import("./views/categories.js") },
   { href: "#/infos", label: "Horaires & infos", icon: I.clock, view: () => import("./views/settings.js") },
   { href: "#/synchronisation", label: "Synchronisation stock", icon: I.sync, view: () => import("./views/sync.js") },
@@ -28,6 +30,8 @@ const ROUTES = [
   [/^#\/evenements\/?$/, () => import("./views/events.js")],
   [/^#\/evenements\/(nouveau|[0-9a-f-]{36})$/, () => import("./views/eventForm.js")],
   [/^#\/rayons$/, () => import("./views/categories.js")],
+  [/^#\/contenus$/, () => import("./views/content.js")],
+  [/^#\/photos$/, () => import("./views/photos.js")],
   [/^#\/infos$/, () => import("./views/settings.js")],
   [/^#\/synchronisation$/, () => import("./views/sync.js")],
 ];

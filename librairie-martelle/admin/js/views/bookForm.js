@@ -1,4 +1,4 @@
-import { getBook, saveBook, deleteBooks, findByIsbn, categories, coverOf, uploadImage, removeImage, copyRemoteCover, publicUrl } from "../api.js";
+import { getBook, saveBook, deleteBooks, archiveBooks, findByIsbn, categories, coverOf, uploadImage, removeImage, copyRemoteCover, publicUrl } from "../api.js";
 import { html, raw, esc, I, AVAIL, toast, confirmDialog, parsePrice, guardDirty } from "../ui.js";
 import { normalizeIsbn, formatIsbn, lookupIsbn, normalizeDate, canScan, scanBarcode } from "../isbn.js";
 import { splitAuthors } from "../csv.js";
@@ -6,12 +6,12 @@ import { splitAuthors } from "../csv.js";
 export async function render(main, [id]) {
   const isNew = !id || id === "nouveau";
   const [cats, book] = await Promise.all([categories(), isNew ? null : getBook(id)]);
-  const b = book || { availability: "in_stock", published: true, authors: [] };
+  const b = book || { availability: null, published: true, authors: [] };
   // cover state: what will be saved
   const cover = { path: b.cover_path || null, url: b.cover_url || null, credit: b.cover_credit || null, file: null, candidate: null, removed: false };
 
   main.innerHTML = html`
-  <div class="topbar"><div><h1>${isNew ? "Ajouter un livre" : b.title}</h1><div class="sub">${isNew ? "Saisissez ou scannez l’ISBN : les informations sont complétées automatiquement quand elles existent." : `Modifié le ${new Date(b.updated_at).toLocaleString("fr-FR")}${b.metadata_source ? " · Données : " + b.metadata_source : ""}`}</div></div>
+  ${b.archived_at ? raw('<div class="notice" style="margin-bottom:16px">Ce livre est archivé : il n’apparaît pas sur le site.</div>') : ""}<div class="topbar"><div><h1>${isNew ? "Ajouter un livre" : b.title}</h1><div class="sub">${isNew ? "Saisissez ou scannez l’ISBN : les informations sont complétées automatiquement quand elles existent." : `Modifié le ${new Date(b.updated_at).toLocaleString("fr-FR")}${b.metadata_source ? " · Données : " + b.metadata_source : ""}`}</div></div>
     <div class="row">${!isNew && b.published ? raw(`<a class="btn" href="../#livre-${b.id}" target="_blank" rel="noopener">${I.ext} Voir sur le site</a>`) : ""}<a class="btn ghost" href="#/livres">← Retour à la liste</a></div></div>
   <form id="bf" novalidate>
   <div class="form-grid"><div class="stack">
@@ -31,12 +31,13 @@ export async function render(main, [id]) {
       <label class="f">Date de parution <span class="hint">AAAA ou AAAA-MM-JJ</span><input class="in" name="published_date" placeholder="2026" value="${b.published_date || ""}"></label>
       <label class="f">Nombre de pages<input class="in" name="page_count" inputmode="numeric" value="${b.page_count || ""}"></label>
       <label class="f">Langue<input class="in" name="language" maxlength="10" placeholder="fr" value="${b.language || ""}"></label>
+      <label class="f span2">Genre littéraire <span class="hint">Ex. : roman policier, essai, album jeunesse, manga…</span><input class="in" name="genre" maxlength="80" list="genres" value="${b.genre || ""}"><datalist id="genres"><option>Roman</option><option>Roman policier</option><option>Thriller</option><option>Science-fiction</option><option>Fantasy</option><option>Bande dessinée</option><option>Manga</option><option>Album jeunesse</option><option>Roman jeunesse</option><option>Essai</option><option>Histoire</option><option>Poésie</option><option>Théâtre</option><option>Beau livre</option><option>Guide de voyage</option></datalist></label>
       <label class="f span2">Résumé <span class="hint">Affiché sur la fiche du livre</span><textarea class="in" name="description" maxlength="8000" rows="7">${b.description || ""}</textarea></label>
     </div></section>
     <section class="card"><h2>Vente</h2><div class="grid g2">
       <label class="f">Rayon *<select class="in" name="category_id"><option value="">— Choisir un rayon —</option>${raw(cats.map((c) => `<option value="${c.id}" ${c.id === b.category_id ? "selected" : ""}>${esc(c.title)}</option>`).join(""))}</select></label>
       <label class="f">Prix de vente (€)<input class="in" name="price" inputmode="decimal" placeholder="18,50" value="${b.price !== null && b.price !== undefined ? String(b.price).replace(".", ",") : ""}"></label>
-      <div class="f span2" role="group" aria-label="Disponibilité"><span style="font-weight:600;font-size:13.5px">Disponibilité</span><div class="seg">${raw(Object.entries(AVAIL).map(([k, v]) => `<label><input type="radio" name="availability" value="${k}" ${k === b.availability ? "checked" : ""}><span>${v}</span></label>`).join(""))}</div></div>
+      <div class="f span2" role="group" aria-label="Disponibilité"><span style="font-weight:600;font-size:13.5px">Disponibilité</span><div class="seg"><label><input type="radio" name="availability" value="" ${b.availability ? "" : "checked"}><span>Non renseignée</span></label>${raw(Object.entries(AVAIL).map(([k, v]) => `<label><input type="radio" name="availability" value="${k}" ${k === b.availability ? "checked" : ""}><span>${v}</span></label>`).join(""))}</div><span class="hint" style="font-weight:400;color:var(--muted);font-size:12.5px">Affichée sur le site uniquement si vous la renseignez (ou si votre logiciel de stock la transmet).</span></div>
       <label class="f">Quantité en stock <span class="hint">Facultatif — mis à jour par le logiciel de stock si connecté</span><input class="in" name="stock_qty" inputmode="numeric" value="${b.stock_qty ?? ""}"></label>
       <label class="f">Référence dans le logiciel de stock<input class="in" name="external_ref" maxlength="120" value="${b.external_ref || ""}"></label>
     </div></section>
@@ -63,9 +64,9 @@ export async function render(main, [id]) {
     </div>
   </aside></div>
   <div class="sticky-actions">
-    ${!isNew ? raw('<button type="button" class="btn danger" id="del">Supprimer</button><span class="grow"></span>') : ""}
+    ${!isNew ? raw(`<button type="button" class="btn danger" id="del">Supprimer</button><button type="button" class="btn" id="arch">${b.archived_at ? "Désarchiver" : "Archiver"}</button><span class="grow"></span>`) : ""}
     ${isNew ? raw('<button type="submit" class="btn" data-next="1">Enregistrer et ajouter un autre</button>') : ""}
-    <button type="submit" class="btn primary lg">Enregistrer</button>
+    <button type="submit" class="btn primary lg">${isNew ? "Publier" : "Enregistrer"}</button>
   </div></form>`;
 
   const $ = (s) => main.querySelector(s);
@@ -132,7 +133,7 @@ export async function render(main, [id]) {
     const rec = {
       title: v("title"), subtitle: v("subtitle") || null, authors: splitAuthors(v("authors")),
       publisher: v("publisher") || null, language: v("language") || null, description: v("description") || null,
-      category_id: v("category_id") || null, availability: f.querySelector('[name="availability"]:checked')?.value || "in_stock",
+      category_id: v("category_id") || null, availability: f.querySelector('[name="availability"]:checked')?.value || null, genre: v("genre") || null,
       external_ref: v("external_ref") || null,
       is_new: field("is_new").checked, is_bestseller: field("is_bestseller").checked, is_staff_pick: field("is_staff_pick").checked,
       staff_note: v("staff_note") || null, staff_name: v("staff_name") || null, published: field("published").checked,
@@ -200,6 +201,12 @@ export async function render(main, [id]) {
   addEventListener("keydown", onKey);
   function onKey(e) { if ((e.ctrlKey || e.metaKey) && e.key === "s") { e.preventDefault(); f.requestSubmit(); } }
 
+  $("#arch")?.addEventListener("click", async () => {
+    const on = !b.archived_at;
+    if (on && !(await confirmDialog({ title: "Archiver ce livre ?", body: "Il disparaît du site et des sélections, mais reste dans l’administration (filtre « Archivés ») et peut être désarchivé à tout moment.", ok: "Archiver" }))) return;
+    try { await archiveBooks([b.id], on); guard.clean(); toast(on ? "Livre archivé : il n’apparaît plus sur le site." : "Livre désarchivé."); location.hash = on ? "#/livres" : `#/livres/${b.id}`; if (!on) dispatchEvent(new HashChangeEvent("hashchange")); }
+    catch (err) { toast(err.message, "bad"); }
+  });
   $("#del")?.addEventListener("click", async () => {
     if (!(await confirmDialog({ title: "Supprimer ce livre ?", body: `« ${b.title} » sera retiré du catalogue et du site. Cette action est définitive.`, ok: "Supprimer", danger: true }))) return;
     try { await deleteBooks([b.id]); guard.clean(); toast("Livre supprimé."); location.hash = "#/livres"; } catch (err) { toast(err.message, "bad"); }

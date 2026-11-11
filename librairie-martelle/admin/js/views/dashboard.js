@@ -10,6 +10,8 @@ export async function render(main, _p, { staff }) {
     st.no_price && `<a href="#/livres?f=noprice">${st.no_price} livre(s) sans prix</a>`,
     st.drafts && `<a href="#/livres?f=drafts">${st.drafts} brouillon(s) non publié(s)</a>`,
     st.out_of_stock && `<a href="#/livres?f=out">${st.out_of_stock} livre(s) indisponible(s)</a>`,
+    st.no_cover && `<a href="#/livres?f=nocover">${st.no_cover} livre(s) sans couverture</a>`,
+    !st.photos && `<a href="#/photos">Ajouter des photos de la librairie</a>`,
   ].filter(Boolean);
   main.innerHTML = html`
   <div class="topbar"><div><h1>Bonjour${firstName ? " " + firstName : ""}</h1><div class="sub">Tout ce que vous modifiez ici apparaît immédiatement sur le site.</div></div>

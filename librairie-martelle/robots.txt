@@ -1,0 +1,7 @@
+# Démonstration : rien n'est indexé tant que la librairie n'a pas validé le site.
+# À la mise en production, remplacer par :
+#   User-agent: *
+#   Disallow: /admin/
+#   Sitemap: https://<domaine>/sitemap.xml
+User-agent: *
+Disallow: /

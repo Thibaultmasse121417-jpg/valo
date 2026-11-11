@@ -30,7 +30,7 @@ for (const [cat, subject] of Object.entries(SUBJECTS)) {
       publisher: v.publishers?.[0]?.name || null, published_date: year(v.publish_date), page_count: v.number_of_pages || null,
       description: typeof v.notes === "string" ? v.notes.slice(0, 2000) : null,
       cover_url: `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`, cover_credit: "Couverture : Open Library",
-      category_id: cat, availability: "in_stock", published: true, source: "isbn", metadata_source: "Open Library",
+      category_id: cat, published: true, source: "isbn", metadata_source: "Open Library",
       is_new: false, is_bestseller: false, is_staff_pick: false,
     });
     n++;

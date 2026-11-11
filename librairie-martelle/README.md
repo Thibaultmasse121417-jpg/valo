@@ -11,29 +11,18 @@ et interface d’administration privée pour l’équipe de la librairie. Conçu
 
 ## 1. Architecture
 
-```
-┌──────────────────────────┐     lecture publique (clé anon, RLS)      ┌──────────────────────────────────────┐
-│ Site public  index.html  │ ───────────────────────────────────────▶ │ Supabase                              │
-│ (statique, 1 fichier)    │                                           │  • Postgres + Row Level Security      │
-└──────────────────────────┘                                           │  • Auth (e-mail + mot de passe)       │
-┌──────────────────────────┐     session authentifiée (équipe)         │  • Storage : bucket public « media »  │
-│ Administration  /admin/  │ ───────────────────────────────────────▶ │  • Edge Function « pos-sync »         │
-│ (statique, modules JS)   │                                           └──────────────────────────────────────┘
-└──────────────────────────┘                                                         ▲
-        │ recherche ISBN (navigateur)                                                │ POST + jeton SYNC_TOKEN
-        ▼                                                                            │
-  Google Books API · Open Library                                  Logiciel de gestion / caisse (à terme)
-```
+Voir **`docs/ARCHITECTURE.md`** (schéma, arborescence, flux de données), **`docs/AUDIT.md`** (ce qui a été conservé,
+amélioré, remplacé) et **`docs/MISE-EN-PRODUCTION.md`** (liste précise des éléments manquants).
 
-| Dossier | Rôle |
+| Élément | Rôle |
 |---|---|
-| `index.html` | Site public (généré depuis `src.html` par `build.py`, polices incluses). |
-| `config.js` | Adresse et clé **publique** du projet Supabase (partagées par le site et l’admin). |
-| `admin/` | Administration : `index.html`, `admin.css`, `js/` (modules ES, sans étape de compilation), `vendor/` (supabase-js 2.45.4, licence MIT). |
-| `supabase/migrations/` | Schéma complet : tables, sécurité (RLS), stockage, fonctions. |
-| `supabase/functions/pos-sync/` | API de synchronisation des stocks et des prix. |
-| `tests/` | Tests unitaires (ISBN, CSV) et d’intégration (sécurité, synchronisation). |
-| `tools/seed-local-test-data.mjs` | Données de **test local uniquement** (vrais livres d’Open Library, sans prix). |
+| `index.html`, `catalogue.html`, `evenements.html`, `mentions-legales.html`, `confidentialite.html` | Pages publiques statiques (en-tête et pied de page générés par `tools/pages.py`). |
+| `assets/` | Feuilles de style, polices WOFF2 (licence OFL), modules JS (`home`, `catalogue`, `events`, `legal`, `book`, partagés : `data`, `art`, `views`, `chrome`). |
+| `server/book-page.mjs` + `netlify/functions/book-page.mjs` | Fiches livres `/livre/<isbn>-<titre>` rendues côté serveur (SEO, JSON-LD) et `/sitemap.xml`. |
+| `config.js` | Adresse et clé **publique** Supabase (site + admin). |
+| `admin/` | Administration (modules ES, sans compilation). |
+| `supabase/` | Migrations (schéma, RLS, stockage) et Edge Function `pos-sync`. |
+| `tests/`, `tools/` | Tests ; polices, pages, serveur de développement, données de test locales. |
 
 ### Modèle de données
 
@@ -83,10 +72,11 @@ Dans `config.js`, renseignez `supabaseUrl` et `supabaseAnonKey` (*Project Settin
 Facultatif : `googleBooksApiKey` (Google Cloud → API Books ; **restreignez la clé au domaine du site**). Sans clé,
 Google limite fortement les recherches et Open Library prend le relais.
 
-### 2.4 Hébergement
-Le site est entièrement statique : déposez le dossier (sauf `supabase/`, `tests/`, `tools/`) sur n’importe quel hébergeur
-HTTPS (Netlify, Vercel, Cloudflare Pages, OVH…). L’administration est accessible à `https://<domaine>/admin/`.
-Pensez à retirer `<meta name="robots" content="noindex,nofollow">` de `src.html` (puis `python3 build.py`) à la mise en ligne officielle.
+### 2.4 Hébergement (Netlify recommandé)
+Reliez le dépôt à Netlify (dossier `librairie-martelle/` comme base) : `netlify.toml` publie les pages statiques et la
+fonction des fiches livres. Variables d’environnement : `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SITE_URL`
+(et `SITE_INDEXABLE=true` à la mise en ligne officielle). L’administration est accessible à `https://<domaine>/admin/`.
+Autre hébergeur : le rendu des fiches (`server/book-page.mjs`, `(Request, env) → Response`) s’adapte à Vercel ou Cloudflare.
 
 ### 2.5 Synchronisation du stock (facultatif)
 ```bash
@@ -150,13 +140,17 @@ npx supabase start
 
 # Tests unitaires (ISBN, CSV, prix)
 node --test tests/unit.test.mjs
+# Règles v3 (archivage, photos, contenus, fiches livres SSR) — même environnement que ci-dessous : node --test tests/v3.test.mjs
 
 # Tests d’intégration (sécurité RLS, doublons, sélections, synchronisation) contre la base locale
 SUPABASE_URL=http://127.0.0.1:54321 SUPABASE_ANON_KEY=… SUPABASE_SERVICE_ROLE_KEY=… \
 STAFF_EMAIL=… STAFF_PASSWORD=… OTHER_EMAIL=… OTHER_PASSWORD=… node --test tests/backend.test.mjs
 
-# Régénérer le site public après modification de src.html
-python3 build.py
+# Serveur local identique à la production (pages + fiches livres /livre/…)
+SUPABASE_URL=http://127.0.0.1:54321 SUPABASE_ANON_KEY=… node tools/dev-server.mjs 8080
+
+# En-tête / pied de page modifiés : régénérer les sous-pages et le gabarit serveur
+python3 tools/pages.py
 ```
 
 ## 6. Limites connues et évolutions prévues

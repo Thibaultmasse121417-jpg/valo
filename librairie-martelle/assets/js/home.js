@@ -1,6 +1,8 @@
 // Home page: 3D curved shelf of the 12 rayons, sections fed by the live catalogue.
 import { C, DARK, BOOKS, DEMO, PICKS, f2, esc, wrap, motif, coverArt, spineArt, backArt, svgMarkup } from "./art.js";
-import { CFG, LIVE, API, PUB_COLS, api, coverSrc, SHOP, priceTxt, AVAIL, avHTML, KINDS, deName, telHref, bookPath, loadSettings, loadContent, applyContent, bookOrderLink, reserveMailto, DAYS, hm, hoursTable, shopStatus, dfmt, mediaUrl } from "./data.js";
+import { LIVE, PUB_COLS, api, SHOP, priceTxt, avHTML, deName, telHref, bookPath, loadSettings, loadContent, applyContent, bookOrderLink, reserveMailto, DAYS, hm, hoursTable, shopStatus, mediaUrl } from "./data.js";
+import { catStyle, fallbackArt, coverHTML, bookCache, eventHTML, EVENT_COLS } from "./views.js";
+import { initChrome } from "./chrome.js";
 
 (() => {
 "use strict";
@@ -23,41 +25,20 @@ const rel = (v, s) => { let r = mod(v - s, TOTAL); if (r >= TOTAL / 2) r -= TOTA
 const isMobile = () => innerWidth < 768;
 
 /* ================= live catalogue (Supabase, public read-only API) ================= */
-const CFG = window.MARTELLE_CONFIG || {};
-const LIVE = Boolean(CFG.supabaseUrl && CFG.supabaseAnonKey);
-const API = LIVE ? String(CFG.supabaseUrl).replace(/\/$/, "") : "";
-const PUB_COLS = "id,isbn,title,subtitle,authors,authors_text,publisher,published_date,page_count,description,cover_path,cover_url,cover_credit,price,availability,category_id,is_new,is_bestseller,is_staff_pick,staff_note,staff_name";
-async function api(path, { method = "GET", body, count = false } = {}) {
-  const r = await fetch(`${API}/rest/v1/${path}`, {
-    method, cache: "no-store", body: body ? JSON.stringify(body) : undefined,
-    headers: { apikey: CFG.supabaseAnonKey, authorization: `Bearer ${CFG.supabaseAnonKey}`, "content-type": "application/json", ...(count ? { prefer: "count=exact" } : {}) },
-  });
-  if (!r.ok) throw new Error("API " + r.status);
-  const data = await r.json();
-  if (!count) return data;
-  const cr = r.headers.get("content-range");
-  return { data, total: cr && cr.includes("/") ? +cr.split("/")[1] : data.length };
-}
-const coverSrc = (b) => (b.cover_path ? `${API}/storage/v1/object/public/media/${b.cover_path.split("/").map(encodeURIComponent).join("/")}` : b.cover_url || null);
-const SHOP = { phone: "03 22 71 54 54", email: "commandes@librairiemartelle.com", order_url: "https://www.leslibraires.fr/presentation/librairie-martelle/", book_url_template: null };
-const nfEur = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
-const priceTxt = (p) => (p === null || p === undefined ? "Prix en librairie" : nfEur.format(+p));
-const AVAIL = { in_stock: "En stock", low_stock: "Derniers exemplaires", on_order: "Sur commande", preorder: "À paraître", out_of_stock: "Indisponible" };
-const KINDS = { dedicace: "Dédicace", rencontre: "Rencontre", lecture: "Lecture", atelier: "Atelier", jeu: "Jeux", autre: "Événement" };
-const deName = (n) => (/^[aeiouyhàâéèêëîïôöûü]/i.test(n) ? "d’" : "de ") + n;
-const telHref = (p) => "tel:" + (String(p).replace(/[^0-9+]/g, "").replace(/^0/, "+33"));
 const COUNTS = {};
 let homeLoadedAt = 0, LIVE_PICKS = null;
 function loadHome() {
   homeLoadedAt = Date.now();
   const since = new Date(Date.now() - 3 * 3600e3).toISOString();
-  const sel = (flag, rank, n) => api(`books?select=${PUB_COLS}&${flag}=eq.true&published=eq.true&order=${rank}.asc,updated_at.desc&limit=${n}`);
+  const sel = (flag, rank, n) => api(`books?select=${PUB_COLS}&${flag}=eq.true&order=${rank}.asc,updated_at.desc&limit=${n}`);
   return Promise.allSettled([
     api("categories?select=id,title,short_title,kicker,description,location_hint&order=position"),
-    api("shop_settings?select=opening_hours,closures,phone,email,address,order_url,book_url_template,announcement"),
+    loadSettings(),
     api("rpc/category_counts", { method: "POST", body: {} }),
     sel("is_new", "new_rank", 12), sel("is_bestseller", "bestseller_rank", 10), sel("is_staff_pick", "pick_rank", 6),
-    api(`events?select=id,title,kind,starts_at,ends_at,location,guests,description,booking_url,booking_required,image_path,book:books(id,title,cover_path,cover_url)&published=eq.true&starts_at=gte.${encodeURIComponent(since)}&order=starts_at.asc&limit=6`),
+    api(`events?select=${EVENT_COLS}&starts_at=gte.${encodeURIComponent(since)}&order=starts_at.asc&limit=4`),
+    loadContent(),
+    api("photos?select=id,path,slot,alt,caption,credit,position&order=position.asc,id.asc"),
   ]).then((r) => r.map((x) => (x.status === "fulfilled" ? x.value : null)));
 }
 const homeData = LIVE ? loadHome() : null;
@@ -305,26 +286,11 @@ async function loadRB(append) {
     $("rbMoreBtn")?.addEventListener("click", () => { RB.page++; loadRB(true); });
   } catch (e) { grid.innerHTML = `<div class="bk-empty" style="grid-column:1/-1">Le catalogue est momentanément indisponible. Merci de réessayer dans un instant.</div>`; }
 }
-const BOOK_CACHE = new Map();
+const BOOK_CACHE = bookCache;
 function cardHTML(bk) {
   BOOK_CACHE.set(bk.id, bk);
-  return `<button class="bk-card" data-book="${bk.id}"><span class="bk-cv">${coverHTML(bk)}</span><span class="bk-t">${esc(bk.title)}</span><span class="bk-a">${esc(bk.authors_text || "")}</span><span class="bk-p"><span>${priceTxt(bk.price)}</span><span class="av ${bk.availability}">${AVAIL[bk.availability]}</span></span></button>`;
+  return `<button class="bk-card" data-book="${bk.id}"><span class="bk-cv">${coverHTML(bk)}</span><span class="bk-t">${esc(bk.title)}</span><span class="bk-a">${esc(bk.authors_text || "")}</span><span class="bk-p"><span>${priceTxt(bk.price)}</span>${avHTML(bk)}</span></button>`;
 }
-const catStyle = (id) => BOOKS.find((b) => b.id === id) || BOOKS[0];
-function fallbackArt(bk) {
-  const c = catStyle(bk.category_id);
-  return coverArt({ ...c, h: 1, title: bk.title.length > 60 ? bk.title.slice(0, 58) + "…" : bk.title, topL: c.short.toUpperCase(), topR: "", botL: (bk.authors_text || "").toUpperCase().slice(0, 34), botR: "Martelle" });
-}
-function coverHTML(bk) { BOOK_CACHE.set(bk.id, { ...(BOOK_CACHE.get(bk.id) || {}), ...bk }); const src = coverSrc(bk); return src ? `<img src="${esc(src)}" alt="Couverture : ${esc(bk.title)}" loading="lazy" decoding="async" data-fb="${bk.id}">` : svgMarkup(fallbackArt(bk)); }
-/* a cover that fails to load is replaced by a drawn cover in the rayon's style */
-document.addEventListener("error", (e) => {
-  const img = e.target;
-  if (!(img instanceof HTMLImageElement) || !img.dataset.fb) return;
-  const bk = BOOK_CACHE.get(img.dataset.fb);
-  if (!bk) return;
-  const t = document.createElement("template"); t.innerHTML = svgMarkup(fallbackArt(bk));
-  img.replaceWith(t.content.firstChild);
-}, true);
 function book3dReal(bk) {
   const c = catStyle(bk.category_id);
   const el = document.createElement("div"); el.className = "b3d";
@@ -336,29 +302,25 @@ function book3dReal(bk) {
 /* ----- one book (sheet stacked above everything) ----- */
 let bookOn = false, bookClosing = false, bookOrigin = null;
 const shBook = $("sh-book");
-function bookLink(bk) {
-  if (SHOP.book_url_template && bk.isbn) return { href: SHOP.book_url_template.replace("{isbn}", bk.isbn), label: "Voir en ligne" };
-  return SHOP.order_url ? { href: SHOP.order_url, label: "Commander en ligne" } : null;
-}
 function openBook(bk, origin, fromHistory) {
   if (!bk || bookOn) return;
   BOOK_CACHE.set(bk.id, bk);
   const c = catStyle(bk.category_id);
   const year = (bk.published_date || "").slice(0, 4);
   const meta = [bk.publisher, year, bk.page_count && `${bk.page_count} pages`, bk.isbn && `ISBN ${bk.isbn}`].filter(Boolean);
-  const subj = encodeURIComponent(`Réservation — ${bk.title}${bk.isbn ? " (" + bk.isbn + ")" : ""}`);
-  const bodyTxt = encodeURIComponent(`Bonjour,\n\nJe souhaite réserver « ${bk.title} »${bk.authors_text ? " de " + bk.authors_text : ""}${bk.isbn ? " (ISBN " + bk.isbn + ")" : ""}.\n\nNom :\nTéléphone :\n\nMerci !`);
-  const link = bookLink(bk);
+
+  const link = bookOrderLink(bk);
   $("bkCrumb").textContent = c.title;
   $("bkInfo").innerHTML = `<div class="dm"><span class="lbl bk-kick">${esc(c.title)}</span></div>
     <div class="dm"><h2 class="bk-title">${esc(bk.title)}</h2></div>
     ${bk.subtitle ? `<div class="dm"><p class="bk-sub">${esc(bk.subtitle)}</p></div>` : ""}
     ${bk.authors_text ? `<div class="dm"><span class="bk-by">${esc(bk.authors_text)}</span></div>` : ""}
     ${meta.length ? `<div class="dm"><div class="bk-meta">${meta.map((m) => `<span>${esc(m)}</span>`).join("")}</div></div>` : ""}
-    <div class="dm"><div class="bk-buy"><span class="bk-price${bk.price === null ? " na" : ""}">${priceTxt(bk.price)}</span><span class="av ${bk.availability}">${AVAIL[bk.availability]}</span>
-      <span class="btn-row" style="margin-left:auto"><a class="btn fill lbl" href="mailto:${esc(SHOP.email)}?subject=${subj}&body=${bodyTxt}">${bk.availability === "out_of_stock" ? "Demander ce livre" : "Réserver en librairie"}</a>${link ? `<a class="btn lbl" href="${esc(link.href)}" target="_blank" rel="noopener">${link.label}</a>` : ""}</span></div></div>
+    <div class="dm"><div class="bk-buy"><span class="bk-price${bk.price === null ? " na" : ""}">${priceTxt(bk.price)}</span>${avHTML(bk)}
+      <span class="btn-row" style="margin-left:auto"><a class="btn fill lbl" href="${esc(reserveMailto(bk))}">${bk.availability === "out_of_stock" ? "Demander ce livre" : "Réserver en librairie"}</a>${link ? `<a class="btn lbl" href="${esc(link.href)}" target="_blank" rel="noopener">${link.label}</a>` : ""}</span></div></div>
     ${bk.staff_note ? `<div class="dm"><div class="bk-note"><p>« ${esc(bk.staff_note)} »</p><span>${bk.staff_name ? "Le coup de cœur " + esc(deName(bk.staff_name)) : "Le coup de cœur des libraires"}</span></div></div>` : ""}
     <div class="dm"><p class="bk-desc">${bk.description ? esc(bk.description) : "Le résumé de ce livre n’est pas encore en ligne : demandez conseil aux libraires."}</p></div>
+    <div class="dm"><a class="ulink lbl" href="${bookPath(bk)}">Voir la fiche complète du livre →</a></div>
     <div class="dm"><p class="src">Retrait au 3 rue des Vergeaux, Amiens · ${esc(SHOP.phone)}${bk.cover_credit ? " · " + esc(bk.cover_credit) : ""}</p></div>`;
   const stage = $("bkStage");
   stage.querySelector(".b3d")?.remove();
@@ -442,12 +404,16 @@ function countUp(root) {
 }
 /* manifesto: words ink in as you read */
 const wordsEl = $("words");
-(() => {
+let wordSpans = [];
+function splitWords(text) {
   const keys = (wordsEl.dataset.k || "").split(",");
-  wordsEl.innerHTML = wordsEl.textContent.trim().split(/\s+/).map((w) => `<span class="w${keys.some((k) => w.toLowerCase().includes(k)) ? " k" : ""}">${esc(w)}</span>`).join(" ");
-})();
-const wordSpans = [...wordsEl.querySelectorAll(".w")];
+  wordsEl.innerHTML = String(text).trim().split(/\s+/).map((w) => `<span class="w${keys.some((k) => w.toLowerCase().includes(k)) ? " k" : ""}">${esc(w)}</span>`).join(" ");
+  wordSpans = [...wordsEl.querySelectorAll(".w")];
+  wordsOn = -1;
+}
+
 let wordsOn = -1;
+splitWords(wordsEl.textContent);
 /* history: pinned horizontal track */
 const hz = $("histoire"), hzTrack = $("hzTrack"), hzBar = $("hzBar");
 const years = [...hz.querySelectorAll(".year")];
@@ -463,7 +429,7 @@ function measureSections() {
   }
   hzTop = hz.getBoundingClientRect().top + scrollY;
   const wr = wordsEl.getBoundingClientRect(); wordsTop = wr.top + scrollY; wordsH = wr.height;
-  sectionsSpy = ["accueil", "histoire", "visite", "nouveautes", "rencontres", "venir"].map((id) => ({ id, y: $(id).getBoundingClientRect().top + scrollY }));
+  sectionsSpy = ["accueil", "librairie", "coups-de-coeur", "venir"].filter((id) => $(id) && !$(id).hidden).map((id) => ({ id, y: $(id).getBoundingClientRect().top + scrollY }));
   lastSy = -1;
 }
 const navLinks = [...document.querySelectorAll(".nav a[data-scroll]")];
@@ -531,41 +497,23 @@ $("pkNext").addEventListener("click", () => { pickI = mod(pickI + 1, pickLen());
 renderPick(0);
 /* marquee only runs on screen */
 new IntersectionObserver((ents) => ents.forEach((en) => $("marq").style.setProperty("--play", en.isIntersecting ? "running" : "paused"))).observe($("marq"));
-/* map loads when "Venir" approaches */
-new IntersectionObserver((ents, ob) => ents.forEach((en) => { if (!en.isIntersecting) return; ob.disconnect();
+/* map: Google Maps is only loaded on request (third-party cookies) */
+$("mapLoad")?.addEventListener("click", () => {
   const f = document.createElement("iframe");
   f.title = "Plan d’accès — Librairie Martelle, 3 rue des Vergeaux, Amiens"; f.loading = "lazy"; f.referrerPolicy = "no-referrer-when-downgrade";
   f.src = "https://www.google.com/maps?q=" + encodeURIComponent("Librairie Martelle, 3 rue des Vergeaux, 80000 Amiens") + "&z=16&output=embed";
   $("map").prepend(f);
-}), { rootMargin: "400px" }).observe($("map"));
+  $("mapLoad").parentElement.remove();
+});
 
-/* ================= opening hours (leslibraires.fr, 11/11/2026) ================= */
-const DAYS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
-let HOURS = [[570, 1140], [570, 1140], [570, 1140], [570, 1140], [570, 1140], [570, 1140], null];
-const CLOSED = new Set(["2026-11-11"]);
-const hm = (m) => `${Math.floor(m / 60)}h${m % 60 ? String(m % 60).padStart(2, "0") : ""}`;
-function parisNow() {
-  const p = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Paris", weekday: "short", hour: "2-digit", minute: "2-digit", hour12: false }).formatToParts(new Date());
-  const g = (t) => p.find((x) => x.type === t).value;
-  const date = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
-  return { wd: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].indexOf(g("weekday")), min: (+g("hour") % 24) * 60 + +g("minute"), date };
-}
-const addDays = (iso, k) => { const t = new Date(iso + "T12:00:00Z"); t.setUTCDate(t.getUTCDate() + k); return t.toISOString().slice(0, 10); };
-const hoursOn = (wd, iso) => (CLOSED.has(iso) ? null : HOURS[wd]);
-function status() {
-  const { wd, min, date } = parisNow(), h = hoursOn(wd, date), exc = CLOSED.has(date);
-  if (h && min >= h[0] && min < h[1]) return { open: true, wd, exc, txt: `Ouvert · jusqu’à ${hm(h[1])}` };
-  if (h && min < h[0]) return { open: false, wd, exc, txt: `Fermé · ouvre à ${hm(h[0])}` };
-  for (let k = 1; k <= 14; k++) { const dd = (wd + k) % 7, hh = hoursOn(dd, addDays(date, k));
-    if (hh) return { open: false, wd, exc, txt: `${exc ? "Fermeture exceptionnelle" : "Fermé"} · ouvre ${k === 1 ? "demain" : DAYS[dd].toLowerCase()} à ${hm(hh[0])}` }; }
-  return { open: false, wd, exc, txt: "Fermé" };
-}
+/* ================= opening hours (shared, Europe/Paris) ================= */
 function renderHours() {
-  const st = status();
-  $("hours").innerHTML = DAYS.map((dn, i) => `<tr${i === st.wd ? ' class="today"' : ""}><td>${dn}</td><td>${i === st.wd && st.exc ? "Fermeture exceptionnelle" : HOURS[i] ? hm(HOURS[i][0]) + " – " + hm(HOURS[i][1]) : "Fermé"}</td></tr>`).join("");
-  [$("status"), $("status2")].forEach((el) => el.classList.toggle("open", st.open));
+  const st = shopStatus(), H = hoursTable();
+  $("hours").innerHTML = DAYS.map((dn, i) => `<tr${i === st.wd ? ' class="today"' : ""}><td>${dn}</td><td>${i === st.wd && st.exc ? "Fermeture exceptionnelle" : H[i] ? hm(H[i][0]) + " – " + hm(H[i][1]) : "Fermé"}</td></tr>`).join("");
+  [$("status"), $("status2"), $("stripStatus")].forEach((el) => el && el.classList.toggle("open", st.open));
   $("statusTxt").textContent = `${st.txt} — 3 rue des Vergeaux`;
   $("status2").querySelector("span").textContent = st.txt;
+  if ($("stripStatusTxt")) $("stripStatusTxt").textContent = st.txt;
 }
 renderHours(); setInterval(renderHours, 60000);
 
@@ -718,7 +666,7 @@ requestAnimationFrame(frame);
 runIntro();
 
 /* ================= apply live data to the page ================= */
-function applyHome([cats, settings, counts, news, best, picks, events]) {
+function applyHome([cats, settings, counts, news, best, picks, events, content, photos]) {
   /* rayons: texts editable from the admin, drawing stays fixed */
   if (cats && cats.length) {
     let changed = false;
@@ -736,21 +684,36 @@ function applyHome([cats, settings, counts, news, best, picks, events]) {
     }
   }
   (counts || []).forEach((c) => (COUNTS[c.category_id] = +c.books));
-  /* practical information */
-  const st = settings && settings[0];
-  if (st) {
-    const toMin = (t) => { const [h, m] = String(t).split(":").map(Number); return h * 60 + (m || 0); };
-    if (Array.isArray(st.opening_hours) && st.opening_hours.length === 7) HOURS = st.opening_hours.map((h) => (h ? [toMin(h.open), toMin(h.close)] : null));
-    CLOSED.clear(); (st.closures || []).forEach((c) => c && c.date && CLOSED.add(c.date));
-    const oldPhone = SHOP.phone, oldMail = SHOP.email, oldOrder = SHOP.order_url;
-    Object.assign(SHOP, { phone: st.phone || SHOP.phone, email: st.email || SHOP.email, order_url: st.order_url || SHOP.order_url, book_url_template: st.book_url_template || null });
-    document.querySelectorAll('a[href^="tel:"]').forEach((a) => { a.href = telHref(SHOP.phone); if (a.textContent.includes(oldPhone)) a.textContent = a.textContent.replace(oldPhone, SHOP.phone); });
-    document.querySelectorAll('a[href^="mailto:"]').forEach((a) => { a.href = a.href.replace(oldMail, SHOP.email); if (a.textContent.includes(oldMail)) a.textContent = SHOP.email; });
-    if (oldOrder !== SHOP.order_url) document.querySelectorAll(`a[href="${oldOrder}"]`).forEach((a) => (a.href = SHOP.order_url));
+  /* practical information (already merged into SHOP by loadSettings) */
+  if (settings) {
+    document.querySelectorAll('a[href^="tel:"]').forEach((a) => { a.href = telHref(SHOP.phone); if (/\d\d \d\d \d\d/.test(a.textContent)) a.textContent = a.textContent.replace(/0\d( \d\d){4}/, SHOP.phone); });
+    document.querySelectorAll('a[href^="mailto:commandes@"]').forEach((a) => { a.href = a.href.replace("commandes@librairiemartelle.com", SHOP.email); if (a.textContent.includes("@")) a.textContent = SHOP.email; });
+    document.querySelectorAll('a[data-order]').forEach((a) => (a.href = SHOP.order_url));
     renderHours();
     const an = $("annc");
-    if (st.announcement) { an.textContent = st.announcement; an.hidden = false; requestAnimationFrame(() => setTimeout(() => an.classList.add("on"), 2600)); }
+    if (SHOP.announcement) { an.textContent = SHOP.announcement; an.hidden = false; setTimeout(() => an.classList.add("on"), 2600); }
     else { an.classList.remove("on"); an.hidden = true; }
+  }
+  /* editable texts and section toggles */
+  if (content) {
+    applyContent(content);
+    if (typeof content["home.manifesto"] === "string" && content["home.manifesto"].trim()) splitWords(content["home.manifesto"]);
+    for (const id of ["histoire", "visite", "nouveautes", "coups-de-coeur", "rencontres", "equipe", "galerie"]) {
+      if (content["home.hide." + id] === true && $(id)) $(id).hidden = true;
+    }
+  }
+  /* photos (only those published with confirmed rights are readable) */
+  if (photos && photos.length) {
+    const team = photos.find((ph) => ph.slot === "equipe");
+    if (team) {
+      $("teamPhoto").innerHTML = `<img src="${esc(mediaUrl(team.path))}" alt="${esc(team.alt)}" loading="lazy">${team.credit ? `<figcaption class="credit">${esc(team.credit)}</figcaption>` : ""}`;
+      $("teamPhoto").classList.add("has-photo");
+    }
+    const gal = photos.filter((ph) => ph.slot !== "equipe");
+    if (gal.length) {
+      $("galRail").innerHTML = gal.map((ph) => `<figure class="gal-it"><img src="${esc(mediaUrl(ph.path))}" alt="${esc(ph.alt)}" loading="lazy">${ph.caption || ph.credit ? `<figcaption>${esc(ph.caption || "")}${ph.credit ? ` <span>${esc(ph.credit)}</span>` : ""}</figcaption>` : ""}</figure>`).join("");
+      $("galerie").hidden = false;
+    }
   }
   /* new releases */
   const secNew = $("nouveautes"), navNew = document.querySelector('.nav a[data-scroll="nouveautes"]');
@@ -761,7 +724,7 @@ function applyHome([cats, settings, counts, news, best, picks, events]) {
       BOOK_CACHE.set(bk.id, bk);
       const it = document.createElement("article"); it.className = "nv"; it.dataset.book = bk.id; it.tabIndex = 0; it.setAttribute("role", "button"); it.setAttribute("aria-label", bk.title);
       it.append(book3dReal(bk));
-      it.insertAdjacentHTML("beforeend", `<i class="b3d-sh"></i><div class="nv-m"><span class="lbl g">${esc(catStyle(bk.category_id).short)}</span><h3>${esc(bk.title)}</h3><p>${esc(bk.authors_text || "")}</p><span class="pr">${priceTxt(bk.price)} <span class="av ${bk.availability}">${AVAIL[bk.availability]}</span></span></div>`);
+      it.insertAdjacentHTML("beforeend", `<i class="b3d-sh"></i><div class="nv-m"><span class="lbl g">${esc(catStyle(bk.category_id).short)}</span><h3>${esc(bk.title)}</h3><p>${esc(bk.authors_text || "")}</p><span class="pr">${priceTxt(bk.price)} ${avHTML(bk)}</span></div>`);
       rail.append(it);
     });
     secNew.hidden = false; if (navNew) navNew.hidden = false;
@@ -772,7 +735,7 @@ function applyHome([cats, settings, counts, news, best, picks, events]) {
     best.forEach((bk) => BOOK_CACHE.set(bk.id, bk));
     secNew.insertAdjacentHTML("afterend", `<section class="sec" id="meilleures-ventes" aria-labelledby="t-best"><div class="row-h" data-io><div><div class="kick lbl"><span class="ln"><span>Meilleures ventes</span></span></div>
       <h2 class="h2" id="t-best"><span class="ln"><span>Les plus <em>demandés</em></span></span></h2></div><span class="lbl" style="color:var(--muted)">Rue des Vergeaux, en ce moment</span></div>
-      <ol class="best" data-io>${best.map((bk, i) => `<li class="wipe" style="--i:${Math.min(i, 6)}"><button data-book="${bk.id}"><span class="rk">${String(i + 1).padStart(2, "0")}</span><span class="mini">${coverHTML(bk)}</span><span><h3>${esc(bk.title)}</h3><p>${esc(bk.authors_text || "")}</p></span><span class="pr">${priceTxt(bk.price)}<span class="av ${bk.availability}">${AVAIL[bk.availability]}</span></span></button></li>`).join("")}</ol></section>`);
+      <ol class="best" data-io>${best.map((bk, i) => `<li class="wipe" style="--i:${Math.min(i, 6)}"><button data-book="${bk.id}"><span class="rk">${String(i + 1).padStart(2, "0")}</span><span class="mini">${coverHTML(bk)}</span><span><h3>${esc(bk.title)}</h3><p>${esc(bk.authors_text || "")}</p></span><span class="pr">${priceTxt(bk.price)}${avHTML(bk)}</span></button></li>`).join("")}</ol></section>`);
     document.querySelectorAll("#meilleures-ventes [data-io]").forEach((el) => io.observe(el));
   }
   /* staff picks */
@@ -785,23 +748,17 @@ function applyHome([cats, settings, counts, news, best, picks, events]) {
     pickI = 0; renderPick(0);
     secPick.hidden = false;
   } else if (picks) secPick.hidden = true;
-  /* events */
+  /* events (upcoming; past ones are archived automatically on the events page) */
   const evl = $("evList");
   if (events && events.length) {
-    const dfmt = (d, o) => new Intl.DateTimeFormat("fr-FR", { timeZone: "Europe/Paris", ...o }).format(new Date(d));
-    evl.innerHTML = events.map((ev) => {
-      const book = ev.book;
-      const cta = ev.booking_url ? `<a class="btn fill lbl" href="${esc(ev.booking_url)}" ${/^https/.test(ev.booking_url) ? 'target="_blank" rel="noopener"' : ""}>${ev.booking_required ? "S’inscrire" : "En savoir plus"}</a>`
-        : ev.booking_required ? `<a class="btn fill lbl" href="mailto:${esc(SHOP.email)}?subject=${encodeURIComponent("Inscription — " + ev.title)}">S’inscrire</a>` : "";
-      return `<article class="evi"><div><div class="dd">${dfmt(ev.starts_at, { day: "numeric" })}</div><span class="mm">${dfmt(ev.starts_at, { month: "long" })}</span></div>
-        <div><span class="lbl">${esc(KINDS[ev.kind] || "Rendez-vous")} · ${dfmt(ev.starts_at, { weekday: "long" })} · ${dfmt(ev.starts_at, { hour: "2-digit", minute: "2-digit" }).replace(":", "h")}${ev.ends_at ? "–" + dfmt(ev.ends_at, { hour: "2-digit", minute: "2-digit" }).replace(":", "h") : ""}</span>
-        <h3>${esc(ev.title)}</h3>${ev.guests ? `<p><b>${esc(ev.guests)}</b></p>` : ""}${ev.description ? `<p>${esc(ev.description.length > 260 ? ev.description.slice(0, 258) + "…" : ev.description)}</p>` : ""}${ev.location && !/Vergeaux/.test(ev.location) ? `<p>${esc(ev.location)}</p>` : ""}</div>
-        <div class="btn-row row-cta">${cta}${book ? `<button class="btn lbl" data-book="${book.id}">Le livre</button>` : ""}</div></article>`;
-    }).join("");
+    evl.innerHTML = events.slice(0, 3).map((ev) => eventHTML(ev)).join("");
     evl.hidden = false;
+    const next = events.find((ev) => !ev.cancelled);
+    if (next) $("stripEvent").innerHTML = `<span class="lbl">Prochain rendez-vous</span><b>${esc(next.title)}</b><span>${new Intl.DateTimeFormat("fr-FR", { timeZone: "Europe/Paris", weekday: "long", day: "numeric", month: "long" }).format(new Date(next.starts_at))}</span>`;
   } else evl.hidden = true;
   measureSections();
 }
+initChrome({ home: true });
 if (LIVE) {
   homeData.then(applyHome);
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && Date.now() - homeLoadedAt > 120000) loadHome().then(applyHome); });

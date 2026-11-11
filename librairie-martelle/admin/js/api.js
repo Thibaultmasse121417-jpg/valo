@@ -5,8 +5,8 @@ export const sb = configured
   ? window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } })
   : null;
 
-export const BOOK_COLS = "id,isbn,title,subtitle,authors,authors_text,publisher,published_date,page_count,language,description,cover_path,cover_url,cover_credit,price,availability,stock_qty,category_id,is_new,is_bestseller,is_staff_pick,new_rank,bestseller_rank,pick_rank,staff_note,staff_name,published,source,metadata_source,external_ref,stock_synced_at,created_at,updated_at";
-export const LIST_COLS = "id,isbn,title,authors_text,publisher,cover_path,cover_url,price,availability,stock_qty,category_id,is_new,is_bestseller,is_staff_pick,published,updated_at";
+export const BOOK_COLS = "id,isbn,title,subtitle,authors,authors_text,publisher,published_date,page_count,language,description,cover_path,cover_url,cover_credit,price,availability,stock_qty,category_id,is_new,is_bestseller,is_staff_pick,new_rank,bestseller_rank,pick_rank,staff_note,staff_name,published,source,metadata_source,external_ref,stock_synced_at,created_at,updated_at,genre,archived_at";
+export const LIST_COLS = "id,isbn,title,authors_text,publisher,cover_path,cover_url,price,availability,stock_qty,category_id,is_new,is_bestseller,is_staff_pick,published,updated_at,archived_at,genre";
 
 /** Throw a readable French message for Supabase errors. */
 export function check({ data, error, count }) {
@@ -67,7 +67,10 @@ export async function listBooks({ q = "", category = "", filter = "", sort = "re
     published: () => r.eq("published", true), drafts: () => r.eq("published", false),
     new: () => r.eq("is_new", true), best: () => r.eq("is_bestseller", true), picks: () => r.eq("is_staff_pick", true),
     out: () => r.eq("availability", "out_of_stock"), noprice: () => r.is("price", null), nocat: () => r.is("category_id", null),
+    nocover: () => r.is("cover_path", null).is("cover_url", null), noavail: () => r.is("availability", null),
   };
+  if (filter === "archived") r = r.not("archived_at", "is", null);
+  else r = r.is("archived_at", null);
   if (F[filter]) r = F[filter]();
   if (sort === "title") r = r.order("title", { ascending: true });
   else if (sort === "price") r = r.order("price", { ascending: true, nullsFirst: false });
@@ -103,6 +106,21 @@ export async function selection(kind) {
   return check(await sb.from("books").select(LIST_COLS + ",staff_note,staff_name,new_rank,bestseller_rank,pick_rank").eq(col[0], true).order(col[1]).order("updated_at", { ascending: false }).limit(200));
 }
 export async function reorderSelection(kind, ids) { return check(await sb.rpc("reorder_selection", { p_kind: kind, p_ids: ids })); }
+export async function archiveBooks(ids, on = true) { return patchBooks(ids, { archived_at: on ? new Date().toISOString() : null, ...(on ? { is_new: false, is_bestseller: false, is_staff_pick: false } : {}) }); }
+
+/* ---------------- site texts & pages ---------------- */
+export async function getContent() { return Object.fromEntries(check(await sb.from("site_content").select("key,value")).map((r) => [r.key, r.value])); }
+export async function saveContent(map) {
+  const rows = Object.entries(map).map(([key, value]) => ({ key, value }));
+  if (rows.length) check(await sb.from("site_content").upsert(rows, { onConflict: "key" }));
+}
+export async function deleteContent(keys) { if (keys.length) check(await sb.from("site_content").delete().in("key", keys)); }
+
+/* ---------------- photos of the shop ---------------- */
+export async function listPhotos() { return check(await sb.from("photos").select("*").order("slot").order("position").order("created_at")); }
+export async function savePhoto(id, rec) { return id ? check(await sb.from("photos").update(rec).eq("id", id).select().single()) : check(await sb.from("photos").insert(rec).select().single()); }
+export async function deletePhoto(ph) { check(await sb.from("photos").delete().eq("id", ph.id)); await removeImage(ph.path); }
+
 export async function stats() { return check(await sb.rpc("admin_stats")) || {}; }
 export async function allBooksForExport() {
   const out = [];
@@ -131,8 +149,8 @@ export async function recentImports() { return check(await sb.from("import_jobs"
 
 /* ---------------- images ---------------- */
 /** Resize to max 1000px (long side), encode as WebP (JPEG fallback), upload to the public « media » bucket. */
-export async function uploadImage(fileOrBlob, folder = "covers") {
-  const blob = await resizeImage(fileOrBlob, 1000);
+export async function uploadImage(fileOrBlob, folder = "covers", max = 1000) {
+  const blob = await resizeImage(fileOrBlob, max);
   const ext = blob.type === "image/webp" ? "webp" : "jpg";
   const path = `${folder}/${new Date().toISOString().slice(0, 10)}-${crypto.randomUUID()}.${ext}`;
   check(await sb.storage.from("media").upload(path, blob, { contentType: blob.type, cacheControl: "31536000", upsert: false }));

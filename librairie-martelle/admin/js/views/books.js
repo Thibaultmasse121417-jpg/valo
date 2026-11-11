@@ -1,4 +1,4 @@
-import { listBooks, categories, patchBooks, deleteBooks, coverOf, allBooksForExport } from "../api.js";
+import { listBooks, categories, patchBooks, deleteBooks, archiveBooks, coverOf, allBooksForExport } from "../api.js";
 import { html, raw, esc, fmtPrice, thumbHTML, I, AVAIL, debounce, toast, confirmDialog, download } from "../ui.js";
 import { toCsv } from "../csv.js";
 import { formatIsbn } from "../isbn.js";
@@ -17,7 +17,7 @@ export async function render(main) {
   <div class="toolbar">
     <input class="in search" type="search" id="q" placeholder="Rechercher : titre, auteur, ISBN, éditeur…" value="${state.q}" aria-label="Rechercher">
     <select class="in" id="cat" aria-label="Rayon"><option value="">Tous les rayons</option>${raw(cats.map((c) => `<option value="${c.id}">${esc(c.title)}</option>`).join(""))}<option value="_none">Sans rayon</option></select>
-    <select class="in" id="flt" aria-label="Filtre"><option value="">Tous les livres</option><option value="published">Publiés</option><option value="drafts">Brouillons</option><option value="new">Nouveautés</option><option value="best">Meilleures ventes</option><option value="picks">Coups de cœur</option><option value="out">Indisponibles</option><option value="noprice">Sans prix</option><option value="nocat">Sans rayon</option></select>
+    <select class="in" id="flt" aria-label="Filtre"><option value="">Tous les livres</option><option value="published">Publiés</option><option value="drafts">Brouillons</option><option value="new">Nouveautés</option><option value="best">Meilleures ventes</option><option value="picks">Coups de cœur</option><option value="out">Indisponibles</option><option value="noprice">Sans prix</option><option value="nocat">Sans rayon</option><option value="nocover">Sans couverture</option><option value="noavail">Disponibilité non renseignée</option><option value="archived">Archivés</option></select>
     <select class="in" id="sort" aria-label="Tri"><option value="recent">Modifiés récemment</option><option value="title">Titre (A → Z)</option><option value="price">Prix croissant</option></select>
   </div>
   <div class="list" id="list"></div>
@@ -28,7 +28,7 @@ export async function render(main) {
     <select class="in" id="bAv"><option value="">Disponibilité…</option>${raw(Object.entries(AVAIL).map(([k, v]) => `<option value="${k}">${v}</option>`).join(""))}</select>
     <button class="btn sm" data-b="pub1">Publier</button><button class="btn sm" data-b="pub0">Dépublier</button>
     <button class="btn sm" data-b="new1">+ Nouveautés</button><button class="btn sm" data-b="best1">+ Meilleures ventes</button>
-    <button class="btn sm" data-b="del" style="color:#FFB4A8;border-color:rgba(255,180,168,.5)">Supprimer</button>
+    <button class="btn sm" data-b="arch">Archiver</button><button class="btn sm" data-b="unarch">Désarchiver</button><button class="btn sm" data-b="del" style="color:#FFB4A8;border-color:rgba(255,180,168,.5)">Supprimer</button>
     <button class="btn sm" data-b="none" style="margin-left:auto">Désélectionner</button>
   </div>`;
   const $ = (s) => main.querySelector(s);
@@ -51,7 +51,7 @@ export async function render(main) {
         <div class="t"><a href="#/livres/${b.id}">${esc(b.title)}</a> ${b.published ? "" : '<span class="pill draft">Brouillon</span>'}<div class="a">${esc(b.authors_text || "Auteur inconnu")}${b.isbn ? " · " + formatIsbn(b.isbn) : ""}</div></div>
         <span class="c-cat small">${esc(catName[b.category_id] || "—")}</span>
         <span class="price c-price">${fmtPrice(b.price)}</span>
-        <span class="c-avail"><span class="pill ${b.availability}">${AVAIL[b.availability]}</span></span>
+        <span class="c-avail">${b.availability ? `<span class="pill ${b.availability}">${AVAIL[b.availability]}</span>` : '<span class="small muted">—</span>'}</span>
         <span class="flags c-flags">${flag(b, "is_new", "N", "Nouveauté")}${flag(b, "is_bestseller", "MV", "Meilleure vente")}${flag(b, "is_staff_pick", "♥", "Coup de cœur")}</span>
         <a class="icon-btn c-edit" href="#/livres/${b.id}" aria-label="Modifier ${esc(b.title)}">${I.edit}</a></div>`).join("");
     const all = $("#all");
@@ -103,6 +103,9 @@ export async function render(main) {
           if (!(await confirmDialog({ title: `Supprimer ${ids.length} livre(s) ?`, body: "Cette action est définitive. Les couvertures importées seront aussi supprimées.", ok: "Supprimer", danger: true }))) return;
           await deleteBooks(ids);
           toast(`${ids.length} livre(s) supprimé(s).`);
+        } else if (act === "arch" || act === "unarch") {
+          await archiveBooks(ids, act === "arch");
+          toast(act === "arch" ? `${ids.length} livre(s) archivé(s) : retirés du site.` : `${ids.length} livre(s) désarchivé(s).`);
         } else {
           const patch = { pub1: { published: true }, pub0: { published: false }, new1: { is_new: true }, best1: { is_bestseller: true } }[act];
           await patchBooks(ids, patch);
@@ -125,7 +128,7 @@ export async function render(main) {
     try {
       const all = await allBooksForExport();
       const head = ["isbn", "titre", "sous_titre", "auteurs", "editeur", "date_parution", "prix", "stock", "disponibilite", "rayon", "nouveaute", "meilleure_vente", "coup_de_coeur", "mot_du_libraire", "publie", "reference", "resume"];
-      const data = all.map((b) => [b.isbn, b.title, b.subtitle, b.authors, b.publisher, b.published_date, b.price === null ? "" : String(b.price).replace(".", ","), b.stock_qty, AVAIL[b.availability], catName[b.category_id] || "", b.is_new ? "oui" : "non", b.is_bestseller ? "oui" : "non", b.is_staff_pick ? "oui" : "non", b.staff_note, b.published ? "oui" : "non", b.external_ref, b.description]);
+      const data = all.map((b) => [b.isbn, b.title, b.subtitle, b.authors, b.publisher, b.published_date, b.price === null ? "" : String(b.price).replace(".", ","), b.stock_qty, b.availability ? AVAIL[b.availability] : "", catName[b.category_id] || "", b.is_new ? "oui" : "non", b.is_bestseller ? "oui" : "non", b.is_staff_pick ? "oui" : "non", b.staff_note, b.published ? "oui" : "non", b.external_ref, b.description]);
       download(`catalogue-martelle-${new Date().toISOString().slice(0, 10)}.csv`, toCsv([head, ...data]));
     } catch (err) { toast(err.message, "bad"); }
     btn.disabled = false;
