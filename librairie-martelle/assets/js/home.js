@@ -164,6 +164,7 @@ addEventListener("keydown", (e) => {
   if (e.key === "Escape") { if (bookOn) requestCloseBook(); else requestClose(); return; }
   if (sheetOpen() || bookOn || sy > VH * .5) return;
   const tag = document.activeElement?.tagName || "";
+  if (/^(INPUT|TEXTAREA|SELECT)$/.test(tag) || document.activeElement?.isContentEditable) return; // typing in a field
   if (e.key === "ArrowLeft") { step(-1); e.preventDefault(); }
   else if (e.key === "ArrowRight") { step(1); e.preventDefault(); }
   else if (e.key === "Enter" && !/^(BUTTON|A)$/.test(tag)) { openDetail(); e.preventDefault(); }
