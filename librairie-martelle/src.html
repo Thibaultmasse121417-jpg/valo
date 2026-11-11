@@ -1,0 +1,1166 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Librairie Martelle — Amiens</title>
+<meta name="description" content="Librairie Martelle, 3 rue des Vergeaux à Amiens. Concept de site proposé par Estalia — démonstration non officielle.">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#ECE6DA">
+<style>
+/*@FONTS@*/
+
+:root{
+  --paper:#ECE6DA; --sheet:#F4F0E8; --ink:#16130F; --muted:#6E675C; --accent:#9C2F1E; --rule:rgba(22,19,15,.9);
+  --ease:cubic-bezier(.2,.8,.2,1); --sheet-ease:cubic-bezier(.76,0,.18,1);
+  --H:min(47vh,33vw);
+  --cy:41%;
+  --sans:"Inter Tight",system-ui,sans-serif;
+  --serif:"Newsreader",Georgia,serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  background:var(--paper);color:var(--ink);font-family:var(--sans);
+  overflow:hidden;user-select:none;-webkit-user-select:none;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  -webkit-tap-highlight-color:transparent;
+}
+@media (pointer:fine){ *,*::before,*::after{cursor:none!important} }
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0}
+button:focus-visible,a:focus-visible{outline:1px dashed var(--accent);outline-offset:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.lbl{font-family:var(--sans);font-weight:600;font-size:10.5px;line-height:1;letter-spacing:.14em;text-transform:uppercase}
+.box{display:inline-flex;align-items:center;height:21px;padding:0 8px;border:1px solid var(--rule)}
+
+/* paper grain */
+.grain{
+  position:fixed;inset:0;z-index:80;pointer-events:none;mix-blend-mode:multiply;opacity:.6;
+  background-size:220px 220px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .42 0 0 0 0 .38 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* top bar */
+.top{position:fixed;left:0;right:0;top:0;height:76px;padding:0 36px;display:flex;align-items:center;justify-content:space-between;color:var(--accent);z-index:30}
+.brand{display:flex;align-items:center;gap:16px;color:var(--accent)}
+.brand .wm{font-family:var(--serif);font-weight:600;font-size:21px;letter-spacing:-.01em;text-transform:none;line-height:1}
+.brand .wm i{font-style:italic;font-weight:400}
+.brand .ln{display:block;width:40px;height:1px;background:currentColor}
+.nav{display:flex;align-items:center;gap:34px}
+.nav .box{border-color:var(--accent)}
+.burger{width:26px;height:12px;position:relative;display:block}
+.burger::before{content:"";position:absolute;inset:-14px}
+.burger i{position:absolute;left:0;right:0;height:1.5px;background:var(--accent)}
+.burger i:first-child{top:0}.burger i:last-child{bottom:0}
+
+/* halftone display words */
+.halo{
+  position:fixed;z-index:1;pointer-events:none;writing-mode:vertical-rl;
+  font-family:var(--serif);font-weight:700;font-style:italic;
+  font-size:min(19vh,12.5vw);line-height:1;letter-spacing:-.02em;
+  color:transparent;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(140,58,38,.5) 0 36%,transparent 40%) 0 0/3px 3px,
+    linear-gradient(rgba(160,112,92,.22),rgba(160,112,92,.22));
+  -webkit-background-clip:text;background-clip:text;
+}
+.halo.hl{left:2.4vw;top:13vh;transform:rotate(180deg)}
+.halo.hr{right:2.4vw;top:9vh}
+
+/* floor shadow */
+.floor{
+  position:fixed;left:50%;top:calc(var(--cy) + var(--H)*.47);z-index:2;pointer-events:none;
+  width:min(96vw,calc(var(--H)*3.6));height:calc(var(--H)*.26);transform:translate(-50%,-50%);
+  background:radial-gradient(50% 50% at 50% 40%,rgba(40,28,16,.30),rgba(40,28,16,.10) 55%,transparent 72%);
+}
+
+/* shelf */
+.shelf{
+  position:fixed;left:0;right:0;top:calc(var(--cy) - var(--H)/2 - 50px);height:calc(var(--H) + 100px);
+  perspective:1400px;perspective-origin:50% 50%;z-index:10;touch-action:pan-y;
+}
+.stage{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d}
+.book{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d;will-change:transform}
+.face{
+  position:absolute;height:calc(var(--hp)*var(--bh));top:calc(var(--hp)/2 - var(--hp)*var(--bh));
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+}
+.face>svg{display:block;width:100%;height:100%;pointer-events:none;border-radius:inherit}
+.face::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit}
+.face::after{content:"";position:absolute;inset:0;border-radius:inherit;background:#000;opacity:var(--shade,0);pointer-events:none}
+.sp{width:var(--ws);left:calc(var(--ws)/-2);transform:translateZ(calc(var(--d)/2));border-radius:3px}
+.sp::before{background:linear-gradient(90deg,rgba(0,0,0,.30),rgba(0,0,0,.06) 14%,rgba(255,255,255,.16) 34%,rgba(255,255,255,0) 58%,rgba(0,0,0,.10) 82%,rgba(0,0,0,.32))}
+.cv{width:var(--d);left:calc(var(--d)/-2);transform:rotateY(90deg) translateZ(calc(var(--ws)/2));border-radius:1px 3px 3px 1px;box-shadow:0 34px 60px -30px rgba(20,14,8,.6)}
+.cv::before{background:linear-gradient(90deg,rgba(0,0,0,.32) 0,rgba(0,0,0,.10) 2.2%,rgba(255,255,255,.14) 3.4%,rgba(0,0,0,.08) 4.6%,rgba(255,255,255,0) 14%,rgba(255,255,255,0) 86%,rgba(0,0,0,.10))}
+#probe{position:fixed;left:0;top:0;width:0;height:var(--H);visibility:hidden;pointer-events:none}
+
+/* reading ring */
+.play{
+  position:fixed;left:0;top:0;width:42px;height:42px;margin:-21px 0 0 -21px;border-radius:50%;
+  border:1px solid var(--accent);background:rgba(236,230,218,.85);z-index:12;pointer-events:none;
+  display:grid;place-items:center;transform:scale(0);
+}
+.play svg{width:14px;height:12px;display:block}
+
+/* caption */
+.cap{
+  position:fixed;left:0;right:0;top:calc(var(--cy) + var(--H)/2 + 4.2vh);z-index:20;
+  display:grid;justify-items:center;row-gap:10px;pointer-events:none;
+  --ts:clamp(28px,3.4vw,46px);
+}
+.m{display:grid;overflow:hidden;width:min(80vw,640px);text-align:center}
+.m>span{grid-area:1/1;display:block;will-change:transform}
+.m-title{font-family:var(--serif);font-weight:500;font-size:var(--ts);line-height:1.12;letter-spacing:-.02em;color:var(--accent);padding:.02em 0 .08em}
+.m-sub{font-size:9.5px;letter-spacing:.24em;color:var(--accent);padding:1px 0}
+.cap .rule{display:block;width:18px;height:1px;background:var(--accent)}
+.m-year{font-weight:500;font-size:10.5px;line-height:1.1;letter-spacing:.08em;color:var(--ink);text-transform:uppercase}
+.arr{
+  position:absolute;top:calc(var(--ts)*1.12/2);width:44px;height:44px;margin:-22px 0 0 -22px;
+  display:grid;place-items:center;color:var(--accent);pointer-events:auto;
+}
+.arr svg{width:24px;height:12px;display:block;overflow:visible}
+.arr.prev{left:calc(50% - min(19vw,250px))}
+.arr.next{left:calc(50% + min(19vw,250px))}
+
+/* section index (ruler) */
+.tl{position:fixed;left:36px;right:36px;bottom:64px;height:40px;z-index:20;color:var(--accent)}
+.tl-line{position:absolute;left:0;right:0;top:12px;height:1px;background:var(--accent);opacity:.75}
+.tk{position:absolute;top:12px;width:1px;background:var(--accent)}
+.tk.mj{height:13px;opacity:.75}
+.tk.mn{height:7px;opacity:.4}
+.ty{position:absolute;top:29px;font-weight:500;font-size:9.5px;line-height:1;letter-spacing:.06em;color:var(--accent);transform:translateX(-50%);white-space:nowrap;text-transform:uppercase}
+.ty b{font-weight:600;margin-right:5px}
+.ty.first{transform:none}
+.ty.last{transform:translateX(-100%)}
+.tl-dot{position:absolute;top:12.5px;left:0;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;border-radius:50%;background:var(--accent)}
+.tl-hit{position:absolute;left:-6px;right:-6px;top:0;bottom:0}
+
+/* footer */
+.foot{position:fixed;left:36px;right:36px;bottom:24px;display:flex;justify-content:space-between;align-items:center;gap:20px;color:var(--accent);z-index:20}
+.status{display:inline-flex;align-items:center;gap:8px}
+.status i{width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.status.open i{background:#2F7D4F;box-shadow:0 0 0 3px rgba(47,125,79,.18)}
+.estalia{color:var(--muted);font-weight:500;letter-spacing:.1em}
+
+/* cursor */
+.cur{position:fixed;left:0;top:0;width:58px;height:58px;margin:-29px 0 0 -29px;z-index:100;pointer-events:none;display:none}
+@media (pointer:fine){.cur.on{display:block}}
+.cur-ring{position:absolute;inset:0;border:1.5px solid var(--ink);border-radius:50%;
+  transition:transform .5s var(--ease),background-color .4s var(--ease),border-color .4s var(--ease)}
+.cur-dot{position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:var(--ink);transition:transform .4s var(--ease)}
+.cur-lbl{position:absolute;inset:0;display:grid;place-content:center;text-align:center;color:#fff;
+  font-weight:600;font-size:10px;line-height:1.25;letter-spacing:.12em;transform:scale(0);transition:transform .45s var(--ease)}
+.cur.spine .cur-ring{transform:scale(.72)}
+.cur.btn .cur-ring{transform:scale(.55)}
+.cur.btn .cur-dot{transform:scale(0)}
+.cur.open .cur-ring{transform:scale(1.75);background:var(--accent);border-color:var(--accent)}
+.cur.open .cur-dot{transform:scale(0)}
+.cur.open .cur-lbl{transform:scale(1)}
+
+/* ---------- sheets (detail + pages) ---------- */
+.sheet{position:fixed;inset:0;z-index:60;background:var(--sheet);display:none;overflow-y:auto;overscroll-behavior:contain;user-select:text;-webkit-user-select:text}
+.sheet.on{display:block}
+.sh-head{position:sticky;top:0;z-index:3;height:76px;padding:0 36px;display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(var(--sheet) 62%,rgba(244,240,232,0))}
+.sh-close{color:var(--ink)}
+.sh-brand{color:var(--accent);display:flex;align-items:center;gap:16px}
+.sh-brand .ln{display:block;width:40px;height:1px;background:currentColor}
+.dm{overflow:hidden}
+.dm>*{display:block;will-change:transform}
+.dm>table{display:table}
+.kick{color:var(--accent);font-size:9.5px;letter-spacing:.24em;padding:1px 0}
+.btn-line{display:inline-flex;align-items:center;gap:10px;height:44px;padding:0 20px;border:1px solid var(--accent);color:var(--accent)}
+.btn-line.fill{background:var(--accent);color:var(--sheet)}
+.btn-row{display:flex;flex-wrap:wrap;gap:10px}
+.demo-tag{display:inline-block;margin-left:8px;padding:2px 6px;border:1px dashed var(--muted);color:var(--muted);font:500 9px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;vertical-align:middle}
+
+/* detail */
+.d-body{display:grid;grid-template-columns:1fr 1fr;column-gap:4vw;min-height:calc(100% - 76px);padding:34px 6vw 56px 7vw}
+.d-left{align-self:center;justify-self:end;width:100%;max-width:520px;display:grid;row-gap:18px}
+.d-title{margin:0;font-family:var(--serif);font-weight:500;font-size:clamp(44px,5.2vw,80px);line-height:1;letter-spacing:-.035em;color:var(--accent);padding-bottom:.06em}
+.d-meta{font-weight:500;font-size:11px;line-height:1.2;letter-spacing:.08em;color:var(--muted)}
+.d-syn{margin:0;font-family:var(--serif);font-weight:400;font-size:17px;line-height:1.5;max-width:42ch;color:var(--ink)}
+.d-credit{margin:0;font-family:var(--serif);font-style:italic;font-size:15px;line-height:1.4;color:var(--muted)}
+.d-right{display:flex;align-items:center;justify-content:flex-start;min-height:0}
+.d-right svg{display:block;height:min(calc(100vh - 170px),78vh);width:auto;max-width:100%;filter:drop-shadow(0 30px 40px rgba(20,14,8,.18))}
+
+/* page: la librairie */
+.p-body{padding:30px 7vw 90px}
+.mai{display:grid;grid-template-columns:1.25fr 1fr;column-gap:6vw;align-items:center;min-height:calc(100vh - 230px)}
+.quote{margin:0;font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.25vw,52px);line-height:1.12;letter-spacing:-.02em;color:var(--ink);text-wrap:balance}
+.quote em{color:var(--accent)}
+.src{margin:18px 0 0;font:italic 400 14px/1.4 var(--serif);color:var(--muted)}
+.figs{display:grid;row-gap:26px;border-top:1px solid var(--rule);padding-top:22px}
+.fig{display:grid;grid-template-columns:auto 1fr;column-gap:18px;align-items:baseline;border-bottom:1px solid rgba(22,19,15,.18);padding-bottom:20px}
+.fig b{font-family:var(--serif);font-weight:500;font-size:clamp(46px,5vw,84px);line-height:.9;letter-spacing:-.04em;color:var(--accent)}
+.fig span{font-size:13px;line-height:1.35;color:var(--ink);max-width:24ch}
+.p-foot{margin-top:56px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:center}
+
+/* page: services (editorial index) */
+.srv-h{font-family:var(--serif);font-weight:500;font-size:clamp(44px,6vw,96px);line-height:.95;letter-spacing:-.04em;color:var(--accent);margin:10px 0 40px}
+.srv{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+.srv li{border-bottom:1px solid rgba(22,19,15,.2)}
+.srv .row{display:grid;grid-template-columns:70px minmax(0,1fr) minmax(0,1.15fr) 120px;column-gap:28px;align-items:baseline;padding:24px 0}
+.srv .n{font:600 11px/1 var(--sans);letter-spacing:.14em;color:var(--accent)}
+.srv h3{margin:0;font-family:var(--serif);font-weight:500;font-size:clamp(24px,2.4vw,36px);line-height:1.05;letter-spacing:-.02em}
+.srv p{margin:0;font:400 16px/1.45 var(--serif);color:var(--ink);max-width:46ch}
+.srv a{justify-self:end;white-space:nowrap;color:var(--accent);border-bottom:1px solid currentColor;padding-bottom:2px}
+
+/* page: venir */
+.ven{display:grid;grid-template-columns:1fr 1.15fr;column-gap:5vw;min-height:calc(100vh - 170px)}
+.ven-l{display:grid;align-content:center;row-gap:18px}
+.addr{margin:0;font-family:var(--serif);font-weight:500;font-size:clamp(40px,4.6vw,74px);line-height:.98;letter-spacing:-.035em;color:var(--accent)}
+.hours{width:100%;max-width:420px;border-collapse:collapse;font-size:13px}
+.hours td{padding:9px 0;border-bottom:1px solid rgba(22,19,15,.18)}
+.hours td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.hours tr.today td{color:var(--accent);font-weight:600}
+.note{margin:0;font:italic 400 13.5px/1.45 var(--serif);color:var(--muted);max-width:52ch}
+.map{position:relative;align-self:stretch;min-height:440px;border:1px solid var(--rule);overflow:hidden;background:#E3DCCD}
+.map iframe{position:absolute;inset:0;width:100%;height:100%;border:0;filter:grayscale(1) sepia(.35) contrast(1.05);mix-blend-mode:multiply}
+.map .pin{position:absolute;left:12px;bottom:12px;background:var(--sheet);border:1px solid var(--rule);padding:10px 12px;font-size:12px;line-height:1.35}
+
+/* page: menu */
+.menu-l{list-style:none;margin:0;padding:10px 0 0;counter-reset:m}
+.menu-l li{border-bottom:1px solid rgba(22,19,15,.2)}
+.menu-l a{display:flex;align-items:baseline;gap:22px;padding:14px 0;font-family:var(--serif);font-weight:500;font-size:clamp(40px,7vw,104px);line-height:1;letter-spacing:-.04em;color:var(--ink);transition:color .3s var(--ease),padding .5s var(--ease)}
+.menu-l a small{font:600 11px/1 var(--sans);letter-spacing:.14em;color:var(--accent)}
+@media (hover:hover){.menu-l a:hover{color:var(--accent);padding-left:14px}}
+.menu-f{display:grid;grid-template-columns:repeat(3,auto);justify-content:space-between;gap:24px;margin-top:44px;font-size:13px;line-height:1.5}
+.menu-f a{border-bottom:1px solid currentColor}
+.disclaim{margin-top:40px;padding-top:16px;border-top:1px dashed rgba(22,19,15,.35);font:400 12.5px/1.5 var(--sans);color:var(--muted);max-width:90ch}
+
+/* intro curtain */
+.intro{position:fixed;inset:0;z-index:70;background:var(--paper);display:grid;place-items:center;pointer-events:none}
+.intro-in{display:grid;justify-items:center;row-gap:16px;text-align:center}
+.intro .wm{display:flex;overflow:hidden;font-family:var(--serif);font-weight:500;font-size:clamp(64px,13vw,210px);line-height:1;letter-spacing:-.045em;color:var(--accent);padding:0 .04em .08em}
+.intro .wm span{display:block;transform:translateY(110%)}
+.intro .il{overflow:hidden}
+.intro .il span{display:block;transform:translateY(110%)}
+.intro .es{position:absolute;bottom:24px;left:0;right:0;text-align:center;color:var(--muted)}
+
+/* scene pushed back while a sheet is open */
+.shelf,.cap,.tl,.halo,.floor{transition:transform 1s var(--sheet-ease)}
+body.sheeted .shelf{transform:scale(.94) translateY(2vh)}
+
+/* phones */
+@media (max-width:767px){
+  :root{--H:min(68vw,40svh);--cy:43%}
+  .top{height:60px;padding:0 16px}
+  .brand{gap:10px}
+  .brand .wm{font-size:18px}
+  .brand .ln,.brand .city{display:none}
+  .nav>a,.nav>.box{display:none}
+  .halo{font-size:22vw;opacity:.8}
+  .cap{--ts:30px}
+  .arr{position:fixed;top:auto;bottom:118px;margin:0}
+  .arr.prev{left:6px}
+  .arr.next{left:auto;right:6px}
+  .tl{left:16px;right:16px;bottom:58px}
+  .ty span{display:none}
+  .ty b{margin:0}
+  .foot{left:16px;right:16px;bottom:16px;flex-direction:column;align-items:flex-start;gap:8px}
+  .foot .estalia{font-size:8.5px}
+  .foot .status{font-size:9.5px}
+  .st-addr{display:none}
+  .sh-head{height:60px;padding:0 16px}
+  .sh-brand{display:none}
+  .d-body{grid-template-columns:1fr;row-gap:28px;padding:10px 16px 40px;min-height:0}
+  .d-right{order:-1;justify-content:center}
+  .d-right svg{height:46svh}
+  .d-left{justify-self:stretch;max-width:none}
+  .d-title{font-size:44px}
+  .p-body{padding:16px 16px 60px}
+  .mai,.ven{grid-template-columns:1fr;row-gap:40px;min-height:0}
+  .srv .row{grid-template-columns:40px 1fr;row-gap:10px}
+  .srv .row p,.srv .row a{grid-column:2}
+  .srv .row a{justify-self:start}
+  .map{min-height:320px}
+  .menu-f{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){ .shelf,.cap,.tl,.halo,.floor,.menu-l a{transition:none} }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="#" data-home aria-label="Librairie Martelle, accueil">
+    <span class="wm">Librairie <i>Martelle</i></span><i class="ln"></i><span class="lbl city">Amiens</span>
+  </a>
+  <nav class="nav" aria-label="Navigation principale">
+    <a class="lbl" href="#librairie" data-sheet="librairie">La librairie</a>
+    <a class="lbl" href="#services" data-sheet="services">Services</a>
+    <a class="lbl" href="#venir" data-sheet="venir">Venir</a>
+    <a class="lbl box" href="#venir" data-sheet="venir">Contact</a>
+    <button class="burger" data-sheet="menu" aria-label="Ouvrir le menu"><i></i><i></i></button>
+  </nav>
+</header>
+
+<div class="halo hl" aria-hidden="true">Lire,</div>
+<div class="halo hr" aria-hidden="true">Amiens</div>
+<div class="floor" aria-hidden="true"></div>
+
+<main>
+  <h1 class="sr">Librairie Martelle, 3 rue des Vergeaux, Amiens — les rayons</h1>
+  <section class="shelf" id="shelf" aria-label="Les rayons de la librairie, présentés comme une étagère de livres">
+    <div class="stage" id="stage"></div>
+  </section>
+</main>
+<div id="probe"></div>
+
+<div class="play" id="play" aria-hidden="true"><svg viewBox="0 0 14 12" fill="none" stroke="#9C2F1E" stroke-width="1.2"><path d="M7 2.2C5.4 1 3 .8 1 1.2v9.4c2-.4 4.4-.2 6 1 1.6-1.2 4-1.4 6-1V1.2C11 .8 8.6 1 7 2.2zM7 2.2v9.4"/></svg></div>
+
+<div class="cap" id="cap" aria-live="polite">
+  <div class="m m-title" id="cTitle"></div>
+  <div class="m m-sub lbl" id="cSub"></div>
+  <i class="rule"></i>
+  <div class="m m-year" id="cYear"></div>
+  <button class="arr prev" id="prev" aria-label="Rayon précédent"><svg viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 1L1 6l5 5M1 6h23"/></svg></button>
+  <button class="arr next" id="next" aria-label="Rayon suivant"><svg viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 1l5 5-5 5M23 6H0"/></svg></button>
+</div>
+
+<div class="tl" id="tl">
+  <i class="tl-line"></i>
+  <div id="ticks"></div>
+  <i class="tl-dot" id="dot"></i>
+  <div class="tl-hit" id="tlhit" role="slider" aria-label="Index des rayons"></div>
+</div>
+
+<footer class="foot">
+  <a class="lbl status" id="status" href="#venir" data-sheet="venir"><i></i><span id="statusTxt">3 rue des Vergeaux, Amiens</span></a>
+  <span class="lbl estalia">Concept proposé par Estalia — démonstration non officielle</span>
+</footer>
+
+<!-- ===== detail: one section of the shop ===== -->
+<section class="sheet" id="sh-detail" aria-hidden="true" aria-label="Rayon">
+  <div class="sh-head">
+    <button class="lbl box sh-close" data-close>Fermer</button>
+    <div class="sh-brand"><span class="lbl">Librairie Martelle</span><i class="ln"></i><span class="lbl">Les rayons</span></div>
+  </div>
+  <div class="d-body">
+    <div class="d-left">
+      <div class="dm"><span class="lbl kick" id="dSub"></span></div>
+      <div class="dm"><h2 class="d-title" id="dTitle"></h2></div>
+      <div class="dm"><span class="d-meta" id="dMeta"></span></div>
+      <div class="dm"><p class="d-syn"><span id="dSyn"></span><span class="demo-tag">Texte de démonstration</span></p></div>
+      <div class="dm"><p class="d-credit">Une question, un titre à commander ? Les libraires de la Librairie Martelle vous répondent.</p></div>
+      <div class="dm"><div class="btn-row">
+        <a class="btn-line fill lbl" href="https://www.leslibraires.fr/presentation/librairie-martelle/" target="_blank" rel="noopener">Commander en ligne</a>
+        <a class="btn-line lbl" id="dMail" href="mailto:commandes@librairiemartelle.com">Demander conseil</a>
+      </div></div>
+    </div>
+    <div class="d-right">
+      <svg id="pSvg" viewBox="0 0 474 711" aria-hidden="true">
+        <defs>
+          <clipPath id="pClip"><rect id="pClipRect" width="474" height="711" rx="3"/></clipPath>
+          <filter id="pInk" filterUnits="userSpaceOnUse" x="-300" y="-300" width="1074" height="1500">
+            <feTurbulence type="fractalNoise" baseFrequency=".011" numOctaves="3" seed="7" result="noise"/>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="120" xChannelSelector="R" yChannelSelector="G"/>
+          </filter>
+          <mask id="pMask" maskUnits="userSpaceOnUse" x="0" y="0" width="474" height="1000">
+            <g filter="url(#pInk)" fill="#fff" id="pBlots">
+              <circle cx="150" cy="330" r="0" data-d="0"/>
+              <circle cx="340" cy="600" r="0" data-d="120"/>
+              <circle cx="250" cy="120" r="0" data-d="220"/>
+              <circle cx="90"  cy="760" r="0" data-d="300"/>
+              <circle cx="400" cy="250" r="0" data-d="360"/>
+              <circle cx="260" cy="860" r="0" data-d="420"/>
+              <circle cx="230" cy="470" r="0" data-d="180"/>
+            </g>
+          </mask>
+        </defs>
+        <g clip-path="url(#pClip)"><g id="pArt" mask="url(#pMask)"></g></g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ===== page: la librairie ===== -->
+<section class="sheet" id="sh-librairie" aria-hidden="true" aria-label="La librairie">
+  <div class="sh-head">
+    <button class="lbl box sh-close" data-close>Fermer</button>
+    <div class="sh-brand"><span class="lbl">Librairie Martelle</span><i class="ln"></i><span class="lbl">La librairie</span></div>
+  </div>
+  <div class="p-body">
+    <div class="mai">
+      <div>
+        <div class="dm"><span class="lbl kick">La librairie — 3 rue des Vergeaux, Amiens</span></div>
+        <div class="dm" style="margin-top:22px"><p class="quote">« La librairie Martelle se veut un lieu de <em>rencontre</em> entre lecteurs, auteurs et libraires. L’esprit de notre librairie c’est aussi l’<em>éveil</em> à toute forme d’apprentissage pour les enfants et les adultes. »</p></div>
+        <div class="dm"><p class="src">Présentation de la librairie, telle que publiée sur leslibraires.fr</p></div>
+      </div>
+      <div class="figs">
+        <div class="dm"><div class="fig"><b>80 000</b><span>titres immédiatement disponibles en magasin</span></div></div>
+        <div class="dm"><div class="fig"><b>6/7</b><span>jours d’ouverture, du lundi au samedi, de 9h30 à 19h</span></div></div>
+        <div class="dm"><div class="fig"><b>3</b><span>façons de recevoir ses livres : retrait en magasin, livraison à domicile ou en point relais</span></div></div>
+      </div>
+    </div>
+    <div class="p-foot">
+      <div class="dm"><div class="btn-row">
+        <button class="btn-line fill lbl" data-close-to="shelf">Parcourir les rayons</button>
+        <a class="btn-line lbl" href="#venir" data-sheet="venir">Nous rendre visite</a>
+      </div></div>
+      <div class="dm"><span class="lbl estalia">Concept proposé par Estalia — démonstration non officielle</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== page: services ===== -->
+<section class="sheet" id="sh-services" aria-hidden="true" aria-label="Services">
+  <div class="sh-head">
+    <button class="lbl box sh-close" data-close>Fermer</button>
+    <div class="sh-brand"><span class="lbl">Librairie Martelle</span><i class="ln"></i><span class="lbl">Services</span></div>
+  </div>
+  <div class="p-body">
+    <div class="dm"><span class="lbl kick">Services — commander, retirer, rencontrer</span></div>
+    <div class="dm"><h2 class="srv-h">Le livre qu’il vous faut,<br>là où vous êtes.</h2></div>
+    <ul class="srv">
+      <li class="dm"><div class="row"><span class="n">01</span><h3>Retrait en magasin</h3><p>Click &amp; collect : commandez en ligne, puis retirez vos livres au 3 rue des Vergeaux.</p><a class="lbl" href="https://www.leslibraires.fr/presentation/librairie-martelle/" target="_blank" rel="noopener">Commander</a></div></li>
+      <li class="dm"><div class="row"><span class="n">02</span><h3>Livraison à domicile</h3><p>Vos livres expédiés directement chez vous.</p><a class="lbl" href="https://www.leslibraires.fr/presentation/librairie-martelle/" target="_blank" rel="noopener">Commander</a></div></li>
+      <li class="dm"><div class="row"><span class="n">03</span><h3>Livraison en point relais</h3><p>Une livraison dans le point relais de votre choix.</p><a class="lbl" href="https://www.leslibraires.fr/presentation/librairie-martelle/" target="_blank" rel="noopener">Commander</a></div></li>
+      <li class="dm"><div class="row"><span class="n">04</span><h3>Commandes &amp; conseils</h3><p>Un titre à faire venir, une idée de lecture ? Écrivez directement aux libraires.</p><a class="lbl" href="mailto:commandes@librairiemartelle.com?subject=Demande%20%C3%A0%20la%20librairie">Écrire</a></div></li>
+      <li class="dm"><div class="row"><span class="n">05</span><h3>Rencontres &amp; dédicaces</h3><p>Un lieu de rencontre entre lecteurs, auteurs et libraires : retrouvez les prochains rendez-vous dans l’agenda de la librairie.</p><a class="lbl" href="https://www.librairiemartelle.com/agenda.php" target="_blank" rel="noopener">Voir l’agenda</a></div></li>
+    </ul>
+    <div class="p-foot">
+      <div class="dm"><a class="btn-line fill lbl" href="tel:+33322715454">Appeler — 03 22 71 54 54</a></div>
+      <div class="dm"><span class="lbl estalia">Concept proposé par Estalia — démonstration non officielle</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== page: venir / contact ===== -->
+<section class="sheet" id="sh-venir" aria-hidden="true" aria-label="Venir et contacter la librairie">
+  <div class="sh-head">
+    <button class="lbl box sh-close" data-close>Fermer</button>
+    <div class="sh-brand"><span class="lbl">Librairie Martelle</span><i class="ln"></i><span class="lbl">Venir &amp; contact</span></div>
+  </div>
+  <div class="p-body">
+    <div class="ven">
+      <div class="ven-l">
+        <div class="dm"><span class="lbl kick">Venir à la librairie</span></div>
+        <div class="dm"><h2 class="addr">3 rue des Vergeaux<br>80000 Amiens</h2></div>
+        <div class="dm"><span class="lbl status" id="status2"><i></i><span></span></span></div>
+        <div class="dm"><table class="hours" id="hours" aria-label="Horaires d’ouverture"></table></div>
+        <div class="dm"><p class="note">Horaires relevés sur la fiche de la librairie sur leslibraires.fr, le 11 novembre 2026. Fermetures exceptionnelles et jours fériés : à vérifier auprès de la librairie.</p></div>
+        <div class="dm"><div class="btn-row">
+          <a class="btn-line fill lbl" href="https://www.google.com/maps/dir/?api=1&amp;destination=Librairie%20Martelle%2C%203%20rue%20des%20Vergeaux%2C%2080000%20Amiens" target="_blank" rel="noopener">Itinéraire</a>
+          <a class="btn-line lbl" href="tel:+33322715454">03 22 71 54 54</a>
+          <a class="btn-line lbl" href="mailto:commandes@librairiemartelle.com">Écrire</a>
+        </div></div>
+      </div>
+      <div class="map dm" id="map">
+        <div class="pin"><b>Librairie Martelle</b><br>3 rue des Vergeaux, 80000 Amiens</div>
+      </div>
+    </div>
+    <div class="p-foot"><div class="dm"><span class="lbl estalia">Concept proposé par Estalia — démonstration non officielle</span></div></div>
+  </div>
+</section>
+
+<!-- ===== page: menu ===== -->
+<section class="sheet" id="sh-menu" aria-hidden="true" aria-label="Menu">
+  <div class="sh-head">
+    <button class="lbl box sh-close" data-close>Fermer</button>
+    <div class="sh-brand"><span class="lbl">Librairie Martelle</span><i class="ln"></i><span class="lbl">Amiens</span></div>
+  </div>
+  <div class="p-body">
+    <ul class="menu-l">
+      <li class="dm"><a href="#" data-close-to="shelf"><small>01</small>Les rayons</a></li>
+      <li class="dm"><a href="#librairie" data-sheet="librairie"><small>02</small>La librairie</a></li>
+      <li class="dm"><a href="#services" data-sheet="services"><small>03</small>Services</a></li>
+      <li class="dm"><a href="#venir" data-sheet="venir"><small>04</small>Venir &amp; horaires</a></li>
+    </ul>
+    <div class="menu-f">
+      <div class="dm"><div>3 rue des Vergeaux<br>80000 Amiens</div></div>
+      <div class="dm"><div><a href="tel:+33322715454">03 22 71 54 54</a><br><a href="mailto:commandes@librairiemartelle.com">commandes@librairiemartelle.com</a></div></div>
+      <div class="dm"><div>Du lundi au samedi<br>9h30 – 19h</div></div>
+    </div>
+    <div class="dm"><p class="disclaim"><b>Concept proposé par Estalia — démonstration non officielle.</b> Le logo typographique, la palette de couleurs, les illustrations de couvertures et les textes d’accroche des rayons sont des contenus de démonstration. Adresse, contact, horaires, services et présentation : fiche de la librairie sur leslibraires.fr (consultée le 11/11/2026).</p></div>
+  </div>
+</section>
+
+<!-- ===== intro curtain ===== -->
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro-in">
+    <div class="il lbl" style="color:var(--accent)"><span>Librairie · Amiens</span></div>
+    <div class="wm" id="introWm"></div>
+    <div class="il lbl" style="color:var(--muted)"><span>80 000 titres disponibles en magasin</span></div>
+  </div>
+  <div class="es lbl estalia">Concept proposé par Estalia — démonstration non officielle</div>
+</div>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cur" id="cur" aria-hidden="true">
+  <i class="cur-ring"></i><i class="cur-dot"></i>
+  <span class="cur-lbl">OUVRIR</span>
+</div>
+
+<script>
+(() => {
+"use strict";
+
+/* ---------- palette (screen-print inks) ---------- */
+const C = {
+  ink:"#16130F", accent:"#9C2F1E", cobalt:"#24408E", red:"#C9452A", cream:"#EEE5D1", sand:"#E4D7BC",
+  ochre:"#C8952F", green:"#2E5E48", sky:"#9DB3DA", slate:"#3B4658", rose:"#D9A08F", paper:"#F2ECDF",
+};
+
+/* ---------- the shop's sections, shown as books (order on the shelf) ---------- */
+const BOOKS = [
+  {id:"litterature", title:"Littérature & Essais", short:"Littérature", kicker:"Romans · Essais littéraires", h:1,   bg:C.cream, fg:C.ink,   ac:C.accent, motif:"quill",
+   syn:"Romans français et étrangers, essais littéraires, premiers romans et grandes voix : la littérature est le cœur battant d’une librairie."},
+  {id:"polar",       title:"Policier & Thriller",  short:"Polar",       kicker:"Enquêtes · Suspense",          h:.92, bg:C.ink,   fg:C.cream, ac:C.red,    motif:"observer",
+   syn:"Enquêtes, romans noirs et thrillers psychologiques, pour les lecteurs qui aiment tourner les pages jusqu’au bout de la nuit."},
+  {id:"imaginaire",  title:"Imaginaire",           short:"Imaginaire",  kicker:"SF · Fantastique · Fantasy",   h:.96, bg:C.cobalt,fg:C.cream, ac:C.sky,    motif:"planet",
+   syn:"Science-fiction, fantastique et fantasy : des mondes à explorer, des sagas à commencer et des classiques à redécouvrir."},
+  {id:"bd",          title:"BD, Comics & Manga",   short:"BD & Manga",  kicker:"Bande dessinée · Comics · Manga", h:.88, bg:C.ochre, fg:C.ink,  ac:C.red,    motif:"bubbles",
+   syn:"Albums franco-belges, romans graphiques, comics et mangas : toutes les façons de raconter une histoire en cases."},
+  {id:"jeunesse",    title:"Jeunesse",             short:"Jeunesse",    kicker:"Albums · Premières lectures",  h:.86, bg:C.sky,   fg:C.ink,   ac:C.cobalt, motif:"birds",
+   syn:"Des premiers imagiers aux romans pour les plus grands : de quoi éveiller très tôt le goût de lire."},
+  {id:"ya",          title:"Jeunes adultes",       short:"Jeunes adultes", kicker:"Young adult",               h:.94, bg:C.rose,  fg:C.ink,   ac:C.red,    motif:"summer",
+   syn:"Romans d’apprentissage, romance, fantasy : les lectures qui accompagnent l’adolescence et bien au-delà."},
+  {id:"arts",        title:"Arts & Beaux livres",  short:"Beaux livres", kicker:"Arts · Beaux livres",         h:1,   bg:C.paper, fg:C.ink,   ac:C.red,    motif:"bauhaus",
+   syn:"Peinture, photographie, architecture, design : de grands formats à feuilleter et à offrir."},
+  {id:"histoire",    title:"Sciences humaines & Histoire", short:"Histoire", kicker:"Sciences humaines et sociales", h:.97, bg:C.slate, fg:C.cream, ac:C.ochre, motif:"columns",
+   syn:"Histoire, philosophie, sociologie, essais d’actualité : des livres pour comprendre le monde et en débattre."},
+  {id:"voyages",     title:"Tourisme & Voyages",   short:"Voyages",     kicker:"Guides · Récits de voyage",    h:.9,  bg:C.cream, fg:C.ink,   ac:C.green,  motif:"valley",
+   syn:"Guides, cartes et récits de voyage, pour préparer le prochain départ ou voyager sans quitter son fauteuil."},
+  {id:"scolaire",    title:"Scolaire & Parascolaire", short:"Scolaire", kicker:"Scolaire · Parascolaire",      h:.93, bg:C.green, fg:C.cream, ac:C.ochre,  motif:"grid",
+   syn:"Manuels, cahiers et ouvrages parascolaires pour accompagner chaque étape de la scolarité."},
+  {id:"papeterie",   title:"Papeterie & Beaux-arts", short:"Papeterie", kicker:"Papeterie · Loisirs créatifs", h:.89, bg:C.red,   fg:C.cream, ac:C.ink,    motif:"pencils",
+   syn:"Carnets, crayons, matériel de beaux-arts et de loisirs créatifs : de quoi écrire, dessiner et créer."},
+  {id:"jeux",        title:"Jeux de société & Jouets", short:"Jeux",    kicker:"Jeux de société · Jouets",     h:.95, bg:C.sand,  fg:C.cobalt,ac:C.red,    motif:"dice",
+   syn:"Jeux de société pour toute la famille, jeux et jouets : le plaisir de jouer, autour d’une table comme d’un livre."},
+];
+BOOKS.forEach((b, i) => { b.no = String(i + 1).padStart(2, "0"); });
+const N = BOOKS.length, COPIES = 3, TOTAL = N * COPIES, START = N;
+
+/* ---------- book art (inline SVG, drawn from data) ---------- */
+const SVGNS = "http://www.w3.org/2000/svg";
+const f2 = (n) => +n.toFixed(1);
+const esc = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+
+function wrap(t, max) {
+  const out = []; let line = "";
+  for (const w of t.split(" ")) {
+    if (line && (line + " " + w).length > max) { out.push(line); line = w; }
+    else line = line ? line + " " + w : w;
+  }
+  out.push(line); return out;
+}
+
+function motif(b, x, y, w, h) {
+  const X = (u) => f2(x + u * w), Y = (v) => f2(y + v * h), M = Math.min(w, h);
+  const poly = (pts, fill, ex = "") => `<path d="M${pts.map(([u, v]) => X(u) + " " + Y(v)).join("L")}Z" fill="${fill}" ${ex}/>`;
+  const circ = (u, v, r, fill, ex = "") => `<circle cx="${X(u)}" cy="${Y(v)}" r="${f2(r * M)}" fill="${fill}" ${ex}/>`;
+  const rect = (u, v, ww, hh, fill, ex = "") => `<rect x="${X(u)}" y="${Y(v)}" width="${f2(ww * w)}" height="${f2(hh * h)}" fill="${fill}" ${ex}/>`;
+  const mul = 'style="mix-blend-mode:multiply"';
+  const { fg, ac, bg } = b;
+  let s = "";
+  switch (b.motif) {
+    case "quill": {
+      s += circ(.78, .2, .14, ac, mul);
+      s += `<path d="M${X(.5)} ${Y(.9)}Q${X(.3)} ${Y(.78)} ${X(.04)} ${Y(.84)}V${Y(.36)}Q${X(.3)} ${Y(.3)} ${X(.5)} ${Y(.42)}Z" fill="${C.paper}" stroke="${fg}" stroke-width="3"/>`;
+      s += `<path d="M${X(.5)} ${Y(.9)}Q${X(.7)} ${Y(.78)} ${X(.96)} ${Y(.84)}V${Y(.36)}Q${X(.7)} ${Y(.3)} ${X(.5)} ${Y(.42)}Z" fill="${C.paper}" stroke="${fg}" stroke-width="3"/>`;
+      for (let i = 0; i < 5; i++) {
+        s += `<path d="M${X(.1)} ${Y(.46 + i * .07)}Q${X(.3)} ${Y(.42 + i * .07)} ${X(.44)} ${Y(.5 + i * .07)}" stroke="${fg}" stroke-width="2" fill="none" opacity=".55"/>`;
+        s += `<path d="M${X(.56)} ${Y(.5 + i * .07)}Q${X(.7)} ${Y(.42 + i * .07)} ${X(.9)} ${Y(.46 + i * .07)}" stroke="${fg}" stroke-width="2" fill="none" opacity=".55"/>`;
+      }
+      s += `<path d="M${X(.62)} ${Y(.62)}C${X(.7)} ${Y(.3)} ${X(.86)} ${Y(.06)} ${X(.98)} ${Y(-.04)}C${X(.94)} ${Y(.18)} ${X(.8)} ${Y(.42)} ${X(.62)} ${Y(.62)}Z" fill="${ac}"/>`;
+      s += `<line x1="${X(.62)}" y1="${Y(.62)}" x2="${X(.9)}" y2="${Y(.08)}" stroke="${bg}" stroke-width="2"/>`;
+      break; }
+    case "observer":
+      for (let i = 0; i < 4; i++) for (let j = 0; j < 3; j++)
+        s += `<rect x="${X(.06 + i * .235)}" y="${Y(.04 + j * .32)}" width="${f2(w * .2)}" height="${f2(h * .27)}" fill="none" stroke="${fg}" stroke-width="1.5" opacity=".35"/>`;
+      s += `<path d="M${X(.08)} ${Y(.5)}Q${X(.5)} ${Y(.1)} ${X(.92)} ${Y(.5)}Q${X(.5)} ${Y(.9)} ${X(.08)} ${Y(.5)}Z" fill="${fg}"/>`;
+      s += circ(.5, .5, .2, ac); s += circ(.5, .5, .09, C.ink); s += circ(.56, .44, .03, fg);
+      break;
+    case "planet":
+      for (let i = 0; i < 22; i++) { const u = (i * 37 % 100) / 100, v = (i * 61 % 100) / 100; s += circ(u, v, .006 + (i % 3) * .004, fg, 'opacity=".8"'); }
+      s += circ(.46, .52, .3, ac);
+      s += `<path d="M${X(.2)} ${Y(.56)}A${f2(M * .3)} ${f2(M * .3)} 0 0 0 ${X(.72)} ${Y(.48)}" fill="${C.ink}" opacity=".25"/>`;
+      s += `<ellipse cx="${X(.46)}" cy="${Y(.52)}" rx="${f2(M * .5)}" ry="${f2(M * .11)}" fill="none" stroke="${fg}" stroke-width="4" transform="rotate(-18 ${X(.46)} ${Y(.52)})"/>`;
+      s += circ(.86, .18, .06, C.red); s += circ(.14, .86, .04, fg);
+      break;
+    case "bubbles": {
+      const bub = (u, v, ww, hh, fill, tail, txt) => {
+        let o = `<rect x="${X(u)}" y="${Y(v)}" width="${f2(ww * w)}" height="${f2(hh * h)}" rx="${f2(M * .08)}" fill="${fill}" stroke="${C.ink}" stroke-width="3"/>`;
+        o += `<path d="M${X(u + tail)} ${Y(v + hh) - 2}l${f2(-w * .04)} ${f2(h * .12)}l${f2(w * .09)} ${f2(-h * .12)}Z" fill="${fill}" stroke="${C.ink}" stroke-width="3" stroke-linejoin="round"/>`;
+        o += `<rect x="${X(u + tail) - 1}" y="${Y(v + hh) - 5}" width="${f2(w * .05) + 2}" height="5" fill="${fill}"/>`;
+        return o + txt;
+      };
+      s += bub(.02, .04, .56, .34, C.cream, .14, `<text x="${X(.3)}" y="${Y(.27)}" text-anchor="middle" font-family="Newsreader, serif" font-weight="700" font-size="${f2(M * .2)}" fill="${C.ink}">!?</text>`);
+      s += bub(.42, .44, .56, .3, C.red, .36, [0, 1, 2].map((i) => `<rect x="${X(.48)}" y="${Y(.5 + i * .075)}" width="${f2(w * (.44 - i * .1))}" height="5" rx="2.5" fill="${C.cream}"/>`).join(""));
+      s += circ(.18, .74, .14, C.ink); s += circ(.18, .74, .1, C.cream);
+      [[-1, 0], [1, 0]].forEach(([dx]) => { s += circ(.18 + dx * .04, .72, .018, C.ink); });
+      s += `<path d="M${X(.12)} ${Y(.8)}q${f2(w * .06)} ${f2(h * .05)} ${f2(w * .12)} 0" stroke="${C.ink}" stroke-width="3" fill="none"/>`;
+      break; }
+    case "birds":
+      [[.2, .12, 0, 1], [.55, .2, 20, .8], [.78, .1, -10, .7], [.35, .42, 40, 1.1], [.68, .5, 70, .9], [.18, .68, 110, .8], [.5, .82, 150, 1.2]].forEach(([u, v, rot, sc], i) => {
+        s += `<path transform="translate(${X(u)} ${Y(v)}) rotate(${rot}) scale(${sc})" d="M-34 -6Q-16 -18 0 2Q16 -18 34 -6Q16 -8 0 12Q-16 -8 -34 -6Z" fill="${i % 2 ? ac : fg}"/>`;
+      });
+      s += `<line x1="${X(0)}" y1="${Y(.98)}" x2="${X(1)}" y2="${Y(.98)}" stroke="${fg}" stroke-width="3"/>`;
+      break;
+    case "summer":
+      for (let i = 0; i < 18; i++) {
+        const a = (i / 18) * Math.PI * 2, r0 = .3, r1 = i % 2 ? .44 : .5;
+        s += `<line x1="${f2(X(.5) + Math.cos(a) * r0 * M)}" y1="${f2(Y(.5) + Math.sin(a) * r0 * M)}" x2="${f2(X(.5) + Math.cos(a) * r1 * M)}" y2="${f2(Y(.5) + Math.sin(a) * r1 * M)}" stroke="${fg}" stroke-width="4"/>`;
+      }
+      s += circ(.5, .5, .26, ac);
+      s += `<path d="M${X(.5)} ${Y(.62)}c${f2(-w * .14)} ${f2(-h * .1)} ${f2(-w * .1)} ${f2(-h * .26)} 0 ${f2(-h * .18)}c${f2(w * .1)} ${f2(-h * .08)} ${f2(w * .14)} ${f2(h * .08)} 0 ${f2(h * .18)}Z" fill="${C.cream}"/>`;
+      break;
+    case "bauhaus":
+      s += rect(0, 0, .5, .5, ac);
+      s += `<path d="M${X(.5)} ${Y(.5)}A${f2(w * .5)} ${f2(w * .5)} 0 0 1 ${X(1)} ${Y(0)}V${Y(.5)}Z" fill="${C.cobalt}"/>`;
+      s += circ(.25, .75, .24, C.ink);
+      s += poly([[.5, 1], [.75, .5], [1, 1]], C.ochre);
+      s += rect(.5, .5, .25, .5, "none", `stroke="${fg}" stroke-width="3"`);
+      s += circ(.25, .25, .1, C.cream);
+      break;
+    case "columns":
+      s += circ(.5, .3, .32, ac, 'opacity=".9"');
+      s += poly([[.04, .3], [.5, .08], [.96, .3]], fg);
+      s += rect(.04, .3, .92, .05, fg);
+      for (let i = 0; i < 5; i++) {
+        s += rect(.1 + i * .175, .38, .09, .48, fg);
+        for (let k = 1; k < 3; k++) s += rect(.1 + i * .175 + k * .03, .38, .006, .48, b.bg, 'opacity=".5"');
+      }
+      s += rect(.02, .87, .96, .05, fg); s += rect(0, .94, 1, .05, fg);
+      break;
+    case "valley":
+      s += circ(.72, .22, .12, C.red, mul);
+      s += poly([[0, 1], [.28, .3], [.5, .66], [.72, .4], [1, .82], [1, 1]], ac, 'opacity=".55"');
+      s += poly([[0, 1], [0, .62], [.22, .5], [.46, .86], [.66, .62], [1, 1]], ac);
+      s += poly([[0, 1], [.18, .8], [.36, 1]], fg);
+      s += `<path d="M${X(.38)} ${Y(1)}C${X(.5)} ${Y(.86)} ${X(.44)} ${Y(.78)} ${X(.56)} ${Y(.7)}" stroke="${bg}" stroke-width="5" fill="none"/>`;
+      s += `<path d="M${X(.1)} ${Y(.2)}l${f2(w * .05)} ${f2(-h * .03)}l${f2(w * .05)} ${f2(h * .03)}" stroke="${fg}" stroke-width="3" fill="none"/>`;
+      break;
+    case "grid":
+      for (let i = 0; i <= 10; i++) {
+        s += `<line x1="${X(i / 10)}" y1="${Y(0)}" x2="${X(i / 10)}" y2="${Y(1)}" stroke="${fg}" stroke-width="1.2" opacity=".3"/>`;
+        s += `<line x1="${X(0)}" y1="${Y(i / 10)}" x2="${X(1)}" y2="${Y(i / 10)}" stroke="${fg}" stroke-width="1.2" opacity=".3"/>`;
+      }
+      s += `<path d="M${X(.1)} ${Y(.8)}C${X(.3)} ${Y(.2)} ${X(.5)} ${Y(.9)} ${X(.7)} ${Y(.35)}" stroke="${ac}" stroke-width="5" fill="none"/>`;
+      s += `<g transform="rotate(-38 ${X(.72)} ${Y(.34)})"><rect x="${X(.72)}" y="${Y(.3)}" width="${f2(w * .5)}" height="${f2(h * .09)}" fill="${C.ochre}" stroke="${C.ink}" stroke-width="2"/><path d="M${X(.72)} ${Y(.3)}l${f2(-w * .1)} ${f2(h * .045)}l${f2(w * .1)} ${f2(h * .045)}Z" fill="${C.cream}" stroke="${C.ink}" stroke-width="2"/><rect x="${X(1.16)}" y="${Y(.3)}" width="${f2(w * .06)}" height="${f2(h * .09)}" fill="${C.rose}" stroke="${C.ink}" stroke-width="2"/></g>`;
+      s += `<text x="${X(.06)}" y="${Y(.16)}" font-family="Newsreader, serif" font-style="italic" font-size="${f2(M * .16)}" fill="${fg}">a+b</text>`;
+      break;
+    case "pencils": {
+      const cols = [C.cream, C.ochre, C.cobalt, C.ink, C.sky, C.cream];
+      cols.forEach((c, i) => {
+        const u = .04 + i * .16, top = .08 + ((i * 3) % 5) * .07;
+        s += rect(u, top + .12, .11, .9 - top - .12, c, `stroke="${C.ink}" stroke-width="2"`);
+        s += rect(u + .036, top + .12, .038, .9 - top - .12, "#000", 'opacity=".12"');
+        s += poly([[u, top + .12], [u + .055, top], [u + .11, top + .12]], C.sand, `stroke="${C.ink}" stroke-width="2"`);
+        s += poly([[u + .04, top + .04], [u + .055, top], [u + .07, top + .04]], c === C.cream ? C.ink : c);
+      });
+      s += rect(0, .9, 1, .04, fg);
+      break; }
+    case "dice": {
+      const die = (cx, cy, sz, rot, pips, fill) => {
+        let o = `<g transform="rotate(${rot} ${X(cx)} ${Y(cy)})"><rect x="${f2(X(cx) - sz * M / 2)}" y="${f2(Y(cy) - sz * M / 2)}" width="${f2(sz * M)}" height="${f2(sz * M)}" rx="${f2(sz * M * .16)}" fill="${fill}" stroke="${C.ink}" stroke-width="3"/>`;
+        pips.forEach(([a, c]) => { o += `<circle cx="${f2(X(cx) + a * sz * M * .28)}" cy="${f2(Y(cy) + c * sz * M * .28)}" r="${f2(sz * M * .075)}" fill="${fill === C.ink ? C.cream : C.ink}"/>`; });
+        return o + "</g>";
+      };
+      s += die(.3, .32, .42, -12, [[-1, -1], [0, 0], [1, 1]], C.cream);
+      s += die(.68, .56, .36, 16, [[-1, -1], [1, -1], [-1, 1], [1, 1], [0, 0]], ac);
+      s += `<path transform="translate(${X(.24)} ${Y(.8)}) scale(${f2(M / 300)})" d="M0 -60c-12 0-20 9-20 20 0 7 3 12 8 15-22 4-45 12-45 22 0 7 14 9 30 9l-16 40h86l-16-40c16 0 30-2 30-9 0-10-23-18-45-22 5-3 8-8 8-15 0-11-8-20-20-20z" fill="${fg}"/>`;
+      break; }
+  }
+  return s;
+}
+
+/* front cover: 474 × 711·h */
+function coverArt(b) {
+  const W = 474, Hh = Math.round(711 * b.h);
+  const lines = wrap(b.title, 11), longest = Math.max(...lines.map((l) => l.length));
+  const fs = Math.min(76, 392 / (longest * .5));
+  const t0 = 92 + fs * .8;
+  let s = `<rect width="${W}" height="${Hh}" fill="${b.bg}"/>`;
+  s += `<text x="40" y="50" font-family="Inter Tight, sans-serif" font-weight="600" font-size="13" letter-spacing="3" fill="${b.fg}">LIBRAIRIE MARTELLE</text>`;
+  s += `<text x="434" y="50" text-anchor="end" font-family="Inter Tight, sans-serif" font-weight="600" font-size="13" letter-spacing="3" fill="${b.fg}">Nº ${b.no}</text>`;
+  s += `<rect x="40" y="64" width="394" height="1.5" fill="${b.fg}" opacity=".7"/>`;
+  lines.forEach((l, i) => {
+    s += `<text x="38" y="${f2(t0 + i * fs * .96)}" font-family="Newsreader, Georgia, serif" font-weight="500" font-size="${f2(fs)}" letter-spacing="-2" fill="${b.fg}">${esc(l)}</text>`;
+  });
+  const my = t0 + (lines.length - 1) * fs * .96 + 44, mh = Hh - 112 - my;
+  s += `<g>${motif(b, 40, my, 394, mh)}</g>`;
+  s += `<rect x="40" y="${Hh - 88}" width="394" height="1.5" fill="${b.fg}" opacity=".7"/>`;
+  s += `<text x="40" y="${Hh - 50}" font-family="Inter Tight, sans-serif" font-weight="600" font-size="14" letter-spacing="3.5" fill="${b.fg}">${esc(b.kicker.toUpperCase())}</text>`;
+  s += `<text x="434" y="${Hh - 50}" text-anchor="end" font-family="Newsreader, serif" font-style="italic" font-size="19" fill="${b.fg}">Amiens</text>`;
+  return { s, W, H: Hh };
+}
+
+/* spine: 90 × 660·h, title reads top to bottom, shelf-mark label near the foot */
+function spineArt(b) {
+  const W = 90, Hh = Math.round(660 * b.h);
+  const avail = Hh - 300;
+  const fs = Math.min(36, avail / (b.short.length * .47));
+  const band = b.ac === b.fg ? C.red : b.ac;
+  let s = `<rect width="${W}" height="${Hh}" fill="${b.bg}"/>`;
+  s += `<rect y="22" width="${W}" height="9" fill="${band}"/><rect y="36" width="${W}" height="2" fill="${b.fg}" opacity=".7"/>`;
+  s += `<circle cx="45" cy="72" r="15" fill="none" stroke="${b.fg}" stroke-width="2"/><text x="45" y="77" text-anchor="middle" font-family="Inter Tight, sans-serif" font-weight="600" font-size="13" fill="${b.fg}">${b.no}</text>`;
+  s += `<text transform="translate(${f2(45 - fs * .34)} 108) rotate(90)" font-family="Newsreader, Georgia, serif" font-weight="500" font-size="${f2(fs)}" letter-spacing="-.5" fill="${b.fg}">${esc(b.short)}</text>`;
+  s += `<text x="45" y="${Hh - 160}" text-anchor="middle" font-family="Newsreader, serif" font-style="italic" font-size="15" fill="${b.fg}">Martelle</text>`;
+  s += `<rect x="13" y="${Hh - 136}" width="64" height="70" rx="3" fill="#F7F2E6" stroke="${C.ink}" stroke-opacity=".25"/>`;
+  ["RAYON", b.no, "AMIENS"].forEach((c, i) => {
+    s += `<text x="45" y="${Hh - 113 + i * 18}" text-anchor="middle" font-family="Inter Tight, sans-serif" font-weight="600" font-size="${i === 1 ? 14 : 10}" letter-spacing=".8" fill="${C.ink}">${c}</text>`;
+  });
+  s += `<rect y="${Hh - 46}" width="${W}" height="2" fill="${b.fg}" opacity=".7"/><rect y="${Hh - 40}" width="${W}" height="9" fill="${band}"/>`;
+  return { s, W, H: Hh };
+}
+const svgMarkup = ({ s, W, H }) => `<svg xmlns="${SVGNS}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">${s}</svg>`;
+const ART = BOOKS.map((b) => ({ cover: coverArt(b), spine: spineArt(b) }));
+
+/* ---------- helpers ---------- */
+const $ = (id) => document.getElementById(id);
+const mod = (a, n) => ((a % n) + n) % n;
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const smooth = (t) => t * t * (3 - 2 * t);
+const EASE = "cubic-bezier(.2,.8,.2,1)", SHEET_EASE = "cubic-bezier(.76,0,.18,1)";
+const mqReduce = matchMedia("(prefers-reduced-motion: reduce)");
+const mqFine = matchMedia("(pointer:fine)");
+let reduce = mqReduce.matches;
+mqReduce.addEventListener?.("change", (e) => (reduce = e.matches));
+const rel = (v, s) => { let r = mod(v - s, TOTAL); if (r >= TOTAL / 2) r -= TOTAL; return r; };
+
+/* ---------- build shelf ---------- */
+const stage = $("stage"), shelf = $("shelf");
+const tapes = [];
+for (let v = 0; v < TOTAL; v++) {
+  const i = v % N, b = BOOKS[i];
+  const t = document.createElement("div");
+  t.className = "book"; t.dataset.v = v; t.style.setProperty("--bh", b.h);
+  const sp = document.createElement("div"); sp.className = "face sp"; sp.innerHTML = svgMarkup(ART[i].spine);
+  const cv = document.createElement("div"); cv.className = "face cv"; cv.innerHTML = svgMarkup(ART[i].cover);
+  sp.setAttribute("role", "img"); sp.setAttribute("aria-label", `Rayon ${b.no} : ${b.title}`);
+  t.append(sp, cv); stage.append(t);
+  tapes.push({ el: t, sp, cv, lift: 0, vis: true, sSp: -1, sCv: -1 });
+}
+
+/* ---------- section index ruler ---------- */
+const ticks = $("ticks");
+for (let i = 0; i < N; i++) {
+  const pct = (i / (N - 1)) * 100;
+  const tk = document.createElement("i"); tk.className = "tk mj"; tk.style.left = pct + "%"; ticks.append(tk);
+  if (i < N - 1) for (let k = 1; k < 4; k++) {
+    const mn = document.createElement("i"); mn.className = "tk mn"; mn.style.left = pct + (k / 4) * (100 / (N - 1)) + "%"; ticks.append(mn);
+  }
+  const l = document.createElement("span");
+  l.className = "ty" + (i === 0 ? " first" : i === N - 1 ? " last" : "");
+  l.style.left = pct + "%";
+  l.innerHTML = `<b>${BOOKS[i].no}</b><span>${esc(BOOKS[i].short)}</span>`;
+  ticks.append(l);
+}
+
+/* ---------- geometry ---------- */
+const P = 1400;
+let H, ws, d, gap, U, XS = [0], W, VH, cyPx;
+function measure() {
+  H = $("probe").getBoundingClientRect().height;
+  W = innerWidth; VH = innerHeight;
+  ws = H * .136;
+  d = H * 474 / 711;
+  gap = H * .03;
+  U = H * (W < 768 ? 1.05 : 1.3);
+  XS = [0];
+  let acc = 0;
+  for (let u = 0; u <= 3 * U; u += 2) { acc += 2 / (1 + Math.pow(u / U, 1.6)); XS.push(acc); }
+  stage.style.setProperty("--hp", H + "px");
+  stage.style.setProperty("--ws", ws + "px");
+  stage.style.setProperty("--d", d + "px");
+  const r = shelf.getBoundingClientRect();
+  cyPx = r.top + r.height / 2;
+}
+const B = (r) => Math.abs(r) < 1 ? (r + Math.sin(Math.PI * r) / Math.PI) / 2 : Math.sign(r) * .5;
+const F = (r) => r * (ws + gap) + (d - ws + 1.4 * gap) * B(r);
+const scl = (u) => 1 / (1 + Math.pow(Math.abs(u) / U, 1.6));
+function xsc(u) {
+  const a = Math.abs(u) / 2, i = Math.floor(a), f = a - i;
+  const n = XS.length - 1;
+  const v = i >= n ? XS[n] : XS[i] + (XS[i + 1] - XS[i]) * f;
+  return Math.sign(u) * v;
+}
+measure();
+addEventListener("resize", measure);
+
+/* ---------- state ---------- */
+const INTRO = !reduce;
+let s = INTRO ? START - 9.5 : START, T = START;
+let held = INTRO, sweep = INTRO;                      /* shelf waits behind the curtain */
+let active = -1, hoverV = -1;
+let tiltX = 0, tiltY = 0, mx = -1, my = -1, hasMouse = false, hoverEl = null;
+let dragging = false, downX = 0, T0 = 0, pointerDown = false, downTape = null, pid = null, justDragged = false;
+let current = null, openT = 0, closing = false, originEl = null;
+let dotIdx = mod(START, N), ringScale = 0;
+const curPos = { x: W / 2, y: VH / 2 };
+const sheetOpen = () => !!current;
+
+/* ---------- caption ---------- */
+const cTitle = $("cTitle"), cSub = $("cSub"), cYear = $("cYear");
+function swapLine(mask, text, dir) {
+  const olds = [...mask.children];
+  const n = document.createElement("span");
+  n.textContent = text;
+  mask.append(n);
+  if (reduce || !dir) { olds.forEach((o) => o.remove()); return; }
+  n.animate([{ transform: `translateY(${dir * 105}%)` }, { transform: "translateY(0%)" }],
+    { duration: 650, easing: EASE, fill: "both" });
+  olds.forEach((o) => {
+    const cur = getComputedStyle(o).transform;
+    o.getAnimations().forEach((a) => a.cancel());
+    const a = o.animate([{ transform: cur === "none" ? "translateY(0%)" : cur }, { transform: `translateY(${-dir * 105}%)` }],
+      { duration: 650, easing: EASE, fill: "both" });
+    a.onfinish = () => o.remove();
+  });
+}
+function setCaption(i, dir) {
+  const b = BOOKS[i];
+  swapLine(cTitle, b.title, dir);
+  swapLine(cSub, b.kicker, dir);
+  swapLine(cYear, `Rayon ${b.no} / ${String(N).padStart(2, "0")}`, dir);
+}
+
+/* ---------- shelf navigation ---------- */
+const settled = () => Math.abs(T - s) < .3;
+function step(n) { if (sheetOpen() || held) return; T = Math.round(T) + n; }
+$("prev").addEventListener("click", (e) => { step(-1); if (e.detail) e.currentTarget.blur(); });
+$("next").addEventListener("click", (e) => { step(1); if (e.detail) e.currentTarget.blur(); });
+
+function tapeClick(v) {
+  if (sheetOpen() || held) return;
+  const r = rel(v, s);
+  if (Math.abs(r) < .5) openDetail();
+  else T = Math.round(T + r);
+}
+
+shelf.addEventListener("pointerdown", (e) => {
+  if (sheetOpen() || held || e.button > 0) return;
+  pointerDown = true; dragging = false; downX = e.clientX; T0 = T; pid = e.pointerId;
+  const t = e.target.closest(".book"); downTape = t ? +t.dataset.v : null;
+});
+addEventListener("pointermove", (e) => {
+  mx = e.clientX; my = e.clientY; hoverEl = e.target;
+  if (e.pointerType === "mouse" && !hasMouse) { hasMouse = true; curPos.x = mx; curPos.y = my; $("cur").classList.add("on"); }
+  if (!pointerDown || e.pointerId !== pid) return;
+  const dx = e.clientX - downX;
+  if (!dragging && Math.abs(dx) > 5) { dragging = true; try { shelf.setPointerCapture(pid); } catch (_) {} }
+  if (dragging) T = T0 - dx / (ws + gap);
+});
+function endPointer(e) {
+  if (!pointerDown || (e && e.pointerId !== pid)) return;
+  pointerDown = false;
+  if (dragging) { T = Math.round(T); dragging = false; justDragged = true; setTimeout(() => (justDragged = false), 0); }
+  else if (downTape !== null && e && e.type === "pointerup") tapeClick(downTape);
+  downTape = null;
+  try { shelf.releasePointerCapture(pid); } catch (_) {}
+}
+addEventListener("pointerup", endPointer);
+addEventListener("pointercancel", endPointer);
+shelf.addEventListener("click", (e) => { if (justDragged) { e.preventDefault(); e.stopPropagation(); } }, true);
+stage.addEventListener("pointerover", (e) => { const t = e.target.closest(".book"); hoverV = t ? +t.dataset.v : -1; });
+stage.addEventListener("pointerleave", () => (hoverV = -1));
+document.addEventListener("pointerleave", () => { hoverV = -1; });
+
+let wheelTimer = 0;
+addEventListener("wheel", (e) => {
+  if (sheetOpen() || held) return;
+  e.preventDefault();
+  const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+  const scale = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? VH : 1;
+  T += (delta * scale) / (ws + gap) * .5;
+  clearTimeout(wheelTimer);
+  wheelTimer = setTimeout(() => (T = Math.round(T)), 160);
+}, { passive: false });
+
+addEventListener("keydown", (e) => {
+  if (e.key === "Escape") { requestClose(); return; }
+  if (sheetOpen()) return;
+  if (e.key === "ArrowLeft") { step(-1); e.preventDefault(); }
+  else if (e.key === "ArrowRight") { step(1); e.preventDefault(); }
+  else if (e.key === "Enter" && !/^(BUTTON|A)$/.test(document.activeElement?.tagName || "")) { openDetail(); e.preventDefault(); }
+});
+
+function goToIndex(best) {
+  const cur = mod(Math.round(T), N);
+  let diff = mod(best - cur, N); if (diff > N / 2) diff -= N;
+  T = Math.round(T) + diff;
+}
+$("tlhit").addEventListener("click", (e) => {
+  if (sheetOpen() || held) return;
+  const r = $("tl").getBoundingClientRect();
+  goToIndex(Math.round(clamp((e.clientX - r.left) / r.width, 0, 1) * (N - 1)));
+});
+
+/* ---------- sheets: paper grows out of whatever opened it ---------- */
+const sheets = {
+  detail: $("sh-detail"), librairie: $("sh-librairie"), services: $("sh-services"), venir: $("sh-venir"), menu: $("sh-menu"),
+};
+const pSvg = $("pSvg"), pArt = $("pArt");
+const blots = [...document.querySelectorAll("#pBlots circle")].map((c) => ({ c, d: +c.dataset.d, cy0: +c.getAttribute("cy"), r: -1 }));
+const coverRect = () => tapes[mod(Math.round(s), TOTAL)].cv.getBoundingClientRect();
+const insetOf = (r, rad) =>
+  `inset(${clamp(r.top, 0, innerHeight).toFixed(1)}px ${clamp(innerWidth - r.right, 0, innerWidth).toFixed(1)}px ${clamp(innerHeight - r.bottom, 0, innerHeight).toFixed(1)}px ${clamp(r.left, 0, innerWidth).toFixed(1)}px round ${rad}px)`;
+const FULL = "inset(0px 0px 0px 0px round 0px)";
+function fallbackRect() {
+  const r = document.querySelector(".burger").getBoundingClientRect();
+  return r.width ? r : { left: innerWidth / 2 - 20, right: innerWidth / 2 + 20, top: innerHeight / 2 - 20, bottom: innerHeight / 2 + 20 };
+}
+function rectOf(el) {
+  if (el === "cover") return coverRect();
+  const r = el && el.getBoundingClientRect ? el.getBoundingClientRect() : null;
+  return r && r.width && r.height && el.offsetParent !== null ? r : fallbackRect();
+}
+
+function showSheet(name, origin) {
+  const el = sheets[name];
+  if (!el || current === name) return;
+  const prev = current ? sheets[current] : null;
+  closing = false;
+  el.getAnimations({ subtree: true }).forEach((a) => a.cancel());
+  el.style.zIndex = prev ? 62 : 60;
+  el.classList.add("on"); el.setAttribute("aria-hidden", "false"); el.scrollTop = 0;
+  document.body.classList.add("sheeted");
+  current = name; originEl = origin;
+  openT = performance.now() - (reduce ? 5000 : 0);
+  const a = el.animate([{ clipPath: insetOf(rectOf(origin), 3) }, { clipPath: FULL }],
+    { duration: reduce ? 1 : 1050, easing: SHEET_EASE, fill: "both" });
+  [...el.querySelectorAll(".dm > *")].forEach((n, k) => n.animate(
+    [{ transform: "translateY(110%)" }, { transform: "translateY(0%)" }],
+    { duration: reduce ? 1 : 900, delay: reduce ? 0 : 560 + Math.min(k, 10) * 70, easing: EASE, fill: "both" }));
+  if (prev) a.onfinish = () => { hideSheet(prev); el.style.zIndex = 60; };
+  if (name === "venir") loadMap();
+  el.querySelector("[data-close]").focus({ preventScroll: true });
+}
+function hideSheet(el) {
+  el.classList.remove("on"); el.setAttribute("aria-hidden", "true");
+  el.getAnimations({ subtree: true }).forEach((x) => x.cancel());
+}
+function closeSheet() {
+  if (!current || closing) return;
+  closing = true;
+  const el = sheets[current];
+  const target = current === "detail" ? coverRect() : rectOf(originEl);
+  el.getAnimations().forEach((a) => a.cancel());
+  const a = el.animate([{ clipPath: FULL }, { clipPath: insetOf(target, 3) }],
+    { duration: reduce ? 1 : 850, easing: SHEET_EASE, fill: "both" });
+  document.body.classList.remove("sheeted");
+  a.onfinish = () => { hideSheet(el); current = null; closing = false; };
+}
+
+/* history: every sheet gets a URL hash, Back closes it */
+function openRoute(name, origin) {
+  if (held) return;
+  if (name === "detail") { openDetail(); return; }
+  if (!sheets[name]) return;
+  if (location.hash !== "#" + name) history[current ? "replaceState" : "pushState"]({ sheet: name }, "", "#" + name);
+  showSheet(name, origin);
+}
+function requestClose() {
+  if (!current) return;
+  if (history.state && history.state.sheet) history.back();
+  else { closeSheet(); history.replaceState(null, "", location.pathname + location.search); }
+}
+addEventListener("popstate", () => {
+  const h = location.hash.slice(1);
+  if (!h) { closeSheet(); return; }
+  if (h.startsWith("rayon-")) { const i = BOOKS.findIndex((b) => "rayon-" + b.id === h); if (i >= 0 && current !== "detail") { if (current) hideSheet(sheets[current]), current = null; goToIndex(i); T = Math.round(T); s = T; openDetail(true); } return; }
+  if (sheets[h] && current !== h) showSheet(h, null);
+});
+
+function openDetail(fromHistory) {
+  if (current || held) return;
+  T = Math.round(T);
+  const i = mod(T, N), b = BOOKS[i], art = ART[i].cover;
+  $("dSub").textContent = b.kicker;
+  $("dTitle").textContent = b.title;
+  $("dMeta").textContent = `RAYON ${b.no} / ${String(N).padStart(2, "0")} — LIBRAIRIE MARTELLE, AMIENS`;
+  $("dSyn").textContent = b.syn + " ";
+  $("dMail").href = `mailto:commandes@librairiemartelle.com?subject=${encodeURIComponent("Conseil — rayon " + b.title)}`;
+  pSvg.setAttribute("viewBox", `0 0 ${art.W} ${art.H}`);
+  pSvg.style.aspectRatio = `${art.W} / ${art.H}`;
+  $("pClipRect").setAttribute("height", art.H);
+  pArt.innerHTML = art.s;
+  blots.forEach((bl) => { bl.r = 0; bl.c.setAttribute("r", 0); bl.c.setAttribute("cy", f2(bl.cy0 * art.H / 900)); });
+  if (fromHistory !== true) history.pushState({ sheet: "detail" }, "", "#rayon-" + b.id);
+  showSheet("detail", "cover");
+}
+
+document.addEventListener("click", (e) => {
+  const a = e.target.closest("[data-sheet],[data-close],[data-close-to],[data-home]");
+  if (!a) return;
+  e.preventDefault();
+  if (a.hasAttribute("data-close") || a.hasAttribute("data-close-to") || a.hasAttribute("data-home")) { requestClose(); return; }
+  openRoute(a.getAttribute("data-sheet"), a);
+});
+
+/* map loads on first visit to "Venir" */
+let mapLoaded = false;
+function loadMap() {
+  if (mapLoaded) return; mapLoaded = true;
+  const f = document.createElement("iframe");
+  f.title = "Plan d’accès — Librairie Martelle, 3 rue des Vergeaux, Amiens";
+  f.loading = "lazy"; f.referrerPolicy = "no-referrer-when-downgrade";
+  f.src = "https://www.google.com/maps?q=" + encodeURIComponent("Librairie Martelle, 3 rue des Vergeaux, 80000 Amiens") + "&z=16&output=embed";
+  $("map").prepend(f);
+}
+
+/* ---------- opening hours (leslibraires.fr, relevé le 11/11/2026) ---------- */
+const DAYS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+const HOURS = [[570, 1140], [570, 1140], [570, 1140], [570, 1140], [570, 1140], [570, 1140], null];
+/* exceptional closures listed on the leslibraires.fr page (ISO dates, Paris time) */
+const CLOSED = new Set(["2026-11-11"]);
+const hm = (m) => `${Math.floor(m / 60)}h${m % 60 ? String(m % 60).padStart(2, "0") : ""}`;
+function parisNow() {
+  const p = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Paris", weekday: "short", hour: "2-digit", minute: "2-digit", hour12: false }).formatToParts(new Date());
+  const g = (t) => p.find((x) => x.type === t).value;
+  const dp = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+  return { wd: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].indexOf(g("weekday")), min: (+g("hour") % 24) * 60 + +g("minute"), date: dp };
+}
+const addDays = (iso, k) => { const t = new Date(iso + "T12:00:00Z"); t.setUTCDate(t.getUTCDate() + k); return t.toISOString().slice(0, 10); };
+const hoursOn = (wd, iso) => (CLOSED.has(iso) ? null : HOURS[wd]);
+function status() {
+  const { wd, min, date } = parisNow(), h = hoursOn(wd, date);
+  const exc = CLOSED.has(date);
+  if (h && min >= h[0] && min < h[1]) return { open: true, wd, exc, txt: `Ouvert · jusqu’à ${hm(h[1])}` };
+  if (h && min < h[0]) return { open: false, wd, exc, txt: `Fermé · ouvre à ${hm(h[0])}` };
+  for (let k = 1; k <= 14; k++) {
+    const dd = (wd + k) % 7, hh = hoursOn(dd, addDays(date, k));
+    if (hh) return { open: false, wd, exc, txt: `${exc ? "Fermeture exceptionnelle" : "Fermé"} · ouvre ${k === 1 ? "demain" : DAYS[dd].toLowerCase()} à ${hm(hh[0])}` };
+  }
+  return { open: false, wd, exc, txt: "Fermé" };
+}
+function renderHours() {
+  const st = status();
+  $("hours").innerHTML = DAYS.map((dname, i) =>
+    `<tr${i === st.wd ? ' class="today"' : ""}><td>${dname}</td><td>${i === st.wd && st.exc ? "Fermeture exceptionnelle" : HOURS[i] ? hm(HOURS[i][0]) + " – " + hm(HOURS[i][1]) : "Fermé"}</td></tr>`).join("");
+  [$("status"), $("status2")].forEach((el) => el.classList.toggle("open", st.open));
+  $("statusTxt").innerHTML = `${st.txt}<span class="st-addr"> — 3 rue des Vergeaux</span>`;
+  $("status2").querySelector("span").textContent = st.txt;
+}
+renderHours();
+setInterval(renderHours, 60000);
+
+/* ---------- intro curtain ---------- */
+const intro = $("intro");
+$("introWm").innerHTML = "Martelle".split("").map((c) => `<span>${c}</span>`).join("");
+function runIntro() {
+  if (!INTRO) { intro.remove(); afterIntro(); return; }
+  [...intro.querySelectorAll(".wm span")].forEach((n, k) => n.animate(
+    [{ transform: "translateY(110%)" }, { transform: "translateY(0%)" }], { duration: 900, delay: 80 + k * 55, easing: EASE, fill: "both" }));
+  [...intro.querySelectorAll(".il span")].forEach((n, k) => n.animate(
+    [{ transform: "translateY(110%)" }, { transform: "translateY(0%)" }], { duration: 800, delay: 260 + k * 380, easing: EASE, fill: "both" }));
+  setTimeout(() => { held = false; }, 1150);
+  const a = intro.animate([{ clipPath: FULL }, { clipPath: "inset(0px 0px 100% 0px round 0px)" }],
+    { duration: 1100, delay: 1250, easing: SHEET_EASE, fill: "both" });
+  a.onfinish = () => { intro.remove(); afterIntro(); };
+}
+function afterIntro() {
+  held = false;
+  const h = location.hash.slice(1);
+  if (h.startsWith("rayon-")) {
+    const i = BOOKS.findIndex((b) => "rayon-" + b.id === h);
+    if (i >= 0) { goToIndex(i); s = T; history.replaceState({ sheet: "detail" }, "", location.hash); setTimeout(() => openDetail(true), 60); }
+  } else if (sheets[h] && h !== "detail") {
+    history.replaceState({ sheet: h }, "", location.hash);
+    showSheet(h, null);
+  }
+}
+
+/* ---------- loop ---------- */
+const play = $("play"), dot = $("dot"), cur = $("cur");
+const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+let last = performance.now(), curState = "";
+
+function frame(now) {
+  const dt = Math.min(.05, Math.max(0, (now - last) / 1000)); last = now;
+
+  /* spring (held behind the curtain, then a sweep along the arc) */
+  if (!held) {
+    if (reduce) s = T;
+    else s += (T - s) * (1 - Math.exp(-(dragging ? 18 : sweep ? 2.6 : 5.2) * dt));
+    if (sweep && Math.abs(T - s) < .5) sweep = false;
+  }
+  if (Math.abs(s - START) > 4 * N) { const sh = Math.round((s - START) / N) * N; s -= sh; T -= sh; T0 -= sh; }
+
+  const a = mod(Math.round(s), N);
+  if (a !== active) { setCaption(a, active < 0 ? 0 : Math.sign(T - s) || 1); active = a; }
+
+  /* tilt */
+  const onCover = hasMouse && !sheetOpen() && !held && settled() &&
+    Math.abs(mx - W / 2) < .55 * d && Math.abs(my - cyPx) < .55 * H;
+  let tY, tX;
+  if (onCover) { tY = ((mx - W / 2) / (.55 * d)) * 8; tX = (-(my - cyPx) / (H / 2)) * 5; }
+  else { tY = hasMouse ? ((mx - W / 2) / W) * 4 : 0; tX = 0; }
+  const kt = reduce ? 1 : 1 - Math.exp(-7 * dt);
+  tiltY += (tY - tiltY) * kt; tiltX += (tX - tiltX) * kt;
+
+  /* books — skipped while a sheet fully covers the screen */
+  const covered = current && !closing && now - openT > 1100;
+  if (!covered) {
+    const kl = reduce ? 1 : 1 - Math.exp(-12 * dt);
+    for (let v = 0; v < TOTAL; v++) {
+      const tp = tapes[v];
+      const r = rel(v, s);
+      const o = smooth(Math.max(0, 1 - Math.abs(r)));
+      const u = F(r);
+      const want = hoverV === v && Math.abs(r) > .5 && !sheetOpen() ? 1 : 0;
+      tp.lift += (want - tp.lift) * kl;
+      if (Math.abs(u) > U * 1.95) { if (tp.vis) { tp.el.style.visibility = "hidden"; tp.vis = false; } continue; }
+      if (!tp.vis) { tp.el.style.visibility = ""; tp.vis = true; }
+      const sc = scl(u), k = 1 / sc;
+      const z = P * (1 - k) + o * H * .1;
+      const x = xsc(u) * k;
+      const y = (H * .5 * (1 - sc) * .42 + o * H * .012 - tp.lift * H * .05) * k;
+      const ry = Math.sign(u) * Math.min(1, Math.abs(u) / U) * 26 * (1 - o) - 90 * o + tiltY * o;
+      const rx = tiltX * o;
+      tp.el.style.transform = `translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,${z.toFixed(2)}px) rotateX(${rx.toFixed(3)}deg) rotateY(${ry.toFixed(3)}deg)`;
+      tp.el.style.zIndex = Math.round(3000 + z);
+      const shSp = Math.min(.6, o * .55 + (1 - sc) * .32), shCv = (1 - o) * .82;
+      if (Math.abs(shSp - tp.sSp) > .002) { tp.sp.style.setProperty("--shade", shSp.toFixed(3)); tp.sSp = shSp; }
+      if (Math.abs(shCv - tp.sCv) > .002) { tp.cv.style.setProperty("--shade", shCv.toFixed(3)); tp.sCv = shCv; }
+    }
+  }
+
+  ringScale = sheetOpen() || held ? 0 : smooth(Math.max(0, 1 - Math.abs(T - s) * 3));
+  play.style.transform = `translate(${(W / 2 - d / 2 - 6).toFixed(1)}px,${(cyPx + .36 * H).toFixed(1)}px) scale(${ringScale.toFixed(3)})`;
+
+  /* index dot: glides between sections, jumps at the 12 → 1 wrap */
+  const fl = Math.floor(s), fr = s - fl;
+  const i0 = mod(fl, N), i1 = mod(fl + 1, N);
+  const ti = i1 < i0 ? (fr < .5 ? i0 : i1) : i0 + fr;
+  if (reduce || Math.abs(ti - dotIdx) > 2) dotIdx = ti;
+  else dotIdx += (ti - dotIdx) * (1 - Math.exp(-14 * dt));
+  dot.style.left = ((dotIdx / (N - 1)) * 100).toFixed(3) + "%";
+
+  /* ink bleed */
+  if (current === "detail") {
+    const t = now - openT;
+    for (const bl of blots) {
+      const p = clamp((t - 520 - bl.d) / 1250, 0, 1);
+      const r = 720 * easeOutCubic(p);
+      if (Math.abs(r - bl.r) > .05) { bl.c.setAttribute("r", r.toFixed(2)); bl.r = r; }
+    }
+  }
+
+  /* cursor */
+  if (hasMouse && mqFine.matches) {
+    const kc = 1 - Math.exp(-16 * dt);
+    curPos.x += (mx - curPos.x) * kc; curPos.y += (my - curPos.y) * kc;
+    cur.style.transform = `translate3d(${curPos.x.toFixed(1)}px,${curPos.y.toFixed(1)}px,0)`;
+    let st = "";
+    if (onCover) st = "open";
+    else if (hoverEl && hoverEl.closest) {
+      if (!sheetOpen() && hoverEl.closest(".book")) st = "spine";
+      else if (hoverEl.closest("button,a,.tl-hit,iframe,.map")) st = "btn";
+    }
+    if (st !== curState) { cur.classList.remove("open", "spine", "btn"); if (st) cur.classList.add(st); curState = st; }
+  }
+
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+runIntro();
+})();
+</script>
+</body>
+</html>
