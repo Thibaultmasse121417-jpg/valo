@@ -1,5 +1,7 @@
 // Local server identical to production routing: static files + /livre/* and /sitemap.xml rendered by server/book-page.mjs.
 // Usage: SUPABASE_URL=… SUPABASE_ANON_KEY=… node tools/dev-server.mjs [port]
+// DEV_PROXY=1 : also relays /rest/v1, /auth/v1 and /storage/v1 to SUPABASE_URL and serves a matching config.js,
+// so a remote preview (single port) can use the local database. Development only.
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
@@ -14,6 +16,21 @@ const env = { SUPABASE_URL: process.env.SUPABASE_URL, SUPABASE_ANON_KEY: process
 createServer(async (req, res) => {
   const url = new URL(req.url, `http://127.0.0.1:${PORT}`);
   try {
+    if (process.env.DEV_PROXY === "1") {
+      if (url.pathname === "/config.js") {
+        res.writeHead(200, { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" });
+        res.end(`window.MARTELLE_CONFIG={supabaseUrl:location.origin,supabaseAnonKey:${JSON.stringify(env.SUPABASE_ANON_KEY)},googleBooksApiKey:""};`);
+        return;
+      }
+      if (/^\/(rest|auth|storage)\/v1\//.test(url.pathname)) {
+        const chunks = []; for await (const c of req) chunks.push(c);
+        const headers = { ...req.headers }; delete headers.host; delete headers["accept-encoding"]; delete headers.connection;
+        const r = await fetch(env.SUPABASE_URL.replace(/\/$/, "") + url.pathname + url.search, { method: req.method, headers, body: ["GET", "HEAD"].includes(req.method) ? undefined : Buffer.concat(chunks), redirect: "manual" });
+        const h = Object.fromEntries(r.headers); delete h["content-encoding"]; delete h["content-length"]; delete h["transfer-encoding"];
+        res.writeHead(r.status, h); res.end(Buffer.from(await r.arrayBuffer()));
+        return;
+      }
+    }
     if (url.pathname.startsWith("/livre/") || url.pathname === "/sitemap.xml") {
       const r = await handle(new Request(url, { method: req.method }), env);
       res.writeHead(r.status, Object.fromEntries(r.headers));
