@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Atelier Comyx</title>
+  <meta name="description" content="L’espace de la boutique pour ajouter ses vêtements sur le portant : une photo au téléphone, le fond s’enlève tout seul.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#f3f1ec">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3l3 10 10 3-10 3-3 10-3-10-10-3 10-3z' fill='%23151515'/%3E%3C/svg%3E">
+  <script type="module" src="../src/atelier.js"></script>
+</head>
+<body>
+  <header class="at-top">
+    <p class="at-logo"><img src="../media/logo-comyx.png" alt="Comyx Prestige" height="30" style="height:30px;width:auto;vertical-align:middle"> <span class="at-logo__sub">Atelier</span></p>
+    <a class="at-lnk" href="../">Voir la boutique <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <p class="at-mode" data-mode hidden></p>
+
+  <!-- Connexion (mode en ligne) -->
+  <section class="at-login" data-vue="connexion" hidden aria-labelledby="login-t">
+    <h1 id="login-t">Connexion</h1>
+    <p>Entrez l’adresse et le mot de passe de la boutique.</p>
+    <form class="at-form" data-login novalidate>
+      <label class="at-f"><span>E-mail</span><input type="email" name="email" autocomplete="username" inputmode="email" required></label>
+      <label class="at-f"><span>Mot de passe</span><input type="password" name="mdp" autocomplete="current-password" required></label>
+      <p class="at-err" data-login-err aria-live="polite"></p>
+      <button class="at-btn" type="submit">Se connecter</button>
+    </form>
+  </section>
+
+  <!-- Liste des pièces -->
+  <main class="at-main" data-vue="liste" hidden>
+    <div class="at-head">
+      <div>
+        <h1>Mes pièces</h1>
+        <p class="at-sub" data-compte></p>
+      </div>
+      <button class="at-btn at-btn--big" type="button" data-ajouter>
+        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 2v14M2 9h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Ajouter une pièce
+      </button>
+    </div>
+
+    <details class="at-conseil">
+      <summary>Comment bien prendre la photo</summary>
+      <ul>
+        <li>La pièce sur un cintre, accrochée à une porte ou un mur clair.</li>
+        <li>Toute la pièce dans le cadre, téléphone bien droit, à hauteur de la pièce.</li>
+        <li>De la lumière du jour, sans flash.</li>
+        <li>Pas de cintre&nbsp;? Posez-la à plat sur un drap : nous ajoutons un cintre.</li>
+      </ul>
+    </details>
+
+    <ul class="at-list" data-liste role="list"></ul>
+
+    <div class="at-foot">
+      <button class="at-lnk at-lnk--mute" type="button" data-reinit hidden>Remettre la démo à zéro</button>
+      <button class="at-lnk at-lnk--mute" type="button" data-deco hidden>Se déconnecter</button>
+    </div>
+  </main>
+
+  <!-- Fiche d'une pièce -->
+  <div class="at-sheet" data-fiche hidden role="dialog" aria-modal="true" aria-labelledby="fiche-t">
+    <form class="at-sheet__in" data-form novalidate>
+      <div class="at-sheet__bar">
+        <button class="at-lnk" type="button" data-fermer>Annuler</button>
+        <h2 id="fiche-t" data-fiche-titre>Nouvelle pièce</h2>
+        <button class="at-btn at-btn--s" type="submit" data-enregistrer>Enregistrer</button>
+      </div>
+
+      <div class="at-sheet__body">
+        <fieldset class="at-couleurs">
+          <legend>Photos et couleurs</legend>
+          <ul class="at-cols" data-couleurs role="list"></ul>
+          <button class="at-btn at-btn--line" type="button" data-ajouter-couleur>+ Ajouter une autre couleur</button>
+        </fieldset>
+
+        <label class="at-f"><span>Nom de la pièce</span><input name="nom" required placeholder="Ex. Belleville, pull grosse maille" autocomplete="off"></label>
+        <p class="at-err" data-err-nom></p>
+        <div class="at-row">
+          <label class="at-f"><span>Prix</span><span class="at-prix"><input name="prix" inputmode="decimal" required placeholder="89"><b>€</b></span></label>
+          <label class="at-f"><span>Catégorie</span>
+            <select name="famille">
+              <option value="hauts">Hauts</option>
+              <option value="mailles">Mailles</option>
+              <option value="vestes">Vestes</option>
+              <option value="robes">Robes</option>
+              <option value="bas">Bas</option>
+              <option value="accessoires">Accessoires</option>
+            </select>
+          </label>
+        </div>
+        <p class="at-err" data-err-prix></p>
+        <label class="at-f"><span>Type <small>(affiché au-dessus du nom)</small></span><input name="type" list="types" placeholder="Pull, chemise, robe…" autocomplete="off"></label>
+        <datalist id="types"><option>T-shirt</option><option>Chemise</option><option>Pull</option><option>Gilet</option><option>Cardigan</option><option>Sweat</option><option>Veste</option><option>Manteau</option><option>Robe</option><option>Jupe</option><option>Pantalon</option><option>Polo</option></datalist>
+
+        <fieldset class="at-f">
+          <legend>Tailles disponibles</legend>
+          <div class="at-chips" data-tailles>
+            <label><input type="checkbox" value="XS"><span>XS</span></label>
+            <label><input type="checkbox" value="S" checked><span>S</span></label>
+            <label><input type="checkbox" value="M" checked><span>M</span></label>
+            <label><input type="checkbox" value="L" checked><span>L</span></label>
+            <label><input type="checkbox" value="XL"><span>XL</span></label>
+            <label><input type="checkbox" value="Taille unique"><span>Unique</span></label>
+          </div>
+        </fieldset>
+        <p class="at-err" data-err-tailles></p>
+
+        <label class="at-f"><span>Description <small>(facultatif)</small></span><textarea name="texte" rows="3" placeholder="Matière, coupe, comment la porter…"></textarea></label>
+
+        <div class="at-switches">
+          <label class="at-switch"><input type="checkbox" name="visible" checked><span>En ligne sur la boutique</span></label>
+          <label class="at-switch"><input type="checkbox" name="nouveau"><span>Étiquette « Nouveau »</span></label>
+        </div>
+
+        <button class="at-lnk at-lnk--danger" type="button" data-supprimer hidden>Supprimer cette pièce</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Studio : détourage et retouche -->
+  <div class="at-studio" data-studio hidden role="dialog" aria-modal="true" aria-labelledby="studio-t">
+    <div class="at-studio__bar">
+      <button class="at-lnk" type="button" data-studio-annuler>Annuler</button>
+      <h2 id="studio-t" data-studio-titre>Votre photo</h2>
+      <button class="at-btn at-btn--s" type="button" data-studio-ok disabled>Valider</button>
+    </div>
+
+    <div class="at-studio__etat" data-studio-etat>
+      <p data-etat-txt>Préparation…</p>
+      <div class="at-jauge"><i data-etat-jauge></i></div>
+      <p class="at-sub" data-etat-sub></p>
+    </div>
+
+    <div class="at-studio__vue" data-studio-vue hidden>
+      <div class="at-onglets" role="tablist" aria-label="Affichage">
+        <button type="button" role="tab" aria-selected="true" data-onglet="apercu">Sur le portant</button>
+        <button type="button" role="tab" aria-selected="false" data-onglet="retouche">Retoucher</button>
+      </div>
+      <div class="at-canvas" data-zone>
+        <canvas data-canvas aria-label="Aperçu de la pièce détourée"></canvas>
+      </div>
+
+      <div class="at-outils" data-outils-apercu>
+        <div class="at-seg" role="group" aria-label="Cintre">
+          <button type="button" data-cintre="ajout" aria-pressed="true">Ajouter un cintre</button>
+          <button type="button" data-cintre="mien" aria-pressed="false">Garder le mien</button>
+        </div>
+        <button class="at-lnk" type="button" data-reprendre>Reprendre la photo</button>
+      </div>
+
+      <div class="at-outils" data-outils-retouche hidden>
+        <div class="at-seg" role="group" aria-label="Outil">
+          <button type="button" data-outil="gomme" aria-pressed="true">Gomme</button>
+          <button type="button" data-outil="pinceau" aria-pressed="false">Restaurer</button>
+        </div>
+        <label class="at-taille"><span>Taille</span><input type="range" min="8" max="120" value="40" data-taille></label>
+        <button class="at-lnk" type="button" data-defaire disabled>Annuler le trait</button>
+      </div>
+      <p class="at-sub at-center" data-astuce>Vérifiez la pièce sur le portant. Un défaut&nbsp;? Ouvrez « Retoucher ».</p>
+    </div>
+  </div>
+
+  <input type="file" accept="image/*" capture="environment" data-fichier hidden>
+  <input type="file" accept="image/*" data-fichier-galerie hidden>
+
+  <!-- Choix de la source de la photo -->
+  <div class="at-menu" data-source hidden role="dialog" aria-modal="true" aria-label="Ajouter une photo">
+    <div class="at-menu__in">
+      <p class="at-menu__t" data-source-titre>Ajouter une photo</p>
+      <button class="at-btn" type="button" data-source-cam>Prendre une photo</button>
+      <button class="at-btn at-btn--line" type="button" data-source-gal>Choisir dans mes photos</button>
+      <button class="at-lnk" type="button" data-source-non>Annuler</button>
+    </div>
+  </div>
+
+  <div class="at-toast" data-toast role="status" aria-live="polite"></div>
+</body>
+</html>

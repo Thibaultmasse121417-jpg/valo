@@ -1,0 +1,42 @@
+/* Identité Comyx Prestige (couleurs reprises de comyx.fr) */
+:root {
+  --bg: #f5f0eb;
+  --paper: #faf9f2;
+  --ink: #3d3232;
+  --mute: #7d6f68;
+  --line: #e3d9cf;
+  --accent: #b18f64;
+  --brun: #524242;
+  --serif: 'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+}
+body { background: var(--bg); color: var(--ink); }
+
+.demo-bar { background: var(--brun); color: #f1e9df; }
+.annonces { background: var(--accent); color: #fff; text-align: center; padding: 8px 16px; font-size: 13px; letter-spacing: 0.02em; min-height: 36px; display: grid; place-items: center; }
+.annonces p { margin: 0; }
+
+.logo--img img { height: 42px; width: auto; }
+@media (max-width: 720px) { .logo--img img { height: 32px; } }
+
+.crumb b { color: var(--ink); }
+.hero__txt h1 { font-family: var(--serif); font-style: italic; font-weight: 500; text-transform: none; letter-spacing: 0; font-size: clamp(26px, 3vw, 38px); }
+.shop__head h2, .maison h2 { font-family: var(--serif); font-weight: 500; letter-spacing: -0.005em; }
+.shop__head h2 { font-size: clamp(32px, 4vw, 52px); }
+.qv__name { font-family: var(--serif); font-weight: 500; font-size: clamp(28px, 3.4vw, 42px); letter-spacing: 0; }
+.eyebrow { color: var(--accent); }
+
+.band { background: var(--ink); color: #f1e9df; }
+.pill { background: var(--paper); }
+.btn { background: var(--ink); }
+.btn:hover:not(:disabled) { background: #2a2222; }
+.chip.is-on, .size.is-on { background: var(--ink); border-color: var(--ink); }
+.card__img { background: #ece4da; }
+.maison__img { background: #e9dfd3; }
+.card__new { color: var(--ink); }
+.rail__bar { background: linear-gradient(#f6e7c9, #c7a873 55%, #8f7244); }
+.rail__bar i { background: linear-gradient(90deg, #c9ae7d, #f3e3c0 40%, #a88a58); }
+
+.foot { gap: 10px; }
+.foot__logo { height: 44px; width: auto; }
+.foot p b { color: var(--ink); }
+.foot__credit { font-size: 12px !important; }

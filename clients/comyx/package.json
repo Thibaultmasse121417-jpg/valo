@@ -1,0 +1,22 @@
+{
+  "name": "comyx-portant",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview --host"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter-tight": "^5.2.0",
+    "@fontsource-variable/schibsted-grotesk": "^5.3.0",
+    "@fontsource/cormorant-garamond": "^5.2.6",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@supabase/supabase-js": "^2.49.4",
+    "onnxruntime-web": "^1.22.0"
+  },
+  "devDependencies": {
+    "vite": "^8.3.5"
+  }
+}
