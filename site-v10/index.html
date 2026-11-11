@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Estalia Studio · Sites portant pour boutiques de mode</title>
+  <meta name="description" content="Un site de boutique où vos vêtements pendent sur un portant : vos clients les effleurent, les font tourner et les ajoutent au panier. Livré en 14 jours, à prix fixe.">
+  <meta name="theme-color" content="#f5f3ee">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23141414'/%3E%3Cpath d='M7 10h18' stroke='%23fff' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M12 10v3l-3 9h6l1-6 1 6h6l-3-9v-3' fill='%23e5341f'/%3E%3C/svg%3E">
+  <script type="module" src="./src/vente.js"></script>
+</head>
+<body>
+  <a class="skip" href="#contenu">Aller au contenu</a>
+
+  <header class="nav">
+    <a class="brand" href="#" aria-label="Estalia Studio, accueil">estalia<span>studio</span></a>
+    <nav aria-label="Navigation principale">
+      <ul class="nav__links">
+        <li><a href="#demo">La démo</a></li>
+        <li><a href="#inclus">Ce qui est inclus</a></li>
+        <li><a href="#methode">Méthode</a></li>
+        <li><a href="#tarifs">Tarifs</a></li>
+        <li><a href="#questions">Questions</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn--red btn--s" href="#contact">Demander un devis</a>
+  </header>
+
+  <main id="contenu">
+    <!-- 1. Promesse -->
+    <section class="hero">
+      <div class="hero__txt">
+        <p class="kicker">Pour les boutiques de vêtements et créateurs</p>
+        <h1>Votre boutique en ligne, présentée comme un vrai portant.</h1>
+        <p class="lead">La plupart des sites de mode se ressemblent&nbsp;: une bannière, puis une grille. Le vôtre s’ouvre sur vos pièces suspendues. On les effleure, celle qu’on touche se tourne vers soi, un clic et elle arrive dans le panier.</p>
+        <div class="hero__cta">
+          <a class="btn btn--red" href="./demo/" data-demo-link>Essayer la démo <span aria-hidden="true">↗</span></a>
+          <a class="btn btn--line" href="#tarifs">Voir les tarifs</a>
+        </div>
+        <ul class="facts" role="list">
+          <li><b>14 jours</b><span>de la commande à la mise en ligne</span></li>
+          <li><b>Prix fixe</b><span>à partir de 1&nbsp;490&nbsp;€, sans abonnement imposé</span></li>
+          <li><b>Photos incluses</b><span>vos pièces détourées sur cintre</span></li>
+        </ul>
+      </div>
+
+      <figure class="device" id="demo">
+        <div class="device__screen">
+          <div class="device__chrome" aria-hidden="true"><i></i><i></i><i></i><span>alba-paris.fr</span></div>
+          <video class="device__video" data-hero-video muted loop playsinline preload="metadata" poster="./media/demo/portant.jpg" aria-label="Enregistrement de la boutique de démonstration : la souris passe sur le portant, ouvre un gilet et change sa couleur.">
+            <source src="./media/demo/portant.mp4" type="video/mp4">
+          </video>
+          <button class="device__play" type="button" data-video-toggle aria-label="Mettre la vidéo en pause">
+            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path class="i-pause" d="M3 2h3v10H3zM8 2h3v10H8z" fill="currentColor"/><path class="i-play" d="M3 1.5l9 5.5-9 5.5z" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <div class="device__base" aria-hidden="true"></div>
+        <figcaption>Boutique de démonstration «&nbsp;Alba&nbsp;», faite par nos soins. <a href="./demo/">L’ouvrir et l’essayer&nbsp;→</a></figcaption>
+      </figure>
+    </section>
+
+    <!-- 2. Pourquoi -->
+    <section class="why">
+      <div class="wrap why__grid">
+        <h2>En boutique, on touche les vêtements. En ligne, on fait défiler des carrés.</h2>
+        <div class="why__txt">
+          <p>Vos clients connaissent votre boutique pour son portant, sa lumière, la façon dont vous mettez une pièce en avant. Un modèle de site standard efface tout ça.</p>
+          <p>Le format portant redonne ce geste&nbsp;: on passe la main sur les cintres, on s’arrête sur une maille, on la retourne pour voir le dos. On a envie de s’attarder, et votre site ne ressemble à aucun autre de la rue.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Inclus -->
+    <section class="inclus" id="inclus" aria-labelledby="inclus-t">
+      <div class="wrap">
+        <div class="head">
+          <p class="kicker">Ce qui est inclus</p>
+          <h2 id="inclus-t">Tout le parcours d’achat, pas seulement l’effet.</h2>
+        </div>
+        <ol class="feats" role="list">
+          <li><h3>Le portant</h3><p>Vos pièces pendent sur une tringle. Elles se balancent quand la souris passe, la pièce survolée se tourne vers le client. Sur téléphone, on fait glisser le portant du pouce.</p></li>
+          <li><h3>L’aperçu rapide</h3><p>Un clic décroche la pièce et l’amène au centre&nbsp;: devant et dos, couleurs, tailles, ajout au panier. Sans quitter la page.</p></li>
+          <li><h3>La boutique complète</h3><p>Grille filtrable par famille, fiches produit avec guide des tailles, pièces associées et bouton d’achat toujours accessible sur mobile.</p></li>
+          <li><h3>Panier et paiement</h3><p>Panier latéral, seuil de livraison offerte, paiement par carte via Shopify ou Stripe. Vous gardez vos comptes et votre argent.</p></li>
+          <li><h3>Retrait en boutique</h3><p>Le client réserve en ligne et passe essayer. Le site amène du monde en boutique au lieu de lui en prendre.</p></li>
+          <li><h3>Photos de vos pièces</h3><p>Vous photographiez vos vêtements sur cintre avec un téléphone. Nous les détourons et les éclairons pour le portant. Coupe, couleur et matière restent les vôtres.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 4. Écrans -->
+    <section class="screens" aria-labelledby="screens-t">
+      <div class="wrap">
+        <div class="head head--row">
+          <h2 id="screens-t">Sur ordinateur et sur téléphone.</h2>
+          <p>Dans la mode, la plupart des visites arrivent depuis un téléphone. Chaque écran est pensé pour le pouce d’abord.</p>
+        </div>
+        <div class="shots">
+          <figure class="shot shot--wide"><img src="./media/demo/apercu.jpg" alt="Aperçu rapide : le gilet Colombe rouge seul au centre, avec ses tailles et le bouton Ajouter au panier." width="1440" height="900" loading="lazy"><figcaption>L’aperçu rapide</figcaption></figure>
+          <figure class="shot shot--phone"><img src="./media/demo/mobile.jpg" alt="Le portant sur téléphone : une pièce au centre, tournée vers l’écran." width="780" height="1328" loading="lazy"><figcaption>Le portant sur téléphone</figcaption></figure>
+          <figure class="shot shot--wide"><img src="./media/demo/grille.jpg" alt="La grille de la boutique avec les filtres Hauts, Mailles et Vestes." width="1440" height="900" loading="lazy"><figcaption>Toute la boutique</figcaption></figure>
+          <figure class="shot shot--wide"><img src="./media/demo/panier.jpg" alt="Le panier latéral avec la jauge de livraison offerte." width="1440" height="900" loading="lazy"><figcaption>Le panier</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Méthode -->
+    <section class="methode" id="methode" aria-labelledby="methode-t">
+      <div class="wrap">
+        <div class="head">
+          <p class="kicker">Méthode</p>
+          <h2 id="methode-t">Quatorze jours, quatre étapes.</h2>
+        </div>
+        <ol class="steps" role="list">
+          <li><span class="steps__d">Jour 1</span><h3>Un appel de 20 minutes</h3><p>Votre univers, vos pièces, ce que vous vendez déjà en ligne. Vous recevez un devis ferme le jour même.</p></li>
+          <li><span class="steps__d">Jours 2 à 4</span><h3>Vos photos</h3><p>Vous suivez notre fiche&nbsp;: un cintre, un mur clair, un téléphone. Ou nous passons en boutique, en option.</p></li>
+          <li><span class="steps__d">Jours 5 à 11</span><h3>La construction</h3><p>Portant, fiches, panier, paiement. Vous suivez l’avancement sur une adresse de test et nous faites vos retours.</p></li>
+          <li><span class="steps__d">Jours 12 à 14</span><h3>La mise en ligne</h3><p>Branchement de votre nom de domaine, tests de commande, et 30 minutes pour vous apprendre à ajouter une pièce.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 6. Tarifs -->
+    <section class="tarifs" id="tarifs" aria-labelledby="tarifs-t">
+      <div class="wrap">
+        <div class="head">
+          <p class="kicker">Tarifs</p>
+          <h2 id="tarifs-t">Trois formules, un prix connu d’avance.</h2>
+          <p class="head__txt">50&nbsp;% à la commande, le reste à la mise en ligne. Le site vous appartient.</p>
+        </div>
+        <div class="plans">
+          <article class="plan">
+            <h3>Portant</h3>
+            <p class="plan__price"><b>1&nbsp;490&nbsp;€</b></p>
+            <p class="plan__for">Vous avez déjà une boutique Shopify ou un compte Instagram qui vend.</p>
+            <ul>
+              <li>Page d’accueil portant, jusqu’à 12 pièces</li>
+              <li>Aperçu rapide, devant et dos</li>
+              <li>Renvoi vers vos fiches existantes</li>
+              <li>Détourage de 12 pièces</li>
+            </ul>
+            <a class="btn btn--line" href="#contact" data-plan="Portant (1 490 €)">Choisir Portant</a>
+          </article>
+          <article class="plan plan--hot">
+            <h3>Boutique <span class="tag">Le plus choisi</span></h3>
+            <p class="plan__price"><b>2&nbsp;490&nbsp;€</b></p>
+            <p class="plan__for">Le site complet, prêt à vendre, comme la démo.</p>
+            <ul>
+              <li>Portant, grille, fiches produit, panier</li>
+              <li>Paiement Shopify ou Stripe</li>
+              <li>Retrait en boutique et livraison</li>
+              <li>Détourage de 40 pièces</li>
+            </ul>
+            <a class="btn btn--red" href="#contact" data-plan="Boutique (2 490 €)">Choisir Boutique</a>
+          </article>
+          <article class="plan">
+            <h3>Maison</h3>
+            <p class="plan__price"><small>à partir de</small> <b>4&nbsp;500&nbsp;€</b></p>
+            <p class="plan__for">Plusieurs collections, un lookbook, plusieurs langues.</p>
+            <ul>
+              <li>Tout Boutique, plus un lookbook</li>
+              <li>Portant par collection ou par saison</li>
+              <li>Site en français et en anglais</li>
+              <li>Détourage de 100 pièces</li>
+            </ul>
+            <a class="btn btn--line" href="#contact" data-plan="Maison (sur devis)">Parler de mon projet</a>
+          </article>
+        </div>
+        <p class="note">En option&nbsp;: pièces supplémentaires à 12&nbsp;€ l’unité, séance photo en boutique à 390&nbsp;€, suivi et mises à jour à 59&nbsp;€ par mois. Hébergement offert la première année.</p>
+      </div>
+    </section>
+
+    <!-- 7. Questions -->
+    <section class="faq" id="questions" aria-labelledby="faq-t">
+      <div class="wrap faq__grid">
+        <h2 id="faq-t">Questions fréquentes</h2>
+        <div class="faq__list">
+          <details><summary>J’ai déjà un site Shopify. Faut-il tout refaire&nbsp;?</summary><p>Non. Avec la formule Portant, nous ajoutons la page portant devant votre boutique actuelle&nbsp;: un clic sur une pièce mène à votre fiche existante. Avec Boutique, nous pouvons garder Shopify pour les stocks et le paiement.</p></details>
+          <details><summary>Je n’ai pas de photos professionnelles.</summary><p>Ce n’est pas nécessaire. Un cintre, un mur clair et un téléphone suffisent&nbsp;: nous envoyons une fiche simple. Nous détourons et rééclairons chaque photo. Nous ne changeons jamais la coupe, la couleur ni la matière d’une pièce.</p></details>
+          <details><summary>Combien de pièces peut-on mettre sur le portant&nbsp;?</summary><p>Entre 8 et 14 se regardent bien sur un écran. Au-delà, le portant défile, ou nous faisons un portant par collection. Le reste de vos pièces est dans la grille de la boutique.</p></details>
+          <details><summary>Est-ce que je peux ajouter des produits moi-même&nbsp;?</summary><p>Oui. Vous ajoutez une pièce depuis Shopify ou depuis un tableau simple, et elle apparaît sur le site. Pour le détourage, vous nous envoyez la photo et elle est en ligne sous 48&nbsp;h.</p></details>
+          <details><summary>Le site est-il rapide sur téléphone&nbsp;?</summary><p>Oui. Pas de 3D lourde&nbsp;: des photos légères et des animations calculées par le navigateur. La démo complète pèse moins d’un mégaoctet de photos.</p></details>
+          <details><summary>Et le nom de domaine, l’hébergement, les mentions légales&nbsp;?</summary><p>Nous branchons votre nom de domaine existant ou vous aidons à en choisir un. L’hébergement est offert la première année. Mentions légales, conditions de vente et bandeau cookies sont inclus.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Contact -->
+    <section class="contact" id="contact" aria-labelledby="contact-t">
+      <div class="wrap contact__grid">
+        <div>
+          <p class="kicker">Contact</p>
+          <h2 id="contact-t">Parlez-nous de votre boutique.</h2>
+          <p class="contact__txt">Réponse sous 24&nbsp;h ouvrées, avec un devis ferme. Si vous nous envoyez trois photos de vos pièces, nous vous renvoyons votre propre portant en aperçu, gratuitement.</p>
+          <p class="contact__mail">Ou écrivez-nous à <a href="mailto:contact@estalia-studio.com">contact@estalia-studio.com</a></p>
+        </div>
+        <form class="form" novalidate>
+          <input type="hidden" name="formule" id="f-formule">
+          <p class="form__picked" data-picked hidden></p>
+          <div class="field"><label for="f-nom">Votre nom</label><input id="f-nom" name="nom" autocomplete="name" required><p class="err" id="f-nom-err"></p></div>
+          <div class="field"><label for="f-boutique">Nom de la boutique</label><input id="f-boutique" name="boutique" autocomplete="organization"></div>
+          <div class="field"><label for="f-email">E-mail</label><input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" required><p class="err" id="f-email-err"></p></div>
+          <div class="field"><label for="f-tel">Téléphone <span class="opt">(facultatif)</span></label><input id="f-tel" name="telephone" type="tel" autocomplete="tel" inputmode="tel"></div>
+          <div class="field"><label for="f-site">Site ou Instagram actuel <span class="opt">(facultatif)</span></label><input id="f-site" name="site" inputmode="url" placeholder="instagram.com/votre-boutique"></div>
+          <div class="field"><label for="f-pieces">Nombre de pièces à mettre en ligne</label>
+            <select id="f-pieces" name="pieces" required>
+              <option value="">Choisir</option>
+              <option>Moins de 12</option>
+              <option>12 à 40</option>
+              <option>40 à 100</option>
+              <option>Plus de 100</option>
+            </select><p class="err" id="f-pieces-err"></p></div>
+          <div class="field field--full"><label for="f-msg">Votre message <span class="opt">(facultatif)</span></label><textarea id="f-msg" name="message" rows="4" placeholder="Votre boutique, vos délais, ce que vous vendez déjà en ligne…"></textarea></div>
+          <label class="check field--full"><input type="checkbox" name="consentement" required> <span>J’accepte qu’Estalia Studio utilise ces informations pour me répondre.</span></label>
+          <p class="err field--full" id="f-consent-err"></p>
+          <div class="field--full form__end"><button class="btn btn--red" type="submit">Envoyer ma demande</button><p class="status" aria-live="polite"></p></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__grid">
+      <p class="brand">estalia<span>studio</span></p>
+      <p>Sites portant pour boutiques de mode. Vidéos et photos produits.</p>
+      <p><a href="mailto:contact@estalia-studio.com">contact@estalia-studio.com</a></p>
+    </div>
+  </footer>
+
+  <a class="sticky-cta btn btn--red" href="./demo/">Essayer la démo <span aria-hidden="true">↗</span></a>
+</body>
+</html>
