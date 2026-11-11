@@ -9,9 +9,11 @@
     "preview": "vite preview --host"
   },
   "dependencies": {
-    "@fontsource-variable/schibsted-grotesk": "^5.3.0",
     "@fontsource-variable/inter-tight": "^5.2.0",
-    "@fontsource/ibm-plex-mono": "^5.3.0"
+    "@fontsource-variable/schibsted-grotesk": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@supabase/supabase-js": "^2.49.4",
+    "onnxruntime-web": "^1.22.0"
   },
   "devDependencies": {
     "vite": "^8.3.5"

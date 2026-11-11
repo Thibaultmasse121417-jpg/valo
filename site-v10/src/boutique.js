@@ -1,10 +1,18 @@
 /* Boutique de démonstration « Alba » : le portant, l’aperçu rapide, la grille et le panier. */
 import '@fontsource-variable/inter-tight'
 import './boutique.css'
-import { PIECES, TAILLES, LIVRAISON_OFFERTE, euros } from './catalogue.js'
+import { TAILLES, LIVRAISON_OFFERTE, euros } from './catalogue.js'
+import { piecesDuPortant } from './donnees.js'
+
+// Les pièces viennent de l'Atelier (ajoutées par la boutique), dans l'ordre choisi.
+const PIECES = await piecesDuPortant()
+// Le portant montre les premières pièces (l'ordre se règle dans l'Atelier), la grille montre tout.
+const MAX_PORTANT = 12 // même valeur que dans atelier.js
+const SUR_PORTANT = PIECES.slice(0, MAX_PORTANT)
 
 const $ = (s, c = document) => c.querySelector(s)
 const $$ = (s, c = document) => [...c.querySelectorAll(s)]
+const esc = (t) => String(t ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
 const touch = matchMedia('(hover: none), (pointer: coarse)')
 const narrow = matchMedia('(max-width: 720px)')
@@ -19,18 +27,21 @@ const store = {
 const list = $('[data-rail-list]')
 const rail = $('[data-rail]')
 
-list.innerHTML = PIECES.map((p, i) => `
+list.innerHTML = SUR_PORTANT.map((p, i) => `
   <li class="piece" style="--i:${i}">
-    <button type="button" class="piece__btn" data-i="${i}" aria-label="${p.nom}, ${euros(p.prix)}. Ouvrir l’aperçu">
-      <span class="piece__swing"><img src="${p.couleurs[0].face}" alt="" width="660" height="876" draggable="false" ${i > 5 ? 'loading="lazy"' : ''}></span>
+    <button type="button" class="piece__btn" data-i="${i}" aria-label="${esc(p.nom)}, ${euros(p.prix)}. Ouvrir l’aperçu">
+      <span class="piece__swing"><img src="${esc(p.couleurs[0].face)}" alt="" width="660" height="876" draggable="false" ${i > 5 ? 'loading="lazy"' : ''}></span>
     </button>
-    <span class="piece__tag" aria-hidden="true">${p.nom.split(',')[0]} · ${euros(p.prix)}</span>
+    <span class="piece__tag" aria-hidden="true">${esc(p.nom.split(',')[0])} · ${euros(p.prix)}</span>
   </li>`).join('')
 
 const pieces = $$('.piece', list).map((el, i) => ({
   el, i, btn: $('.piece__btn', el), swing: $('.piece__swing', el),
   a: 0, v: 0, t: 0, push: 0, phase: Math.random() * Math.PI * 2
 }))
+
+const majLong = () => $('.rail-zone').classList.toggle('is-long', list.scrollWidth > list.clientWidth + 2)
+majLong(); addEventListener('resize', majLong)
 
 let hovered = -1
 let centred = -1
@@ -158,10 +169,10 @@ const grid = $('[data-grid]')
 grid.innerHTML = PIECES.map((p, i) => `
   <li class="card" data-fam="${p.famille}">
     <button type="button" class="card__btn" data-i="${i}">
-      <span class="card__img"><img src="${p.couleurs[0].face}" alt="" width="660" height="876" loading="lazy"></span>
+      <span class="card__img"><img src="${esc(p.couleurs[0].face)}" alt="" width="660" height="876" loading="lazy"></span>
       ${p.nouveau ? '<span class="card__new">Nouveau</span>' : ''}
-      <span class="card__name">${p.nom}</span>
-      <span class="card__meta"><span>${euros(p.prix)}</span><span class="dots">${p.couleurs.map((c) => `<i style="--c:${c.hex}" title="${c.nom}"></i>`).join('')}</span></span>
+      <span class="card__name">${esc(p.nom)}</span>
+      <span class="card__meta"><span>${euros(p.prix)}</span><span class="dots">${p.couleurs.map((c) => `<i style="--c:${esc(c.hex)}" title="${esc(c.nom)}"></i>`).join('')}</span></span>
     </button>
   </li>`).join('')
 grid.addEventListener('click', (e) => {
@@ -191,9 +202,9 @@ function paintQV (swap) {
   views.hidden = !col.dos
   for (const b of $$('button', views)) { const on = b.dataset.view === sel.view; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', String(on)) }
   $('[data-qv-colors]').innerHTML = p.couleurs.length > 1
-    ? p.couleurs.map((c, k) => `<button type="button" class="sw${k === sel.c ? ' is-on' : ''}" style="--c:${c.hex}" data-c="${k}" aria-pressed="${k === sel.c}" aria-label="${c.nom}"></button>`).join('')
+    ? p.couleurs.map((c, k) => `<button type="button" class="sw${k === sel.c ? ' is-on' : ''}" style="--c:${esc(c.hex)}" data-c="${k}" aria-pressed="${k === sel.c}" aria-label="${esc(c.nom)}"></button>`).join('')
     : ''
-  $('[data-qv-sizes]').innerHTML = TAILLES.map((t) => `<button type="button" class="size${t === sel.size ? ' is-on' : ''}" data-s="${t}" aria-pressed="${t === sel.size}">${t}</button>`).join('')
+  $('[data-qv-sizes]').innerHTML = (p.tailles?.length ? p.tailles : TAILLES).map((t) => `<button type="button" class="size${t === sel.size ? ' is-on' : ''}" data-s="${t}" aria-pressed="${t === sel.size}">${t}</button>`).join('')
   $('[data-qv-err]').textContent = ''
   const src = sel.view === 'dos' && col.dos ? col.dos : col.face
   if (swap && !reduce && qvImg.getAttribute('src') !== src) {
@@ -267,7 +278,7 @@ qv.addEventListener('click', (e) => {
 $('[data-qv-add]').addEventListener('click', () => {
   if (!sel.size) { $('[data-qv-err]').textContent = 'Choisissez une taille.'; $('[data-qv-sizes] button').focus(); return }
   addToCart(PIECES[sel.i].id, sel.c, sel.size)
-  toast(`${PIECES[sel.i].nom.split(',')[0]} ajouté au panier`)
+  toast(`${esc(PIECES[sel.i].nom.split(',')[0])} ajouté au panier`)
 })
 addEventListener('keydown', (e) => {
   if (qvOpen) {
@@ -299,7 +310,7 @@ qv.addEventListener('touchend', (e) => {
 /* ---------- Panier ---------- */
 const cart = $('[data-cart]')
 const veil = $('[data-cart-veil]')
-let items = store.get('alba-panier', [])
+let items = store.get('alba-panier', []).filter((x) => PIECES.some((p) => p.id === x.id))
 let cartOpen = false
 
 function addToCart (id, c, size) {
@@ -325,8 +336,8 @@ function paintCart () {
       const p = PIECES.find((q) => q.id === x.id); if (!p) return ''
       const col = p.couleurs[x.c] ?? p.couleurs[0]
       return `<li class="line">
-        <img src="${col.face}" alt="" width="66" height="88">
-        <div class="line__txt"><p class="line__name">${p.nom}</p><p class="line__meta">${col.nom} · ${x.size}</p>
+        <img src="${esc(col.face)}" alt="" width="66" height="88">
+        <div class="line__txt"><p class="line__name">${esc(p.nom)}</p><p class="line__meta">${esc(col.nom)} · ${esc(x.size)}</p>
           <div class="qty"><button type="button" data-q="${k}" data-d="-1" aria-label="Retirer un">−</button><span>${x.q}</span><button type="button" data-q="${k}" data-d="1" aria-label="Ajouter un">+</button></div></div>
         <div class="line__r"><p>${euros(p.prix * x.q)}</p><button type="button" class="lnk lnk--s" data-rm="${k}">Retirer</button></div>
       </li>`

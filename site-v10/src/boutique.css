@@ -53,8 +53,13 @@ h1, h2, h3 { margin: 0; font-weight: 600; letter-spacing: -0.02em; line-height: 
 .rail__bar i:first-child { left: -6px; }
 .rail__bar i:last-child { right: -6px; }
 
-.rail__list { list-style: none; margin: 0; padding: 0 calc(var(--piece) * 0.2) 0; display: flex; justify-content: center; perspective: 1400px; position: relative; z-index: 1; overflow-x: auto; overflow-y: visible; scrollbar-width: none; cursor: default; }
+.rail__list { list-style: none; margin: 0; padding: 0 calc(var(--piece) * 0.2) 0; display: flex; justify-content: flex-start; perspective: 1400px; position: relative; z-index: 1; overflow-x: auto; overflow-y: visible; scrollbar-width: none; cursor: default; }
 .rail__list::-webkit-scrollbar { display: none; }
+.rail__list > .piece:first-child { margin-inline-start: auto; }
+.rail__list > .piece:last-child { margin-inline-end: auto; }
+.rail-zone.is-long::before, .rail-zone.is-long::after { content: ''; position: absolute; top: 0; bottom: 0; width: clamp(24px, 5vw, 80px); z-index: 3; pointer-events: none; }
+.rail-zone.is-long::before { left: 0; background: linear-gradient(90deg, var(--bg), transparent); }
+.rail-zone.is-long::after { right: 0; background: linear-gradient(-90deg, var(--bg), transparent); }
 .rail__list.is-drag { cursor: grabbing; }
 .rail__list.is-drag .piece__btn { pointer-events: none; }
 

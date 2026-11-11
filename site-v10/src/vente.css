@@ -92,6 +92,22 @@ p { text-wrap: pretty; }
 .feats h3 { font-size: 21px; margin-bottom: 10px; }
 .feats p { margin: 0; color: var(--ink-2); font-size: 16px; }
 
+/* Atelier */
+.atelier { padding: clamp(64px, 9vw, 128px) 0; background: #ebe6dc; border-block: 1px solid var(--line); }
+.atelier__grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
+.atelier h2 { font-size: clamp(30px, 3.8vw, 50px); }
+.atelier__lead { margin: 18px 0 22px; color: var(--ink-2); font-size: 18px; }
+.atelier__steps { margin: 0 0 28px; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 14px; }
+.atelier__steps li { counter-increment: s; position: relative; padding-left: 42px; color: var(--ink-2); font-size: 16px; }
+.atelier__steps li::before { content: counter(s); position: absolute; left: 0; top: -1px; width: 28px; height: 28px; border-radius: 50%; background: var(--ink); color: #fff; font-size: 13.5px; font-weight: 600; display: grid; place-items: center; }
+.atelier__steps b { color: var(--ink); }
+.atelier__phones { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: start; }
+.atelier__phones .phone:nth-child(2) { margin-top: 36px; }
+.atelier__phones .phone:nth-child(3) { margin-top: 72px; }
+.phone { margin: 0; }
+.phone img { width: 100%; border-radius: 22px; border: 6px solid #1b1b1b; background: #f3f1ec; box-shadow: 0 30px 50px -30px rgba(0, 0, 0, .45); }
+.phone figcaption { margin-top: 10px; font-size: 14px; color: var(--ink-2); text-align: center; }
+
 /* Écrans */
 .screens { padding: 0 0 clamp(64px, 9vw, 128px); }
 .shots { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px 18px; align-items: start; }
@@ -175,6 +191,7 @@ p { text-wrap: pretty; }
 /* Adaptations */
 @media (max-width: 1080px) {
   .hero { grid-template-columns: 1fr; }
+  .atelier__grid { grid-template-columns: 1fr; }
   .hero__txt { max-width: 760px; }
   .nav__links { display: none; }
   .feats { grid-template-columns: repeat(2, 1fr); }
@@ -186,7 +203,11 @@ p { text-wrap: pretty; }
   .facts { grid-template-columns: 1fr; gap: 12px; }
   .facts li { display: flex; gap: 10px; align-items: baseline; }
   .facts b { font-size: 17px; flex: none; }
-  .why__grid, .faq__grid, .contact__grid { grid-template-columns: 1fr; }
+  .why__grid, .faq__grid, .contact__grid, .atelier__grid { grid-template-columns: 1fr; }
+  .atelier__phones { gap: 8px; }
+  .atelier__phones .phone:nth-child(n) { margin-top: 0; }
+  .phone img { border-width: 4px; border-radius: 14px; }
+  .phone figcaption { font-size: 12.5px; }
   .feats { grid-template-columns: 1fr; }
   .steps { grid-template-columns: 1fr; }
   .plans { grid-template-columns: 1fr; }

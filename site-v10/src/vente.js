@@ -40,7 +40,7 @@ new IntersectionObserver(([e]) => { atContact = e.isIntersecting; upd() }).obser
 
 // Apparitions discrètes.
 if (!reduce) {
-  const els = $$('.head, .feats li, .steps li, .plan, .shot, .why__grid > *, .faq__grid > *, .contact__grid > *')
+  const els = $$('.head, .feats li, .steps li, .plan, .shot, .phone, .atelier__txt, .why__grid > *, .faq__grid > *, .contact__grid > *')
   els.forEach((el) => el.classList.add('rv'))
   const io = new IntersectionObserver((list) => {
     for (const e of list) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target) }
