@@ -46,8 +46,8 @@ def main():
     css = []
     for st, w, data, rng in faces(G + "family=Inter+Tight:wght@100..900&display=swap"):
         css.append(face_css("Inter Tight", st, w, data, rng))
-    for st, w, data, rng in faces(G + "family=Newsreader:ital,wght@0,200..800;1,200..800&display=swap"):
-        css.append(face_css("Newsreader", st, w, data, rng))
+    for st, w, data, rng in faces(G + "family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&display=swap"):
+        css.append(face_css("Fraunces", st, w, data, rng))
     out = src.replace("/*@FONTS@*/", "\n".join(css))
     (HERE / "index.html").write_text(out, encoding="utf-8")
     print(f"wrote index.html ({len(out)/1024:.0f} KB, {len(css)} faces)")
