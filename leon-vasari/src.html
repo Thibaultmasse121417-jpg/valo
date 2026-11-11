@@ -1,0 +1,834 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Vasari Library</title>
+<meta name="description" content="The Vasari Library: twelve books from the stacks, 1958–1989, on a curved shelf.">
+<style>
+/*@FONTS@*/
+
+:root{
+  --paper:#ECE8E0; --sheet:#F3F0EA; --ink:#141414; --muted:#6D6A63; --cobalt:#1F3FB0; --rule:rgba(20,20,20,.9);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --H:min(47vh,33vw);
+  --cy:41%;
+  --sans:"Inter Tight","Noto Sans JP",system-ui,sans-serif;
+  --serif:"Newsreader",Georgia,serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  background:var(--paper);color:var(--ink);font-family:var(--sans);
+  overflow:hidden;user-select:none;-webkit-user-select:none;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  -webkit-tap-highlight-color:transparent;
+}
+@media (pointer:fine){ *,*::before,*::after{cursor:none!important} }
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0}
+button:focus-visible,a:focus-visible{outline:1px dashed var(--cobalt);outline-offset:4px}
+
+.lbl{font-family:var(--sans);font-weight:600;font-size:10.5px;line-height:1;letter-spacing:.14em;text-transform:uppercase}
+.box{display:inline-flex;align-items:center;height:21px;padding:0 8px;border:1px solid var(--rule)}
+
+/* paper grain */
+.grain{
+  position:fixed;inset:0;z-index:40;pointer-events:none;mix-blend-mode:multiply;opacity:.6;
+  background-size:220px 220px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .42 0 0 0 0 .38 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* top bar */
+.top{position:fixed;left:0;right:0;top:0;height:76px;padding:0 36px;display:flex;align-items:center;justify-content:space-between;color:var(--cobalt);z-index:30}
+.brand{display:flex;align-items:center;gap:16px;color:var(--cobalt)}
+.brand .ln{display:block;width:40px;height:1px;background:currentColor}
+.nav{display:flex;align-items:center;gap:34px}
+.burger{width:26px;height:12px;position:relative;display:block}
+.burger i{position:absolute;left:0;right:0;height:1.5px;background:var(--cobalt)}
+.burger i:first-child{top:0}.burger i:last-child{bottom:0}
+
+/* halftone kanji */
+.kanji{
+  position:fixed;z-index:1;pointer-events:none;writing-mode:vertical-rl;
+  font-family:"Noto Sans JP Big","Noto Sans JP",sans-serif;font-weight:800;
+  font-size:min(19vh,12.5vw);line-height:1.02;letter-spacing:.02em;
+  color:transparent;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(64,82,138,.55) 0 36%,transparent 40%) 0 0/3px 3px,
+    linear-gradient(rgba(110,122,160,.26),rgba(110,122,160,.26));
+  -webkit-background-clip:text;background-clip:text;
+}
+.kanji.kl{left:2.4vw;top:13vh}
+.kanji.kr{right:2.4vw;top:9vh}
+
+/* floor shadow */
+.floor{
+  position:fixed;left:50%;top:calc(var(--cy) + var(--H)*.47);z-index:2;pointer-events:none;
+  width:min(96vw,calc(var(--H)*3.6));height:calc(var(--H)*.26);transform:translate(-50%,-50%);
+  background:radial-gradient(50% 50% at 50% 40%,rgba(40,32,20,.30),rgba(40,32,20,.10) 55%,transparent 72%);
+}
+
+/* shelf */
+.shelf{
+  position:fixed;left:0;right:0;top:calc(var(--cy) - var(--H)/2 - 50px);height:calc(var(--H) + 100px);
+  perspective:1400px;perspective-origin:50% 50%;z-index:10;touch-action:pan-y;
+}
+.stage{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d}
+.book{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d;will-change:transform}
+/* books stand on the shelf line (H/2) and vary in height (--bh) */
+.face{
+  position:absolute;height:calc(var(--hp)*var(--bh));top:calc(var(--hp)/2 - var(--hp)*var(--bh));
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+}
+.face>svg{display:block;width:100%;height:100%;pointer-events:none}
+.face::before{content:"";position:absolute;inset:0;pointer-events:none}
+.face::after{content:"";position:absolute;inset:0;border-radius:inherit;background:#000;opacity:var(--shade,0);pointer-events:none}
+.sp{width:var(--ws);left:calc(var(--ws)/-2);transform:translateZ(calc(var(--d)/2));border-radius:3px}
+/* rounded cloth spine */
+.sp::before{background:linear-gradient(90deg,rgba(0,0,0,.30),rgba(0,0,0,.06) 14%,rgba(255,255,255,.16) 34%,rgba(255,255,255,0) 58%,rgba(0,0,0,.10) 82%,rgba(0,0,0,.32))}
+.cv{width:var(--d);left:calc(var(--d)/-2);transform:rotateY(90deg) translateZ(calc(var(--ws)/2));border-radius:1px 3px 3px 1px;box-shadow:0 34px 60px -30px rgba(20,16,10,.6)}
+/* hinge groove + light falloff across the board */
+.cv::before{background:linear-gradient(90deg,rgba(0,0,0,.32) 0,rgba(0,0,0,.10) 2.2%,rgba(255,255,255,.14) 3.4%,rgba(0,0,0,.08) 4.6%,rgba(255,255,255,0) 14%,rgba(255,255,255,0) 86%,rgba(0,0,0,.10))}
+#probe{position:fixed;left:0;top:0;width:0;height:var(--H);visibility:hidden;pointer-events:none}
+
+/* play ring */
+.play{
+  position:fixed;left:0;top:0;width:42px;height:42px;margin:-21px 0 0 -21px;border-radius:50%;
+  border:1px solid var(--cobalt);background:rgba(236,232,224,.8);z-index:12;pointer-events:none;
+  display:grid;place-items:center;transform:scale(0);
+}
+.play svg{width:14px;height:12px;display:block}
+
+/* caption */
+.cap{
+  position:fixed;left:0;right:0;top:calc(var(--cy) + var(--H)/2 + 4.2vh);z-index:20;
+  display:grid;justify-items:center;row-gap:10px;pointer-events:none;
+  --ts:clamp(28px,3.4vw,46px);
+}
+.m{display:grid;overflow:hidden;width:min(80vw,640px);text-align:center}
+.m>span{grid-area:1/1;display:block;will-change:transform}
+.m-title{font-weight:600;font-size:var(--ts);line-height:1.12;letter-spacing:-.015em;color:var(--cobalt);padding:.02em 0 .06em}
+.m-sub{font-size:9.5px;letter-spacing:.24em;color:var(--cobalt);padding:1px 0}
+.cap .rule{display:block;width:18px;height:1px;background:var(--cobalt)}
+.m-year{font-weight:500;font-size:10.5px;line-height:1.1;letter-spacing:.08em;color:var(--ink);text-transform:uppercase}
+.arr{
+  position:absolute;top:calc(var(--ts)*1.12/2);width:44px;height:44px;margin:-22px 0 0 -22px;
+  display:grid;place-items:center;color:var(--cobalt);pointer-events:auto;
+}
+.arr svg{width:24px;height:12px;display:block;overflow:visible}
+.arr.prev{left:calc(50% - min(19vw,250px))}
+.arr.next{left:calc(50% + min(19vw,250px))}
+
+/* timeline */
+.tl{position:fixed;left:36px;right:36px;bottom:64px;height:40px;z-index:20;color:var(--cobalt)}
+.tl-line{position:absolute;left:0;right:0;top:12px;height:1px;background:var(--cobalt);opacity:.75}
+.tk{position:absolute;top:12px;width:1px;background:var(--cobalt)}
+.tk.mj{height:13px;opacity:.75}
+.tk.mn{height:7px;opacity:.4}
+.ty{position:absolute;top:29px;font-weight:500;font-size:9.5px;line-height:1;letter-spacing:.06em;color:var(--cobalt);transform:translateX(-50%);white-space:nowrap}
+.ty.first{transform:none}
+.ty.last{transform:translateX(-100%)}
+.tl-dot{position:absolute;top:12.5px;left:0;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;border-radius:50%;background:var(--cobalt)}
+.tl-hit{position:absolute;left:-6px;right:-6px;top:0;bottom:0}
+
+/* footer */
+.foot{position:fixed;left:36px;right:36px;bottom:24px;display:flex;justify-content:space-between;color:var(--cobalt);z-index:20}
+.foot .soc{display:flex;gap:6px}
+
+/* cursor */
+.cur{position:fixed;left:0;top:0;width:58px;height:58px;margin:-29px 0 0 -29px;z-index:100;pointer-events:none;display:none}
+@media (pointer:fine){.cur.on{display:block}}
+.cur-ring{position:absolute;inset:0;border:1.5px solid var(--ink);border-radius:50%;
+  transition:transform .5s var(--ease),background-color .4s var(--ease),border-color .4s var(--ease)}
+.cur-dot{position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:var(--ink);transition:transform .4s var(--ease)}
+.cur-lbl{position:absolute;inset:0;display:grid;place-content:center;text-align:center;color:#fff;
+  font-weight:600;font-size:10px;line-height:1.25;letter-spacing:.12em;transform:scale(0);transition:transform .45s var(--ease)}
+.cur.spine .cur-ring{transform:scale(.72)}
+.cur.btn .cur-ring{transform:scale(.55)}
+.cur.btn .cur-dot{transform:scale(0)}
+.cur.open .cur-ring{transform:scale(1.75);background:var(--cobalt);border-color:var(--cobalt)}
+.cur.open .cur-dot{transform:scale(0)}
+.cur.open .cur-lbl{transform:scale(1)}
+
+/* detail sheet */
+.detail{
+  position:fixed;inset:0;z-index:60;background:var(--sheet);display:none;
+  grid-template-columns:1fr 1fr;grid-template-rows:minmax(0,1fr);column-gap:4vw;
+  padding:110px 6vw 56px 7vw;
+}
+.detail.on{display:grid}
+.d-close{position:absolute;left:36px;top:28px;color:var(--ink)}
+.d-brand{position:absolute;right:36px;top:28px;height:21px;display:flex;align-items:center;gap:16px;color:var(--cobalt)}
+.d-brand .ln{display:block;width:40px;height:1px;background:currentColor}
+.d-left{align-self:center;justify-self:end;width:100%;max-width:520px;display:grid;row-gap:18px}
+.dm{overflow:hidden}
+.dm>*{display:block;will-change:transform}
+.d-sub{color:var(--cobalt);font-size:9.5px;letter-spacing:.24em;padding:1px 0}
+.d-title{margin:0;font-weight:600;font-size:clamp(44px,5.2vw,80px);line-height:1.02;letter-spacing:-.03em;color:var(--cobalt);padding-bottom:.04em}
+.d-meta{font-weight:500;font-size:11px;line-height:1.2;letter-spacing:.08em;color:var(--muted)}
+.d-syn{margin:0;font-family:var(--serif);font-weight:400;font-size:17px;line-height:1.5;max-width:42ch;color:var(--ink)}
+.d-credit{margin:0;font-family:var(--serif);font-style:italic;font-size:15px;line-height:1.4;color:var(--muted)}
+.d-credit span{font-family:"Noto Sans JP",sans-serif;font-style:normal;font-weight:500;font-size:12px;margin-left:6px}
+.watch{display:inline-flex;align-items:center;justify-self:start;height:44px;padding:0 20px;border:1px solid var(--cobalt);color:var(--cobalt)}
+.d-right{display:flex;align-items:center;justify-content:flex-start;min-height:0;height:100%}
+.d-right svg{display:block;height:min(100%,78vh);width:auto;max-width:100%;filter:drop-shadow(0 30px 40px rgba(20,16,10,.18))}
+
+/* phones */
+@media (max-width:767px){
+  :root{--H:min(68vw,40svh);--cy:43%}
+  .top{height:60px;padding:0 16px}
+  .brand .ln{width:22px}
+  .nav>a{display:none}
+  .kanji{font-size:22vw;opacity:.8}
+  .cap{--ts:27px}
+  .arr{position:fixed;top:auto;bottom:118px;margin:0}
+  .arr.prev{left:6px}
+  .arr.next{left:auto;right:6px}
+  .tl{left:16px;right:16px;bottom:54px}
+  .ty.odd{display:none}
+  .foot{left:16px;right:16px}
+  .detail{display:none;grid-template-columns:1fr;grid-template-rows:auto auto;padding:76px 16px 40px;overflow-y:auto;overscroll-behavior:contain;row-gap:28px}
+  .detail.on{display:grid}
+  .d-close{left:16px;top:20px}
+  .d-brand{display:none}
+  .d-brand .ln{width:22px}
+  .d-right{order:-1;height:auto;justify-content:center}
+  .d-right svg{height:46svh}
+  .d-left{justify-self:stretch;max-width:none}
+  .d-title{font-size:42px}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand"><a class="lbl" href="#">The Vasari Library</a><i class="ln"></i><span class="lbl">Reading Room</span></div>
+  <nav class="nav">
+    <a class="lbl" href="#">Catalogue</a>
+    <a class="lbl" href="#">Visit</a>
+    <a class="lbl" href="#">Journal</a>
+    <button class="burger" aria-label="Menu"><i></i><i></i></button>
+  </nav>
+</header>
+
+<div class="kanji kl" aria-hidden="true">書庫</div>
+<div class="kanji kr" aria-hidden="true">の記憶</div>
+<div class="floor" aria-hidden="true"></div>
+
+<section class="shelf" id="shelf" aria-label="Book shelf">
+  <div class="stage" id="stage"></div>
+</section>
+<div id="probe"></div>
+
+<div class="play" id="play" aria-hidden="true"><svg viewBox="0 0 14 12" fill="none" stroke="#1F3FB0" stroke-width="1.2"><path d="M7 2.2C5.4 1 3 .8 1 1.2v9.4c2-.4 4.4-.2 6 1 1.6-1.2 4-1.4 6-1V1.2C11 .8 8.6 1 7 2.2zM7 2.2v9.4"/></svg></div>
+
+<div class="cap" id="cap" aria-live="polite">
+  <div class="m m-title" id="cTitle"></div>
+  <div class="m m-sub lbl" id="cSub"></div>
+  <i class="rule"></i>
+  <div class="m m-year" id="cYear"></div>
+  <button class="arr prev" id="prev" aria-label="Previous book"><svg viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 1L1 6l5 5M1 6h23"/></svg></button>
+  <button class="arr next" id="next" aria-label="Next book"><svg viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 1l5 5-5 5M23 6H0"/></svg></button>
+</div>
+
+<div class="tl" id="tl">
+  <i class="tl-line"></i>
+  <div id="ticks"></div>
+  <i class="tl-dot" id="dot"></i>
+  <div class="tl-hit" id="tlhit" aria-label="Publication years 1955–1990"></div>
+</div>
+
+<footer class="foot">
+  <span class="lbl">© The Vasari Library. All rights reserved.</span>
+  <span class="lbl soc"><a href="#">FB</a>/<a href="#">TW</a></span>
+</footer>
+
+<section class="detail" id="detail" aria-hidden="true" aria-label="Book detail">
+  <button class="d-close lbl box" id="close">Close / 閉じる</button>
+  <div class="d-brand"><span class="lbl">The Vasari Library</span><i class="ln"></i><span class="lbl">Reading Room</span></div>
+  <div class="d-left">
+    <div class="dm"><span class="lbl d-sub" id="dSub"></span></div>
+    <div class="dm"><h2 class="d-title" id="dTitle"></h2></div>
+    <div class="dm"><span class="d-meta" id="dMeta"></span></div>
+    <div class="dm"><p class="d-syn" id="dSyn"></p></div>
+    <div class="dm"><p class="d-credit"><em id="dCredit"></em><span>著</span></p></div>
+    <div class="dm"><button class="watch lbl">Borrow this book / 本を借りる</button></div>
+  </div>
+  <div class="d-right">
+    <svg id="pSvg" viewBox="0 0 474 711" aria-hidden="true">
+      <defs>
+        <clipPath id="pClip"><rect id="pClipRect" width="474" height="711" rx="3"/></clipPath>
+        <filter id="pInk" filterUnits="userSpaceOnUse" x="-300" y="-300" width="1074" height="1500">
+          <feTurbulence type="fractalNoise" baseFrequency=".011" numOctaves="3" seed="7" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="120" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+        <mask id="pMask" maskUnits="userSpaceOnUse" x="0" y="0" width="474" height="1000">
+          <g filter="url(#pInk)" fill="#fff" id="pBlots">
+            <circle cx="150" cy="330" r="0" data-d="0"/>
+            <circle cx="340" cy="600" r="0" data-d="120"/>
+            <circle cx="250" cy="120" r="0" data-d="220"/>
+            <circle cx="90"  cy="760" r="0" data-d="300"/>
+            <circle cx="400" cy="250" r="0" data-d="360"/>
+            <circle cx="260" cy="860" r="0" data-d="420"/>
+            <circle cx="230" cy="470" r="0" data-d="180"/>
+          </g>
+        </mask>
+      </defs>
+      <g clip-path="url(#pClip)">
+        <g id="pArt" mask="url(#pMask)"></g>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cur" id="cur" aria-hidden="true">
+  <i class="cur-ring"></i><i class="cur-dot"></i>
+  <span class="cur-lbl">READ<br>読む</span>
+</div>
+
+<script>
+(() => {
+"use strict";
+
+/* ---------- palette (screen-print inks) ---------- */
+const C = {
+  ink:"#141414", cobalt:"#1F3FB0", red:"#D4472A", cream:"#EEE5D1", sand:"#E4D7BC",
+  ochre:"#C8952F", green:"#2E6A4E", sky:"#9DB3DA", slate:"#3B4658", rose:"#D9A08F", paper:"#F2ECDF",
+};
+
+/* ---------- books (shelf order; the page opens on index 5) ---------- */
+const BOOKS = [
+  {id:"valley",  title:"The Silent Valley",  author:"Mara Ellison",  romaji:"SHIZUKANA TANI",  kanji:"静かな谷",   year:1958, genre:"Novel",    pages:304, h:.94, bg:C.cream, fg:C.ink,   ac:C.green, motif:"valley",
+   syn:"A schoolteacher returns to the mountain village that exiled her father, and finds the valley has kept every one of its secrets."},
+  {id:"bluehour",title:"The Blue Hour",      author:"Jun Okabe",     romaji:"AO NO TOKI",      kanji:"青の刻",     year:1962, genre:"Romance",  pages:212, h:.88, bg:C.cobalt,fg:C.cream, ac:C.sky,   motif:"bluehour",
+   syn:"Over one long evening in a harbour town, a widow and a stranger trade small lies until the light runs out."},
+  {id:"river",   title:"River of Salt",      author:"Tomas Halde",   romaji:"SHIO NO KAWA",    kanji:"塩の川",     year:1964, genre:"Novel",    pages:356, h:1,   bg:C.sand,  fg:C.slate, ac:C.cobalt,motif:"river",
+   syn:"Two brothers drag a salt barge downriver to a city that no longer wants anything they carry."},
+  {id:"summer",  title:"The Last Summer",    author:"Ines Valcourt", romaji:"SAIGO NO NATSU",  kanji:"最後の夏",   year:1966, genre:"Novel",    pages:248, h:.91, bg:C.ochre, fg:C.ink,   ac:C.red,   motif:"summer",
+   syn:"The summer before the dam floods their village, three friends set fire to everything they cannot take with them."},
+  {id:"green",   title:"The Green Road",     author:"Edda Marlow",   romaji:"MIDORI NO MICHI", kanji:"緑の道",     year:1969, genre:"Mystery",  pages:276, h:.97, bg:C.green, fg:C.cream, ac:C.ochre, motif:"green",
+   syn:"A surveyor mapping a forest road keeps finding the same footprints, always one day ahead of him."},
+  {id:"noon",    title:"Noon in Ashes",      author:"Rafael Ostin",  romaji:"HAI NO SHOGO",    kanji:"灰の正午",   year:1971, genre:"Western",  pages:288, h:1,   bg:C.cream, fg:C.ink,   ac:C.red,   motif:"noon",
+   syn:"A rider crosses a white desert to settle an old debt, and learns too late who sent him."},
+  {id:"observer",title:"The Observer",       author:"Kei Morimoto",  romaji:"KANSATSUSHA",     kanji:"観察者",     year:1973, genre:"Thriller", pages:196, h:.89, bg:C.ink,   fg:C.cream, ac:C.red,   motif:"observer",
+   syn:"A night watchman begins to suspect that the building he guards has started watching him back."},
+  {id:"birds",   title:"The Fallen Birds",   author:"Ada Brennick",  romaji:"OCHITA TORI",     kanji:"落ちた鳥",   year:1975, genre:"Novel",    pages:332, h:.95, bg:C.sky,   fg:C.ink,   ac:C.cobalt,motif:"birds",
+   syn:"When the birds stop singing over a frontier town, the mayor’s daughter is the only one who goes looking for the reason."},
+  {id:"storm",   title:"Light in the Storm", author:"Owen Callery",  romaji:"ARASHI NO HI",    kanji:"嵐の灯",     year:1978, genre:"Novel",    pages:384, h:.99, bg:C.slate, fg:C.cream, ac:C.ochre, motif:"storm",
+   syn:"A lighthouse keeper and his son wait out a three-day storm with a shipwrecked sailor who will not give his name."},
+  {id:"tide",    title:"The Long Tide",      author:"Sora Inoue",    romaji:"NAGAI SHIO",      kanji:"長い潮",     year:1981, genre:"Poetry",   pages:168, h:.86, bg:C.paper, fg:C.cobalt,ac:C.cobalt,motif:"tide",
+   syn:"A fisherman’s wife counts the tides on the harbour wall while her husband’s boat fails to come home."},
+  {id:"war",     title:"A Quiet War",        author:"Felix Arden",   romaji:"SHIZUKANA SENSO", kanji:"静かな戦争", year:1985, genre:"Comedy",   pages:240, h:.93, bg:C.red,   fg:C.cream, ac:C.ink,   motif:"war",
+   syn:"Two neighbours fight a silent war over a garden wall for thirty years, and neither will say how it began."},
+  {id:"door",    title:"Red Door",           author:"Leon Vasari",   romaji:"AKAI TOBIRA",     kanji:"赤い扉",     year:1989, genre:"Thriller", pages:264, h:.96, bg:C.rose,  fg:C.ink,   ac:C.red,   motif:"door",
+   syn:"A projectionist follows a reel of unknown film through the corridors of a cinema on its final night."},
+];
+const GENRE_CODE = { Novel:"FIC", Romance:"ROM", Mystery:"MYS", Western:"WES", Thriller:"THR", Poetry:"POE", Comedy:"HUM" };
+BOOKS.forEach((b, i) => {
+  const sur = b.author.split(" ").pop();
+  b.call = [GENRE_CODE[b.genre], sur.slice(0, 3).toUpperCase(), String(b.year)];
+  b.no = String(i + 1).padStart(2, "0");
+});
+const N = BOOKS.length, COPIES = 3, TOTAL = N * COPIES, START = 5 + N;
+
+/* ---------- book art (inline SVG, drawn from data) ---------- */
+const SVGNS = "http://www.w3.org/2000/svg";
+const f2 = (n) => +n.toFixed(1);
+
+function wrap(t, max) {
+  const out = []; let line = "";
+  for (const w of t.split(" ")) {
+    if (line && (line + " " + w).length > max) { out.push(line); line = w; }
+    else line = line ? line + " " + w : w;
+  }
+  out.push(line); return out;
+}
+
+/* motif drawn into box (x, y, w, h) */
+function motif(b, x, y, w, h) {
+  const X = (u) => f2(x + u * w), Y = (v) => f2(y + v * h);
+  const poly = (pts, fill, ex = "") => `<path d="M${pts.map(([u, v]) => X(u) + " " + Y(v)).join("L")}Z" fill="${fill}" ${ex}/>`;
+  const circ = (u, v, r, fill, ex = "") => `<circle cx="${X(u)}" cy="${Y(v)}" r="${f2(r * Math.min(w, h))}" fill="${fill}" ${ex}/>`;
+  const mul = 'style="mix-blend-mode:multiply"';
+  const { fg, ac, bg } = b;
+  let s = "";
+  switch (b.motif) {
+    case "valley":
+      s += circ(.72, .22, .12, C.red, mul);
+      s += poly([[0, 1], [.28, .3], [.5, .66], [.72, .4], [1, .82], [1, 1]], ac, 'opacity=".55"');
+      s += poly([[0, 1], [0, .62], [.22, .5], [.46, .86], [.66, .62], [1, 1]], ac);
+      s += poly([[0, 1], [.18, .8], [.36, 1]], fg);
+      s += `<path d="M${X(.38)} ${Y(1)}C${X(.5)} ${Y(.86)} ${X(.44)} ${Y(.78)} ${X(.56)} ${Y(.7)}" stroke="${bg}" stroke-width="5" fill="none"/>`;
+      break;
+    case "bluehour":
+      s += circ(.5, .48, .44, ac);
+      s += `<rect x="${X(0)}" y="${Y(.56)}" width="${f2(w)}" height="${f2(h * .44)}" fill="${C.ink}" opacity=".45"/>`;
+      for (let i = 0; i < 7; i++) s += `<rect x="${X(.12 + i * .02)}" y="${Y(.6 + i * .055)}" width="${f2(w * (.76 - i * .04))}" height="3" fill="${fg}" opacity="${.9 - i * .1}"/>`;
+      s += poly([[.62, .56], [.66, .5], [.7, .56]], fg);
+      break;
+    case "river":
+      for (let i = 0; i < 8; i++) {
+        const yy = .08 + i * .12;
+        s += `<path d="M${X(-.05)} ${Y(yy + .1)}Q${X(.25)} ${Y(yy - .06)} ${X(.5)} ${Y(yy + .04)}T${X(1.05)} ${Y(yy - .02)}" stroke="${i % 3 === 1 ? C.red : ac}" stroke-width="${i % 3 === 1 ? 4 : 9}" fill="none" ${mul}/>`;
+      }
+      s += poly([[.3, .52], [.62, .52], [.56, .6], [.36, .6]], fg);
+      s += `<rect x="${X(.45)}" y="${Y(.3)}" width="3" height="${f2(h * .22)}" fill="${fg}"/>`;
+      break;
+    case "summer":
+      for (let i = 0; i < 18; i++) {
+        const a = (i / 18) * Math.PI * 2, r0 = .3, r1 = i % 2 ? .44 : .5, m = Math.min(w, h);
+        s += `<line x1="${f2(X(.5) + Math.cos(a) * r0 * m)}" y1="${f2(Y(.5) + Math.sin(a) * r0 * m)}" x2="${f2(X(.5) + Math.cos(a) * r1 * m)}" y2="${f2(Y(.5) + Math.sin(a) * r1 * m)}" stroke="${fg}" stroke-width="4"/>`;
+      }
+      s += circ(.5, .5, .26, ac);
+      s += poly([[.3, .62], [.42, .46], [.5, .58], [.58, .4], [.7, .62]], fg);
+      break;
+    case "green":
+      s += `<path d="M${X(.42)} ${Y(1)}C${X(.5)} ${Y(.7)} ${X(.7)} ${Y(.6)} ${X(.52)} ${Y(.3)}L${X(.56)} ${Y(.3)}C${X(.78)} ${Y(.6)} ${X(.62)} ${Y(.72)} ${X(.68)} ${Y(1)}Z" fill="${C.cream}" opacity=".85"/>`;
+      [0, .1, .2, .66, .76, .86].forEach((u, i) => {
+        const v = .22 + (i % 2) * .14;
+        s += poly([[u, v + .42], [u + .07, v], [u + .14, v + .42]], i % 3 === 1 ? fg : ac);
+        s += `<rect x="${X(u + .065)}" y="${Y(v + .42)}" width="3" height="${f2(h * .08)}" fill="${fg}"/>`;
+      });
+      s += circ(.6, .16, .05, fg);
+      break;
+    case "noon":
+      s += circ(.5, .4, .4, ac);
+      s += `<rect x="${X(0)}" y="${Y(.8)}" width="${f2(w)}" height="${f2(h * .2)}" fill="${fg}"/>`;
+      s += poly([[0, .8], [.18, .7], [.34, .8]], fg); s += poly([[.66, .8], [.84, .66], [1, .8]], fg);
+      s += `<rect x="${X(.27)}" y="${Y(.66)}" width="${f2(w * .03)}" height="${f2(h * .14)}" fill="${fg}"/>`;
+      s += circ(.285, .63, .025, fg);
+      for (let i = 0; i < 4; i++) s += `<rect x="${X(.4 + i * .1)}" y="${Y(.86 + (i % 2) * .05)}" width="${f2(w * .06)}" height="2" fill="${bg}"/>`;
+      break;
+    case "observer":
+      for (let i = 0; i < 4; i++) for (let j = 0; j < 3; j++)
+        s += `<rect x="${X(.06 + i * .235)}" y="${Y(.04 + j * .32)}" width="${f2(w * .2)}" height="${f2(h * .27)}" fill="none" stroke="${fg}" stroke-width="1.5" opacity=".35"/>`;
+      s += `<path d="M${X(.08)} ${Y(.5)}Q${X(.5)} ${Y(.1)} ${X(.92)} ${Y(.5)}Q${X(.5)} ${Y(.9)} ${X(.08)} ${Y(.5)}Z" fill="${fg}"/>`;
+      s += circ(.5, .5, .2, ac); s += circ(.5, .5, .09, C.ink); s += circ(.56, .44, .03, fg);
+      break;
+    case "birds":
+      [[.2, .12, 0, 1], [.55, .2, 20, .8], [.78, .1, -10, .7], [.35, .42, 40, 1.1], [.68, .5, 70, .9], [.18, .68, 110, .8], [.5, .82, 150, 1.2]].forEach(([u, v, rot, sc], i) => {
+        s += `<path transform="translate(${X(u)} ${Y(v)}) rotate(${rot}) scale(${sc})" d="M-34 -6Q-16 -18 0 2Q16 -18 34 -6Q16 -8 0 12Q-16 -8 -34 -6Z" fill="${i % 2 ? ac : fg}"/>`;
+      });
+      s += `<line x1="${X(0)}" y1="${Y(.98)}" x2="${X(1)}" y2="${Y(.98)}" stroke="${fg}" stroke-width="3"/>`;
+      break;
+    case "storm":
+      s += poly([[.5, .26], [1.1, 0], [1.1, .4]], ac, 'opacity=".7"');
+      s += poly([[.5, .26], [-.1, .05], [-.1, .32]], ac, 'opacity=".4"');
+      s += poly([[.44, .86], [.47, .3], [.53, .3], [.56, .86]], C.cream);
+      s += `<rect x="${X(.455)}" y="${Y(.22)}" width="${f2(w * .09)}" height="${f2(h * .08)}" fill="${ac}"/>`;
+      s += poly([[.44, .22], [.5, .15], [.56, .22]], C.cream);
+      for (let i = 0; i < 4; i++) s += `<rect x="${X(.47)}" y="${Y(.38 + i * .12)}" width="${f2(w * .06)}" height="${f2(h * .04)}" fill="${C.red}"/>`;
+      for (let i = 0; i < 4; i++) s += `<path d="M${X(-.02)} ${Y(.82 + i * .05)}q${f2(w * .1)} -14 ${f2(w * .2)} 0t${f2(w * .2)} 0t${f2(w * .2)} 0t${f2(w * .2)} 0t${f2(w * .2)} 0" stroke="${fg}" stroke-width="3" fill="none" opacity="${1 - i * .2}"/>`;
+      break;
+    case "tide":
+      for (let i = 0; i < 9; i++) {
+        const r = .12 + i * .1, m = w;
+        s += `<path d="M${f2(X(.5) - r * m)} ${Y(1)}A${f2(r * m)} ${f2(r * m)} 0 0 1 ${f2(X(.5) + r * m)} ${Y(1)}" stroke="${i % 3 === 2 ? C.red : ac}" stroke-width="${i % 3 === 2 ? 3 : 7}" fill="none"/>`;
+      }
+      s += circ(.5, .16, .06, C.red);
+      break;
+    case "war":
+      for (let r = 0; r < 6; r++) for (let c = 0; c < 4; c++) {
+        const off = r % 2 ? .1 : 0;
+        s += `<rect x="${X(.32 + off + c * .1 - .1)}" y="${Y(.36 + r * .1)}" width="${f2(w * .09)}" height="${f2(h * .085)}" fill="${fg}" opacity=".9"/>`;
+      }
+      s += `<rect x="${X(.12)}" y="${Y(.36)}" width="${f2(w * .76)}" height="${f2(h * .64)}" fill="none"/>`;
+      s += circ(.1, .5, .07, ac); s += `<rect x="${X(.07)}" y="${Y(.58)}" width="${f2(w * .06)}" height="${f2(h * .42)}" fill="${ac}"/>`;
+      s += circ(.9, .5, .07, ac); s += `<rect x="${X(.87)}" y="${Y(.58)}" width="${f2(w * .06)}" height="${f2(h * .42)}" fill="${ac}"/>`;
+      s += circ(.5, .14, .1, C.cream, 'opacity=".9"');
+      break;
+    case "door":
+      s += `<path d="M${X(.28)} ${Y(1)}V${Y(.3)}A${f2(w * .22)} ${f2(w * .22)} 0 0 1 ${X(.72)} ${Y(.3)}V${Y(1)}Z" fill="${C.ink}"/>`;
+      s += `<path d="M${X(.33)} ${Y(1)}V${Y(.32)}A${f2(w * .17)} ${f2(w * .17)} 0 0 1 ${X(.67)} ${Y(.32)}V${Y(1)}Z" fill="${ac}"/>`;
+      s += circ(.6, .66, .025, C.cream);
+      s += poly([[.67, 1], [.67, .32], [.8, .4], [.8, 1.04]], C.ink, 'opacity=".55"');
+      for (let i = 0; i < 3; i++) s += `<rect x="${X(.2 - i * .06)}" y="${Y(.92 + i * .04)}" width="${f2(w * (.6 + i * .12))}" height="2.5" fill="${fg}"/>`;
+      break;
+  }
+  return s;
+}
+
+/* front cover: 474 × 711·h */
+function coverArt(b) {
+  const W = 474, Hh = Math.round(711 * b.h);
+  const lines = wrap(b.title, 11), longest = Math.max(...lines.map((l) => l.length));
+  const fs = Math.min(74, 392 / (longest * .5));
+  const t0 = 92 + fs * .8;
+  let s = `<rect width="${W}" height="${Hh}" fill="${b.bg}"/>`;
+  s += `<text x="40" y="50" font-family="Inter Tight, sans-serif" font-weight="600" font-size="13" letter-spacing="3" fill="${b.fg}">${b.genre.toUpperCase()}</text>`;
+  s += `<text x="434" y="50" text-anchor="end" font-family="Inter Tight, sans-serif" font-weight="600" font-size="13" letter-spacing="3" fill="${b.fg}">Nº ${b.no}</text>`;
+  s += `<rect x="40" y="64" width="394" height="1.5" fill="${b.fg}" opacity=".7"/>`;
+  lines.forEach((l, i) => {
+    s += `<text x="38" y="${f2(t0 + i * fs * .96)}" font-family="Newsreader, Georgia, serif" font-weight="600" font-size="${f2(fs)}" letter-spacing="-1.5" fill="${b.fg}">${l}</text>`;
+  });
+  const my = t0 + (lines.length - 1) * fs * .96 + 44, mh = Hh - 112 - my;
+  s += `<g>${motif(b, 40, my, 394, mh)}</g>`;
+  s += `<rect x="40" y="${Hh - 88}" width="394" height="1.5" fill="${b.fg}" opacity=".7"/>`;
+  s += `<text x="40" y="${Hh - 50}" font-family="Inter Tight, sans-serif" font-weight="600" font-size="16" letter-spacing="4" fill="${b.fg}">${b.author.toUpperCase()}</text>`;
+  s += `<text x="434" y="${Hh - 50}" text-anchor="end" font-family="Noto Sans JP, sans-serif" font-weight="500" font-size="16" letter-spacing="2" fill="${b.fg}">${b.kanji}</text>`;
+  return { s, W, H: Hh };
+}
+
+/* spine: 90 × 660·h, title reads top to bottom, library call-number label near the foot */
+function spineArt(b) {
+  const W = 90, Hh = Math.round(660 * b.h);
+  const avail = Hh - 300;
+  const fs = Math.min(34, avail / (b.title.length * .47));
+  const sur = b.author.split(" ").pop().toUpperCase();
+  let s = `<rect width="${W}" height="${Hh}" fill="${b.bg}"/>`;
+  s += `<rect y="22" width="${W}" height="9" fill="${b.ac === b.fg ? C.red : b.ac}"/><rect y="36" width="${W}" height="2" fill="${b.fg}" opacity=".7"/>`;
+  s += `<circle cx="45" cy="72" r="15" fill="none" stroke="${b.fg}" stroke-width="2"/><text x="45" y="77" text-anchor="middle" font-family="Inter Tight, sans-serif" font-weight="600" font-size="13" fill="${b.fg}">${b.no}</text>`;
+  s += `<text transform="translate(${f2(45 - fs * .34)} 108) rotate(90)" font-family="Newsreader, Georgia, serif" font-weight="600" font-size="${f2(fs)}" letter-spacing="-.5" fill="${b.fg}">${b.title}</text>`;
+  s += `<text x="45" y="${Hh - 160}" text-anchor="middle" font-family="Inter Tight, sans-serif" font-weight="600" font-size="${sur.length > 7 ? 9.5 : 11}" letter-spacing="1.5" fill="${b.fg}">${sur}</text>`;
+  s += `<rect x="13" y="${Hh - 136}" width="64" height="70" rx="3" fill="#F7F2E6" stroke="${C.ink}" stroke-opacity=".25"/>`;
+  b.call.forEach((c, i) => {
+    s += `<text x="45" y="${Hh - 113 + i * 18}" text-anchor="middle" font-family="Inter Tight, sans-serif" font-weight="600" font-size="12.5" letter-spacing=".8" fill="${C.ink}">${c}</text>`;
+  });
+  s += `<rect y="${Hh - 46}" width="${W}" height="2" fill="${b.fg}" opacity=".7"/><rect y="${Hh - 40}" width="${W}" height="9" fill="${b.ac === b.fg ? C.red : b.ac}"/>`;
+  return { s, W, H: Hh };
+}
+const svgMarkup = ({ s, W, H }) => `<svg xmlns="${SVGNS}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">${s}</svg>`;
+const ART = BOOKS.map((b) => ({ cover: coverArt(b), spine: spineArt(b) }));
+
+/* ---------- helpers ---------- */
+const $ = (id) => document.getElementById(id);
+const mod = (a, n) => ((a % n) + n) % n;
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const smooth = (t) => t * t * (3 - 2 * t);
+const EASE = "cubic-bezier(.2,.8,.2,1)";
+const mqReduce = matchMedia("(prefers-reduced-motion: reduce)");
+const mqFine = matchMedia("(pointer:fine)");
+let reduce = mqReduce.matches;
+mqReduce.addEventListener?.("change", (e) => (reduce = e.matches));
+const rel = (v, s) => { let r = mod(v - s, TOTAL); if (r >= TOTAL / 2) r -= TOTAL; return r; };
+
+/* ---------- build shelf ---------- */
+const stage = $("stage"), shelf = $("shelf");
+const tapes = [];
+for (let v = 0; v < TOTAL; v++) {
+  const i = v % N, b = BOOKS[i];
+  const t = document.createElement("div");
+  t.className = "book"; t.dataset.v = v; t.style.setProperty("--bh", b.h);
+  const sp = document.createElement("div"); sp.className = "face sp"; sp.innerHTML = svgMarkup(ART[i].spine);
+  const cv = document.createElement("div"); cv.className = "face cv"; cv.innerHTML = svgMarkup(ART[i].cover);
+  sp.setAttribute("role", "img"); sp.setAttribute("aria-label", `${b.title} by ${b.author} (spine)`);
+  t.append(sp, cv); stage.append(t);
+  tapes.push({ el: t, sp, cv, lift: 0, vis: true, sSp: -1, sCv: -1 });
+}
+
+/* ---------- timeline ---------- */
+const ticks = $("ticks");
+let labelIx = 0;
+for (let y = 1955; y <= 1990; y++) {
+  const pct = ((y - 1955) / 35) * 100;
+  const major = y % 5 === 0;
+  const tk = document.createElement("i");
+  tk.className = "tk " + (major ? "mj" : "mn"); tk.style.left = pct + "%";
+  ticks.append(tk);
+  if (major) {
+    const l = document.createElement("span");
+    l.className = "ty" + (y === 1955 ? " first" : y === 1990 ? " last" : "") + (labelIx % 2 ? " odd" : "");
+    l.style.left = pct + "%"; l.textContent = y; ticks.append(l); labelIx++;
+  }
+}
+
+/* ---------- geometry ---------- */
+const P = 1400;
+let H, ws, d, gap, U, XS = [0], W, VH, cyPx;
+function measure() {
+  H = $("probe").getBoundingClientRect().height;
+  W = innerWidth; VH = innerHeight;
+  ws = H * .136;          /* spine thickness  (90 / 660) */
+  d = H * 474 / 711;      /* board width, 2:3 */
+  gap = H * .03;
+  U = H * (W < 768 ? 1.05 : 1.3);
+  XS = [0];
+  let acc = 0;
+  for (let u = 0; u <= 3 * U; u += 2) { acc += 2 / (1 + Math.pow(u / U, 1.6)); XS.push(acc); }
+  stage.style.setProperty("--hp", H + "px");
+  stage.style.setProperty("--ws", ws + "px");
+  stage.style.setProperty("--d", d + "px");
+  const r = shelf.getBoundingClientRect();
+  cyPx = r.top + r.height / 2;
+}
+const B = (r) => Math.abs(r) < 1 ? (r + Math.sin(Math.PI * r) / Math.PI) / 2 : Math.sign(r) * .5;
+const F = (r) => r * (ws + gap) + (d - ws + 1.4 * gap) * B(r);
+const scl = (u) => 1 / (1 + Math.pow(Math.abs(u) / U, 1.6));
+function xsc(u) {
+  const a = Math.abs(u) / 2, i = Math.floor(a), f = a - i;
+  const n = XS.length - 1;
+  const v = i >= n ? XS[n] : XS[i] + (XS[i + 1] - XS[i]) * f;
+  return Math.sign(u) * v;
+}
+measure();
+addEventListener("resize", measure);
+
+/* ---------- state ---------- */
+let s = START, T = START;
+let active = -1, hoverV = -1;
+let tiltX = 0, tiltY = 0, mx = -1, my = -1, hasMouse = false, hoverEl = null;
+let dragging = false, downX = 0, T0 = 0, pointerDown = false, downTape = null, pid = null, justDragged = false;
+let detailOpen = false, openT = 0, closing = false;
+let dotYear = BOOKS[5].year, ringScale = 0;
+const curPos = { x: W / 2, y: VH / 2 };
+
+/* ---------- caption ---------- */
+const cTitle = $("cTitle"), cSub = $("cSub"), cYear = $("cYear");
+function swapLine(mask, text, dir) {
+  const olds = [...mask.children];
+  const n = document.createElement("span");
+  n.textContent = text;
+  mask.append(n);
+  if (reduce || !dir) { olds.forEach((o) => o.remove()); return; }
+  n.animate([{ transform: `translateY(${dir * 105}%)` }, { transform: "translateY(0%)" }],
+    { duration: 650, easing: EASE, fill: "both" });
+  olds.forEach((o) => {
+    const cur = getComputedStyle(o).transform;
+    o.getAnimations().forEach((a) => a.cancel());
+    const a = o.animate([{ transform: cur === "none" ? "translateY(0%)" : cur }, { transform: `translateY(${-dir * 105}%)` }],
+      { duration: 650, easing: EASE, fill: "both" });
+    a.onfinish = () => o.remove();
+  });
+}
+function setCaption(i, dir) {
+  const b = BOOKS[i];
+  swapLine(cTitle, b.title, dir);
+  swapLine(cSub, `${b.romaji} / ${b.kanji}`, dir);
+  swapLine(cYear, `${b.year} — ${b.author}`, dir);
+}
+
+/* ---------- navigation ---------- */
+const settled = () => Math.abs(T - s) < .3;
+function step(n) { if (detailOpen) return; T = Math.round(T) + n; }
+$("prev").addEventListener("click", (e) => { step(-1); if (e.detail) e.currentTarget.blur(); });
+$("next").addEventListener("click", (e) => { step(1); if (e.detail) e.currentTarget.blur(); });
+
+function tapeClick(v) {
+  if (detailOpen) return;
+  const r = rel(v, s);
+  if (Math.abs(r) < .5) openDetail();
+  else T = Math.round(T + r);
+}
+
+shelf.addEventListener("pointerdown", (e) => {
+  if (detailOpen || e.button > 0) return;
+  pointerDown = true; dragging = false; downX = e.clientX; T0 = T; pid = e.pointerId;
+  const t = e.target.closest(".book"); downTape = t ? +t.dataset.v : null;
+});
+addEventListener("pointermove", (e) => {
+  mx = e.clientX; my = e.clientY; hoverEl = e.target;
+  if (e.pointerType === "mouse" && !hasMouse) { hasMouse = true; curPos.x = mx; curPos.y = my; $("cur").classList.add("on"); }
+  if (!pointerDown || e.pointerId !== pid) return;
+  const dx = e.clientX - downX;
+  if (!dragging && Math.abs(dx) > 5) {
+    dragging = true;
+    try { shelf.setPointerCapture(pid); } catch (_) {}
+  }
+  if (dragging) T = T0 - dx / (ws + gap);
+});
+function endPointer(e) {
+  if (!pointerDown || (e && e.pointerId !== pid)) return;
+  pointerDown = false;
+  if (dragging) { T = Math.round(T); dragging = false; justDragged = true; setTimeout(() => (justDragged = false), 0); }
+  else if (downTape !== null && e && e.type === "pointerup") tapeClick(downTape);
+  downTape = null;
+  try { shelf.releasePointerCapture(pid); } catch (_) {}
+}
+addEventListener("pointerup", endPointer);
+addEventListener("pointercancel", endPointer);
+shelf.addEventListener("click", (e) => { if (justDragged) { e.preventDefault(); e.stopPropagation(); } }, true);
+
+stage.addEventListener("pointerover", (e) => { const t = e.target.closest(".book"); hoverV = t ? +t.dataset.v : -1; });
+stage.addEventListener("pointerleave", () => (hoverV = -1));
+document.addEventListener("pointerleave", () => { hoverV = -1; });
+
+let wheelTimer = 0;
+addEventListener("wheel", (e) => {
+  if (detailOpen) return;
+  e.preventDefault();
+  const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+  const scale = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? VH : 1;
+  T += (delta * scale) / (ws + gap) * .5;
+  clearTimeout(wheelTimer);
+  wheelTimer = setTimeout(() => (T = Math.round(T)), 160);
+}, { passive: false });
+
+addEventListener("keydown", (e) => {
+  if (e.key === "ArrowLeft") { step(-1); e.preventDefault(); }
+  else if (e.key === "ArrowRight") { step(1); e.preventDefault(); }
+  else if (e.key === "Enter") { if (!detailOpen && document.activeElement?.tagName !== "BUTTON") { openDetail(); e.preventDefault(); } }
+  else if (e.key === "Escape") closeDetail();
+});
+
+$("tlhit").addEventListener("click", (e) => {
+  if (detailOpen) return;
+  const r = $("tl").getBoundingClientRect();
+  const year = 1955 + clamp((e.clientX - r.left) / r.width, 0, 1) * 35;
+  let best = 0, bd = Infinity;
+  BOOKS.forEach((b, i) => { const dd = Math.abs(b.year - year); if (dd < bd) { bd = dd; best = i; } });
+  const cur = mod(Math.round(T), N);
+  let diff = mod(best - cur, N); if (diff > N / 2) diff -= N;
+  T = Math.round(T) + diff;
+});
+
+/* ---------- detail sheet ---------- */
+const detail = $("detail"), pSvg = $("pSvg"), pArt = $("pArt");
+const blots = [...document.querySelectorAll("#pBlots circle")].map((c) => ({ c, d: +c.dataset.d, cy0: +c.getAttribute("cy"), r: -1 }));
+const lines = [...detail.querySelectorAll(".dm > *")];
+function coverRect() {
+  const v = mod(Math.round(s), TOTAL);
+  return tapes[v].cv.getBoundingClientRect();
+}
+const insetOf = (r, rad) =>
+  `inset(${r.top.toFixed(1)}px ${(innerWidth - r.right).toFixed(1)}px ${(innerHeight - r.bottom).toFixed(1)}px ${r.left.toFixed(1)}px round ${rad}px)`;
+
+function openDetail() {
+  if (detailOpen) return;
+  T = Math.round(T);
+  const i = mod(T, N), b = BOOKS[i], art = ART[i].cover;
+  $("dSub").textContent = `${b.romaji} / ${b.kanji}`;
+  $("dTitle").textContent = b.title;
+  $("dMeta").textContent = `${b.year} / ${b.genre.toUpperCase()} / ${b.pages} pages / ${b.call.slice(0, 2).join(" ")}`;
+  $("dSyn").textContent = b.syn;
+  $("dCredit").textContent = `Written by ${b.author}.`;
+  /* the poster is the book's own cover, bleeding in through the ink mask */
+  pSvg.setAttribute("viewBox", `0 0 ${art.W} ${art.H}`);
+  pSvg.style.aspectRatio = `${art.W} / ${art.H}`;
+  $("pClipRect").setAttribute("height", art.H);
+  pArt.innerHTML = art.s;
+  blots.forEach((bl) => { bl.r = 0; bl.c.setAttribute("r", 0); bl.c.setAttribute("cy", f2(bl.cy0 * art.H / 900)); });
+
+  const rect = coverRect();
+  detail.getAnimations({ subtree: true }).forEach((a) => a.cancel());
+  closing = false;
+  detail.classList.add("on");
+  detail.setAttribute("aria-hidden", "false");
+  detail.scrollTop = 0;
+  detailOpen = true;
+  openT = performance.now() - (reduce ? 5000 : 0);
+  detail.animate([{ clipPath: insetOf(rect, 3) }, { clipPath: "inset(0px 0px 0px 0px round 0px)" }],
+    { duration: reduce ? 1 : 1050, easing: "cubic-bezier(.76,0,.18,1)", fill: "both" });
+  lines.forEach((el, k) => el.animate([{ transform: "translateY(110%)" }, { transform: "translateY(0%)" }],
+    { duration: reduce ? 1 : 900, delay: reduce ? 0 : 620 + k * 75, easing: EASE, fill: "both" }));
+  $("close").focus({ preventScroll: true });
+}
+
+function closeDetail() {
+  if (!detailOpen || closing) return;
+  closing = true;
+  const rect = coverRect();
+  detail.getAnimations().forEach((a) => a.cancel());
+  const a = detail.animate([{ clipPath: "inset(0px 0px 0px 0px round 0px)" }, { clipPath: insetOf(rect, 3) }],
+    { duration: reduce ? 1 : 850, easing: "cubic-bezier(.76,0,.18,1)", fill: "both" });
+  a.onfinish = () => {
+    detail.classList.remove("on");
+    detail.setAttribute("aria-hidden", "true");
+    detail.getAnimations({ subtree: true }).forEach((x) => x.cancel());
+    detailOpen = false; closing = false;
+  };
+}
+$("close").addEventListener("click", closeDetail);
+
+/* ---------- loop ---------- */
+const play = $("play"), dot = $("dot"), cur = $("cur");
+const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+let last = performance.now(), curState = "";
+setCaption(mod(Math.round(s), N), 0); active = mod(Math.round(s), N);
+
+function frame(now) {
+  const dt = Math.min(.05, Math.max(0, (now - last) / 1000)); last = now;
+
+  /* spring */
+  if (reduce) s = T;
+  else s += (T - s) * (1 - Math.exp(-(dragging ? 18 : 5.2) * dt));
+  if (Math.abs(s - START) > 4 * N) {
+    const sh = Math.round((s - START) / N) * N;
+    s -= sh; T -= sh; T0 -= sh;
+  }
+
+  /* active book */
+  const a = mod(Math.round(s), N);
+  if (a !== active) { setCaption(a, Math.sign(T - s) || 1); active = a; }
+
+  /* tilt */
+  const onCover = hasMouse && !detailOpen && settled() &&
+    Math.abs(mx - W / 2) < .55 * d && Math.abs(my - cyPx) < .55 * H;
+  let tY, tX;
+  if (onCover) { tY = ((mx - W / 2) / (.55 * d)) * 8; tX = (-(my - cyPx) / (H / 2)) * 5; }
+  else { tY = hasMouse ? ((mx - W / 2) / W) * 4 : 0; tX = 0; }
+  const kt = reduce ? 1 : 1 - Math.exp(-7 * dt);
+  tiltY += (tY - tiltY) * kt; tiltX += (tX - tiltX) * kt;
+
+  /* books */
+  const kl = reduce ? 1 : 1 - Math.exp(-12 * dt);
+  for (let v = 0; v < TOTAL; v++) {
+    const tp = tapes[v];
+    const r = rel(v, s);
+    const o = smooth(Math.max(0, 1 - Math.abs(r)));
+    const u = F(r);
+    const want = hoverV === v && Math.abs(r) > .5 && !detailOpen ? 1 : 0;
+    tp.lift += (want - tp.lift) * kl;
+    if (Math.abs(u) > U * 1.95) {
+      if (tp.vis) { tp.el.style.visibility = "hidden"; tp.vis = false; }
+      continue;
+    }
+    if (!tp.vis) { tp.el.style.visibility = ""; tp.vis = true; }
+    const sc = scl(u), k = 1 / sc;
+    const z = P * (1 - k) + o * H * .1;
+    const x = xsc(u) * k;
+    const y = (H * .5 * (1 - sc) * .42 + o * H * .012 - tp.lift * H * .05) * k;
+    const ry = Math.sign(u) * Math.min(1, Math.abs(u) / U) * 26 * (1 - o) - 90 * o + tiltY * o;
+    const rx = tiltX * o;
+    tp.el.style.transform = `translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,${z.toFixed(2)}px) rotateX(${rx.toFixed(3)}deg) rotateY(${ry.toFixed(3)}deg)`;
+    tp.el.style.zIndex = Math.round(3000 + z);
+    const shSp = Math.min(.6, o * .55 + (1 - sc) * .32), shCv = (1 - o) * .82;
+    if (Math.abs(shSp - tp.sSp) > .002) { tp.sp.style.setProperty("--shade", shSp.toFixed(3)); tp.sSp = shSp; }
+    if (Math.abs(shCv - tp.sCv) > .002) { tp.cv.style.setProperty("--shade", shCv.toFixed(3)); tp.sCv = shCv; }
+  }
+
+  /* reading ring, on the cover's lower-left corner */
+  ringScale = detailOpen ? 0 : smooth(Math.max(0, 1 - Math.abs(T - s) * 3));
+  play.style.transform = `translate(${(W / 2 - d / 2 - 6).toFixed(1)}px,${(cyPx + .36 * H).toFixed(1)}px) scale(${ringScale.toFixed(3)})`;
+
+  /* timeline dot */
+  const fl = Math.floor(s), fr = s - fl;
+  const y0 = BOOKS[mod(fl, N)].year, y1 = BOOKS[mod(fl + 1, N)].year;
+  const ty = y1 < y0 ? (fr < .5 ? y0 : y1) : y0 + (y1 - y0) * fr;
+  if (reduce || Math.abs(ty - dotYear) > 6) dotYear = ty;
+  else dotYear += (ty - dotYear) * (1 - Math.exp(-14 * dt));
+  dot.style.left = (((dotYear - 1955) / 35) * 100).toFixed(3) + "%";
+
+  /* ink bleed */
+  if (detailOpen) {
+    const t = now - openT;
+    for (const bl of blots) {
+      const p = clamp((t - 520 - bl.d) / 1250, 0, 1);
+      const r = 720 * easeOutCubic(p);
+      if (Math.abs(r - bl.r) > .05) { bl.c.setAttribute("r", r.toFixed(2)); bl.r = r; }
+    }
+  }
+
+  /* cursor */
+  if (hasMouse && mqFine.matches) {
+    const kc = 1 - Math.exp(-16 * dt);
+    curPos.x += (mx - curPos.x) * kc; curPos.y += (my - curPos.y) * kc;
+    cur.style.transform = `translate3d(${curPos.x.toFixed(1)}px,${curPos.y.toFixed(1)}px,0)`;
+    let st = "";
+    if (onCover) st = "open";
+    else if (hoverEl && hoverEl.closest) {
+      if (!detailOpen && hoverEl.closest(".book")) st = "spine";
+      else if (hoverEl.closest("button,a,.tl-hit")) st = "btn";
+    }
+    if (st !== curState) { cur.classList.remove("open", "spine", "btn"); if (st) cur.classList.add(st); curState = st; }
+  }
+
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
