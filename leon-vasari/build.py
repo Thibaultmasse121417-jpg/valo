@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build leon-vasari/index.html from src.html by inlining every font as base64 WOFF2.
+"""Build leon-vasari/index.html (The Vasari Library) from src.html by inlining every font as base64 WOFF2.
 
 Usage:  python3 leon-vasari/build.py
 Needs network access to fonts.googleapis.com / fonts.gstatic.com (fetched with curl).
@@ -54,7 +54,7 @@ def main():
         css.append(face_css("Noto Sans JP", st, w, data, rng))
     for st, w, data, rng in faces(G + f"family=Noto+Serif+SC:wght@700&text={q(jp)}&display=swap", None):
         css.append(face_css("Noto Serif SC", st, w, data, rng))
-    for st, w, data, rng in faces(G + f"family=Noto+Sans+JP:wght@800&text={q('映画の記憶')}&display=block", None):
+    for st, w, data, rng in faces(G + f"family=Noto+Sans+JP:wght@800&text={q('書庫の記憶')}&display=block", None):
         css.append(face_css("Noto Sans JP Big", st, w, data, rng, display="block"))
     out = src.replace("/*@FONTS@*/", "\n".join(css))
     (HERE / "index.html").write_text(out, encoding="utf-8")
