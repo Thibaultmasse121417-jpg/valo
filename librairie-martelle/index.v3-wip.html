@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Librairie Martelle — Amiens, depuis 1957</title>
+<meta name="description" content="Librairie Martelle, librairie indépendante au 3 rue des Vergeaux à Amiens depuis 1957. Concept de site proposé par Estalia — démonstration non officielle.">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#ECE6DA">
+<link rel="preload" href="assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/fonts.css">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body class="locked">
+
+<header class="top" id="top">
+  <a class="brand" href="#accueil" data-scroll="accueil" aria-label="Librairie Martelle, retour en haut">
+    <span class="wm">Librairie <i>Martelle</i></span><i class="ln"></i><span class="lbl city">Amiens · 1957</span>
+  </a>
+  <nav class="nav" aria-label="Navigation principale">
+    <a class="lbl" href="#accueil" data-scroll="accueil">Rayons</a>
+    <a class="lbl" href="#histoire" data-scroll="histoire">Histoire</a>
+    <a class="lbl" href="#visite" data-scroll="visite">La librairie</a>
+    <a class="lbl" href="#nouveautes" data-scroll="nouveautes">Nouveautés</a>
+    <a class="lbl" href="#rencontres" data-scroll="rencontres">Rencontres</a>
+    <a class="lbl" href="#venir" data-scroll="venir">Venir</a>
+    <a class="btn fill lbl" href="https://www.leslibraires.fr/presentation/librairie-martelle/" target="_blank" rel="noopener">Commander</a>
+    <button class="burger" data-sheet="menu" aria-label="Ouvrir le menu"><i></i><i></i></button>
+  </nav>
+</header>
+
+<main id="main">
+<!-- ================= HERO: the shelf ================= -->
+<section class="hero" id="accueil" aria-label="Les rayons de la librairie">
+  <div class="hero-in" id="heroIn">
+    <div class="halo hl" aria-hidden="true">1957</div>
+    <div class="halo hr" aria-hidden="true">Amiens</div>
+    <div class="stage-wrap">
+      <div class="floor" aria-hidden="true"></div>
+      <div class="shelf" id="shelf" aria-label="Étagère des rayons : faites glisser ou utilisez les flèches">
+        <div class="stage" id="stage"></div>
+      </div>
+      <div id="probe"></div>
+      <div class="play" id="play" aria-hidden="true"><svg viewBox="0 0 14 12" fill="none" stroke="#9C2F1E" stroke-width="1.2"><path d="M7 2.2C5.4 1 3 .8 1 1.2v9.4c2-.4 4.4-.2 6 1 1.6-1.2 4-1.4 6-1V1.2C11 .8 8.6 1 7 2.2zM7 2.2v9.4"/></svg></div>
+    </div>
+    <h1 class="sr">Librairie Martelle, librairie indépendante à Amiens depuis 1957 — 3 rue des Vergeaux</h1>
+    <div class="cap" id="cap" aria-live="polite">
+      <div class="m m-title" id="cTitle"></div>
+      <div class="m m-sub lbl" id="cSub"></div>
+      <i class="rule"></i>
+      <div class="m m-year" id="cYear"></div>
+      <button class="arr prev" id="prev" aria-label="Rayon précédent"><svg viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 1L1 6l5 5M1 6h23"/></svg></button>
+      <button class="arr next" id="next" aria-label="Rayon suivant"><svg viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 1l5 5-5 5M23 6H0"/></svg></button>
+    </div>
+    <div class="hint" id="hint" aria-hidden="true"><svg viewBox="0 0 30 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M5 1L1 6l4 5M25 1l4 5-4 5M1 6h28"/></svg><span id="hintTxt">Faites glisser les rayons · touchez la couverture pour l’ouvrir</span></div>
+    <div class="tl" id="tl">
+      <i class="tl-line"></i>
+      <div id="ticks"></div>
+      <i class="tl-dot" id="dot"></i>
+      <div class="tl-hit" id="tlhit" role="slider" aria-label="Index des rayons" aria-valuemin="1" aria-valuemax="12" aria-valuenow="1" tabindex="0"></div>
+    </div>
+    <div class="hfoot">
+      <a class="lbl status" id="status" href="#venir" data-scroll="venir"><i></i><span id="statusTxt">3 rue des Vergeaux, Amiens</span></a>
+      <a class="lbl cue" href="#librairie" data-scroll="librairie"><i></i>Découvrir la librairie</a>
+      <span class="lbl estalia">Concept proposé par Estalia — démonstration non officielle</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MANIFESTO ================= -->
+<section class="sec" id="librairie" aria-labelledby="t-mani">
+  <div class="mani">
+    <div>
+      <div class="kick lbl" data-io><span class="ln"><span>La librairie — Amiens, depuis 1957</span></span></div>
+      <h2 class="sr" id="t-mani">La librairie</h2>
+      <p class="words" id="words" data-k="rencontre,éveil">La librairie Martelle se veut un lieu de rencontre entre lecteurs, auteurs et libraires. L’esprit de notre librairie c’est aussi l’éveil à toute forme d’apprentissage pour les enfants et les adultes.</p>
+      <p class="src" style="margin-top:22px">Présentation de la librairie sur <a href="https://www.leslibraires.fr/presentation/librairie-martelle/" target="_blank" rel="noopener">leslibraires.fr</a></p>
+    </div>
+    <div class="stats" data-io>
+      <div class="stat wipe"><b data-count="1957" data-plain>1957</b><span>Ouverture de la librairie, en juin, par Lionel et Annie Martelle</span><p class="src">Livres Hebdo, 2015 · La Gazette, 2017</p></div>
+      <div class="stat wipe" style="--i:1"><b data-count="80000">80 000</b><span>titres immédiatement disponibles en magasin</span><p class="src">leslibraires.fr, 2026</p></div>
+      <div class="stat wipe" style="--i:2"><b data-count="2000" data-pre="≈ ">≈ 2 000</b><span>m² de librairie, partis d’un magasin de 15 m²</span><p class="src">Livres Hebdo, 2015</p></div>
+      <div class="stat wipe" style="--i:3"><b data-count="30" data-pre="Top ">Top 30</b><span>des librairies françaises au classement annuel de Livres Hebdo</span><p class="src">Livres Hebdo, 2015</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HISTORY (pinned horizontal) ================= -->
+<section class="hz" id="histoire" aria-labelledby="t-hist">
+  <div class="hz-sticky">
+    <div class="hz-track" id="hzTrack">
+      <article class="chap intro-c" data-io>
+        <div class="kick lbl"><span class="ln"><span>Histoire</span></span></div>
+        <h2 class="h2" id="t-hist"><span class="ln"><span>Une histoire</span></span><span class="ln"><span style="--i:1">de <em>famille</em>,</span></span><span class="ln"><span style="--i:2">depuis 1957</span></span></h2>
+        <p class="lead wipe" style="--i:3">D’un magasin de 15 m² face à la Cité scolaire à l’une des grandes librairies indépendantes de France.</p>
+      </article>
+      <article class="chap" data-io>
+        <div class="year" data-y="1957">1957</div>
+        <h3>Un magasin de 15 m²</h3>
+        <p>Lionel et Annie Martelle ouvrent, en juin, un petit magasin de livres scolaires et de papeterie. Au fil des déménagements, la librairie s’impose dans le paysage amiénois.</p>
+        <blockquote>« Mes parents ont fondé la librairie et l’ont ouverte le jour de ma naissance en juin 1957. »<small>Françoise Gaudefroy, La Gazette, juin 2017</small></blockquote>
+      </article>
+      <article class="chap" data-io>
+        <div class="year" data-y="1992">1992</div>
+        <h3>La transmission</h3>
+        <p>Lionel Martelle passe le flambeau à ses filles, Anne Martelle et Françoise Gaudefroy. Il fut aussi président du Syndicat des libraires classiques de France et œuvra à la fondation de l’Union des libraires de France.</p>
+        <p class="src">Livres Hebdo, 3 mars 2015</p>
+      </article>
+      <article class="chap" data-io>
+        <div class="year" data-y="~2007">~2007</div>
+        <h3>Des espaces clairs, mis en scène</h3>
+        <blockquote>« Nous ne voulons pas ressembler à ces librairies aux livres parfaitement rangés et aux libraires renfrognés. Nous avons voulu des espaces clairs avec beaucoup de mises en scène. »<small>Françoise Gaudefroy, à propos des grands travaux menés « il y a dix ans » — La Gazette, juin 2017</small></blockquote>
+      </article>
+      <article class="chap" data-io>
+        <div class="year" data-y="2015">2015</div>
+        <h3>Près de 2 000 m²</h3>
+        <p>Devenue généraliste, la librairie occupe près de 2 000 m² et figure parmi les 30 premières librairies françaises du classement annuel de Livres Hebdo.</p>
+        <p class="src">Livres Hebdo, 3 mars 2015</p>
+      </article>
+      <article class="chap" data-io>
+        <div class="year" data-y="2017">2017</div>
+        <h3>Soixante ans, sur scène</h3>
+        <p>Pour ses 60 ans, la librairie s’associe à la Maison de la Culture d’Amiens : <em>Les Liaisons dangereuses</em> lues par Elsa Lepoivre, Denis Podalydès et Marcel Bozonnet, puis <em>La nuit sera calme</em> de Romain Gary par Jacques Gamblin.</p>
+        <p class="src">La vie des livres etc., avril 2017</p>
+      </article>
+      <article class="chap" data-io>
+        <div class="year" data-y="Aujourd’hui">Aujourd’hui</div>
+        <h3>80 000 titres, prêts à partir</h3>
+        <p>Plus de 80 000 titres immédiatement disponibles en magasin, à retirer sur place ou à recevoir chez soi.</p>
+        <div class="btn-row"><a class="btn fill lbl" href="https://www.leslibraires.fr/presentation/librairie-martelle/" target="_blank" rel="noopener">Commander en ligne</a></div>
+      </article>
+    </div>
+    <div class="hz-lbl lbl"><span>Histoire</span><span>1957 — aujourd’hui</span></div>
+    <div class="hz-bar"><i id="hzBar"></i></div>
+  </div>
+</section>
+
+<!-- ================= FAMILY / TEAM ================= -->
+<section class="sec" id="equipe" aria-labelledby="t-fam">
+  <div class="fam">
+    <figure class="photo-slot wipe" data-io>
+      <div class="mono" aria-hidden="true">M</div>
+      <div class="cap2 lbl"><span>Librairie Martelle</span><span>Amiens</span></div>
+      <figcaption class="demo-tag">Emplacement photo — l’équipe, à fournir par la librairie</figcaption>
+    </figure>
+    <div data-io>
+      <div class="kick lbl"><span class="ln"><span>L’équipe</span></span></div>
+      <h2 class="sr" id="t-fam">L’équipe et la famille Martelle</h2>
+      <p class="bigq wipe">Notre librairie est vraiment atypique, à la fois traditionnelle et à l’heure du digital, elle ne ressemble à aucune autre.</p>
+      <p class="who wipe" style="--i:1">— Françoise Gaudefroy, codirectrice, dans La Gazette (juin 2017)</p>
+      <div class="roles">
+        <div class="role wipe" style="--i:2"><b>Fondateurs</b><span>Lionel &amp; Annie Martelle<small>Ouverture de la librairie en 1957</small></span></div>
+        <div class="role wipe" style="--i:3"><b>Direction</b><span>Anne Martelle &amp; Françoise Gaudefroy<small>À la tête de la librairie depuis 1992 (sources de 2015 et 2017)</small></span></div>
+        <div class="role wipe" style="--i:4"><b>Chaque jour</b><span>Les libraires de la rue des Vergeaux<small>Conseils, commandes et rencontres</small></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= VISIT: floors ================= -->
+<section class="sec" id="visite" aria-labelledby="t-vis" style="background:var(--sheet)">
+  <div class="vis">
+    <div data-io>
+      <div class="kick lbl"><span class="ln"><span>La librairie</span></span></div>
+      <h2 class="h2" id="t-vis"><span class="ln"><span>Trois niveaux</span></span><span class="ln"><span style="--i:1">à <em>parcourir</em></span></span></h2>
+      <div class="lvls" role="tablist" aria-label="Niveaux de la librairie">
+        <button class="lvb" role="tab" data-lv="2" aria-selected="false"><span class="n">↑</span><span class="t">À l’étage</span><span class="pl">+</span><span class="d"><span>L’enseigne Color’i : beaux-arts, loisirs créatifs, éveil artistique et encadrement.</span></span></button>
+        <button class="lvb on" role="tab" data-lv="1" aria-selected="true"><span class="n">0</span><span class="t">L’entrée &amp; les allées</span><span class="pl">+</span><span class="d"><span>L’espace littérature dès l’entrée. Dans les allées : vie pratique, tourisme, jeunesse des tout-petits aux adolescents, beaux-arts, policier, poche, actualités, universitaire et scolaire.</span></span></button>
+        <button class="lvb" role="tab" data-lv="0" aria-selected="false"><span class="n">↓</span><span class="t">Au sous-sol</span><span class="pl">+</span><span class="d"><span>BD, mangas, science-fiction et fantasy.</span></span></button>
+      </div>
+      <p class="src" style="margin-top:20px">D’après La Gazette (juin 2017) — l’agencement a pu évoluer depuis. Plan schématique.</p>
+    </div>
+    <div class="iso-wrap" data-io id="isoWrap" aria-hidden="true">
+      <div class="iso" id="iso">
+        <div class="lv" style="--z:0" data-lv="0"><div class="sd"></div><div class="sd2"></div><div class="tp">
+          <div class="zone" style="left:8%;top:10%;width:40%;height:38%">BD</div>
+          <div class="zone" style="left:52%;top:10%;width:40%;height:38%">Mangas</div>
+          <div class="zone" style="left:8%;top:54%;width:84%;height:36%">SF · Fantasy</div></div>
+          <span class="lv-tag">Sous-sol</span></div>
+        <div class="lv on" style="--z:1" data-lv="1"><div class="sd"></div><div class="sd2"></div><div class="tp">
+          <div class="zone" style="left:6%;top:62%;width:52%;height:30%">Littérature<br>· entrée ·</div>
+          <div class="zone soft" style="left:6%;top:8%;width:26%;height:48%">Jeunesse</div>
+          <div class="zone soft" style="left:36%;top:8%;width:22%;height:24%">Policier</div>
+          <div class="zone soft" style="left:36%;top:34%;width:22%;height:22%">Poche</div>
+          <div class="zone soft" style="left:62%;top:8%;width:32%;height:26%">Tourisme</div>
+          <div class="zone soft" style="left:62%;top:38%;width:32%;height:24%">Scolaire</div>
+          <div class="zone soft" style="left:62%;top:66%;width:32%;height:26%">Actualités</div></div>
+          <span class="lv-tag">Entrée</span></div>
+        <div class="lv" style="--z:2" data-lv="2"><div class="sd"></div><div class="sd2"></div><div class="tp">
+          <div class="zone" style="left:10%;top:14%;width:80%;height:72%">Color’i<br>beaux-arts · créatif</div></div>
+          <span class="lv-tag">Étage</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= NEW RELEASES (demo) ================= -->
+<section class="sec" id="nouveautes" aria-labelledby="t-new">
+  <div class="row-h" data-io>
+    <div>
+      <div class="kick lbl"><span class="ln"><span>Nouveautés</span></span></div>
+      <h2 class="h2" id="t-new"><span class="ln"><span>Fraîchement</span></span><span class="ln"><span style="--i:1"><em>arrivés</em></span></span></h2>
+    </div>
+    <div style="display:grid;justify-items:end;row-gap:16px">
+      <span class="demo-tag" id="newDemo">Démonstration — titres fictifs, à relier au fonds réel</span>
+      <div class="rail-ctl"><button class="rbtn" data-rail="-1" aria-label="Précédents"><svg viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 1L1 6l5 5M1 6h23"/></svg></button><button class="rbtn" data-rail="1" aria-label="Suivants"><svg viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 1l5 5-5 5M23 6H0"/></svg></button></div>
+    </div>
+  </div>
+  <div class="rail" id="rail"></div>
+</section>
+
+<!-- ================= STAFF PICKS (demo) ================= -->
+<section class="sec" id="coups-de-coeur" aria-labelledby="t-pick" style="background:var(--sheet)">
+  <div class="row-h" data-io>
+    <div>
+      <div class="kick lbl"><span class="ln"><span>Coups de cœur des libraires</span></span></div>
+      <h2 class="h2" id="t-pick"><span class="ln"><span>Ils les ont <em>aimés</em></span></span></h2>
+    </div>
+    <span class="demo-tag" id="pickDemo">Démonstration — titres et notes fictifs</span>
+  </div>
+  <div class="pick">
+    <div class="pick-stage" id="pickStage"><i class="b3d-sh"></i></div>
+    <div class="pick-txt">
+      <div class="pick-n"><b id="pkN">01</b><span class="lbl">/ 03</span></div>
+      <div class="swap" id="pkT"></div>
+      <div class="swap lbl pick-a" id="pkA"></div>
+      <div class="swap" id="pkQ"></div>
+      <div class="pick-by" id="pkBy">— Note de libraire (exemple de mise en page)</div>
+      <div class="btn-row">
+        <button class="rbtn" id="pkPrev" aria-label="Coup de cœur précédent"><svg viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 1L1 6l5 5M1 6h23"/></svg></button>
+        <button class="rbtn" id="pkNext" aria-label="Coup de cœur suivant"><svg viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 1l5 5-5 5M23 6H0"/></svg></button>
+        <a class="btn lbl" id="pkCta" href="mailto:commandes@librairiemartelle.com?subject=Un%20conseil%20de%20lecture">Demander un conseil</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EVENTS ================= -->
+<section class="sec dark on-dark" id="rencontres" aria-labelledby="t-ev">
+  <div class="ev" data-io>
+    <div>
+      <div class="kick lbl"><span class="ln"><span>Rencontres &amp; dédicaces</span></span></div>
+      <h2 class="h2" id="t-ev"><span class="ln"><span>Ici, on <em>rencontre</em></span></span><span class="ln"><span style="--i:1">les auteurs</span></span></h2>
+    </div>
+    <div style="display:grid;row-gap:24px">
+      <p class="lead wipe" style="--i:2">« Un lieu de rencontre entre lecteurs, auteurs et libraires. » Dédicaces, lectures et soirées : le programme est publié dans l’agenda de la librairie.</p>
+      <div class="btn-row wipe" style="--i:3">
+        <a class="btn fill lbl" href="https://www.librairiemartelle.com/agenda.php" target="_blank" rel="noopener">Voir les prochains rendez-vous</a>
+        <a class="btn lbl" href="tel:+33322715454">Se renseigner</a>
+      </div>
+    </div>
+  </div>
+  <div class="evl" id="evList" hidden></div>
+  <div class="marq" id="marq" aria-hidden="true"><div class="marq-in">
+    <span>Elsa Lepoivre <i>·</i></span><span>Denis Podalydès <i>·</i></span><span>Marcel Bozonnet <i>·</i></span><span>Jacques Gamblin <i>·</i></span>
+    <span>Elsa Lepoivre <i>·</i></span><span>Denis Podalydès <i>·</i></span><span>Marcel Bozonnet <i>·</i></span><span>Jacques Gamblin <i>·</i></span>
+  </div></div>
+  <div class="past" data-io>
+    <div class="past-it wipe"><span class="lbl">Lundi 3 avril 2017 · Grand Théâtre, Maison de la Culture</span><h3><em>Les Liaisons dangereuses</em></h3><p>Lecture d’extraits du roman de Choderlos de Laclos, né à Amiens, par Elsa Lepoivre et Denis Podalydès de la Comédie-Française, et Marcel Bozonnet — pour les 60 ans de la librairie.</p></div>
+    <div class="past-it wipe" style="--i:1"><span class="lbl">Mercredi 5 avril 2017 · Maison de la Culture d’Amiens</span><h3><em>La nuit sera calme</em></h3><p>Lecture-spectacle du livre de Romain Gary par Jacques Gamblin, seconde soirée anniversaire.</p></div>
+  </div>
+  <p class="src" style="margin-top:28px">Archives : « La librairie Martelle d’Amiens a 60 ans ! », La vie des livres etc., 6 avril 2017. Les prochains événements sont à consulter sur l’agenda officiel.</p>
+</section>
+
+<!-- ================= SERVICES ================= -->
+<section class="sec" id="services" aria-labelledby="t-srv">
+  <div data-io>
+    <div class="kick lbl"><span class="ln"><span>Services</span></span></div>
+    <h2 class="h2" id="t-srv"><span class="ln"><span>Le livre qu’il vous faut,</span></span><span class="ln"><span style="--i:1"><em>là où vous êtes</em></span></span></h2>
+  </div>
+  <ul class="srv" data-io>
+    <li class="wipe"><div class="row"><span class="n">01</span><h3>Retrait en magasin</h3><p>Click &amp; collect : commandez en ligne, puis retirez vos livres au 3 rue des Vergeaux.</p><a class="lbl ulink" href="https://www.leslibraires.fr/presentation/librairie-martelle/" target="_blank" rel="noopener">Commander</a></div></li>
+    <li class="wipe" style="--i:1"><div class="row"><span class="n">02</span><h3>Livraison à domicile</h3><p>Vos livres expédiés directement chez vous.</p><a class="lbl ulink" href="https://www.leslibraires.fr/presentation/librairie-martelle/" target="_blank" rel="noopener">Commander</a></div></li>
+    <li class="wipe" style="--i:2"><div class="row"><span class="n">03</span><h3>Livraison en point relais</h3><p>Une livraison dans le point relais de votre choix.</p><a class="lbl ulink" href="https://www.leslibraires.fr/presentation/librairie-martelle/" target="_blank" rel="noopener">Commander</a></div></li>
+    <li class="wipe" style="--i:3"><div class="row"><span class="n">04</span><h3>Commandes &amp; conseils</h3><p>Un titre à faire venir, une idée de lecture ? Écrivez directement aux libraires.</p><a class="lbl ulink" href="mailto:commandes@librairiemartelle.com?subject=Demande%20%C3%A0%20la%20librairie">Écrire</a></div></li>
+  </ul>
+  <div class="cta-band wipe" data-io>
+    <p>Un livre en tête ? Commandez-le, retirez-le rue des Vergeaux.</p>
+    <div class="btn-row"><a class="btn fill lbl" href="https://www.leslibraires.fr/presentation/librairie-martelle/" target="_blank" rel="noopener">Commander en ligne</a><a class="btn lbl" href="tel:+33322715454">03 22 71 54 54</a></div>
+  </div>
+</section>
+
+<!-- ================= VISIT US ================= -->
+<section class="sec" id="venir" aria-labelledby="t-ven" style="background:var(--sheet)">
+  <div class="ven">
+    <div class="ven-l" data-io>
+      <div class="kick lbl"><span class="ln"><span>Venir à la librairie</span></span></div>
+      <h2 class="addr" id="t-ven"><span class="ln"><span>3 rue des Vergeaux</span></span><span class="ln"><span style="--i:1"><em>80000 Amiens</em></span></span></h2>
+      <span class="lbl status wipe" id="status2" style="--i:2"><i></i><span></span></span>
+      <table class="hours wipe" id="hours" style="--i:3" aria-label="Horaires d’ouverture"></table>
+      <p class="note wipe" style="--i:4">Horaires relevés sur la fiche de la librairie sur leslibraires.fr, le 11 novembre 2026. Fermetures exceptionnelles et jours fériés : à vérifier auprès de la librairie.</p>
+      <div class="btn-row wipe" style="--i:5">
+        <a class="btn fill lbl" href="https://www.google.com/maps/dir/?api=1&amp;destination=Librairie%20Martelle%2C%203%20rue%20des%20Vergeaux%2C%2080000%20Amiens" target="_blank" rel="noopener">Itinéraire</a>
+        <a class="btn lbl" href="tel:+33322715454">03 22 71 54 54</a>
+        <a class="btn lbl" href="mailto:commandes@librairiemartelle.com">Écrire</a>
+      </div>
+    </div>
+    <div class="map wipe" id="map" data-io>
+      <div class="load">Plan d’accès — chargement…</div>
+      <div class="pin"><b>Librairie Martelle</b><br>3 rue des Vergeaux, 80000 Amiens</div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="foot-grid">
+    <div><span class="lbl">Adresse</span>3 rue des Vergeaux<br>80000 Amiens<br><a class="ulink" href="https://www.google.com/maps/dir/?api=1&amp;destination=Librairie%20Martelle%2C%203%20rue%20des%20Vergeaux%2C%2080000%20Amiens" target="_blank" rel="noopener">Itinéraire</a></div>
+    <div><span class="lbl">Contact</span><a class="ulink" href="tel:+33322715454">03 22 71 54 54</a><br><a class="ulink" href="mailto:commandes@librairiemartelle.com">commandes@librairiemartelle.com</a></div>
+    <div><span class="lbl">Horaires</span>Du lundi au samedi<br>9h30 – 19h<br>Dimanche : fermé</div>
+    <div><span class="lbl">Explorer</span><a href="#accueil" data-scroll="accueil">Les rayons</a><br><a href="#histoire" data-scroll="histoire">Histoire</a><br><a href="#rencontres" data-scroll="rencontres">Rencontres</a><br><a href="https://www.leslibraires.fr/presentation/librairie-martelle/" target="_blank" rel="noopener">Commander en ligne</a></div>
+  </div>
+  <span class="giant" aria-hidden="true">Martelle</span>
+  <p class="sources">Sources : fiche de la librairie sur <a href="https://www.leslibraires.fr/presentation/librairie-martelle/" target="_blank" rel="noopener">leslibraires.fr</a> (consultée le 11/11/2026) ; <a href="https://www.livreshebdo.fr/article/lionel-martelle-disparait" target="_blank" rel="noopener">Livres Hebdo, 3 mars 2015</a> ; <a href="https://www.lagazettefrance.fr/article/martelle-independante-depuis-toujours" target="_blank" rel="noopener">La Gazette, 4 juin 2017</a> ; <a href="https://alexandraoury.com/la-librairie-martelle-d-amiens-a-60-ans" target="_blank" rel="noopener">La vie des livres etc., 6 avril 2017</a>. Logo typographique, palette, illustrations de couvertures, textes des rayons, nouveautés et coups de cœur : contenus de démonstration.</p>
+  <div class="foot-b lbl"><span>© Librairie Martelle</span><span>Concept proposé par Estalia — démonstration non officielle</span></div>
+</footer>
+
+<nav class="mbar" id="mbar" aria-label="Actions rapides">
+  <a href="tel:+33322715454"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 1.5h3l1.2 3.3-1.8 1.2a8 8 0 004.6 4.6l1.2-1.8 3.3 1.2v3c0 .6-.5 1-1 1A12.5 12.5 0 012 2.5c0-.5.4-1 1-1z"/></svg>Appeler</a>
+  <a href="https://www.google.com/maps/dir/?api=1&amp;destination=Librairie%20Martelle%2C%203%20rue%20des%20Vergeaux%2C%2080000%20Amiens" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 15s5-4.6 5-8.5a5 5 0 00-10 0C3 10.4 8 15 8 15z"/><circle cx="8" cy="6.5" r="1.8"/></svg>Itinéraire</a>
+  <a class="fill" href="https://www.leslibraires.fr/presentation/librairie-martelle/" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 3.2C6.2 2 3.6 1.8 1.5 2.2v10.4c2.1-.4 4.7-.2 6.5 1 1.8-1.2 4.4-1.4 6.5-1V2.2C12.4 1.8 9.8 2 8 3.2zM8 3.2v10.4"/></svg>Commander</a>
+</nav>
+
+<!-- ===== sheet: a section of the shop ===== -->
+<section class="sheet" id="sh-detail" aria-hidden="true" aria-label="Rayon">
+  <div class="sh-head">
+    <button class="lbl box" data-close>Fermer</button>
+    <div class="sh-brand"><span class="lbl">Librairie Martelle</span><i class="ln"></i><span class="lbl">Les rayons</span></div>
+  </div>
+  <div class="d-body">
+    <div class="d-left">
+      <div class="dm"><span class="lbl" style="color:var(--accent);letter-spacing:.24em;font-size:9.5px" id="dSub"></span></div>
+      <div class="dm"><h2 class="d-title" id="dTitle"></h2></div>
+      <div class="dm"><span class="d-meta" id="dMeta"></span></div>
+      <div class="dm"><p class="d-syn"><span id="dSyn"></span> <span class="demo-tag">Texte de démonstration</span></p></div>
+      <div class="dm"><p class="d-credit" id="dWhere"></p></div>
+      <div class="dm"><div class="btn-row">
+        <a class="btn fill lbl" href="https://www.leslibraires.fr/presentation/librairie-martelle/" target="_blank" rel="noopener">Commander en ligne</a>
+        <a class="btn lbl" id="dMail" href="mailto:commandes@librairiemartelle.com">Demander conseil</a>
+      </div></div>
+    </div>
+    <div class="d-right">
+      <svg id="pSvg" viewBox="0 0 474 711" aria-hidden="true">
+        <defs>
+          <clipPath id="pClip"><rect id="pClipRect" width="474" height="711" rx="3"/></clipPath>
+          <filter id="pInk" filterUnits="userSpaceOnUse" x="-300" y="-300" width="1074" height="1500">
+            <feTurbulence type="fractalNoise" baseFrequency=".011" numOctaves="3" seed="7" result="noise"/>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="120" xChannelSelector="R" yChannelSelector="G"/>
+          </filter>
+          <mask id="pMask" maskUnits="userSpaceOnUse" x="0" y="0" width="474" height="1000">
+            <g filter="url(#pInk)" fill="#fff" id="pBlots">
+              <circle cx="150" cy="330" r="0" data-d="0"/><circle cx="340" cy="600" r="0" data-d="120"/>
+              <circle cx="250" cy="120" r="0" data-d="220"/><circle cx="90" cy="760" r="0" data-d="300"/>
+              <circle cx="400" cy="250" r="0" data-d="360"/><circle cx="260" cy="860" r="0" data-d="420"/>
+              <circle cx="230" cy="470" r="0" data-d="180"/>
+            </g>
+          </mask>
+        </defs>
+        <g clip-path="url(#pClip)"><g id="pArt" mask="url(#pMask)"></g></g>
+      </svg>
+    </div>
+  </div>
+  <div class="d-books" id="dBooks"></div>
+</section>
+
+<!-- ===== sheet: one book ===== -->
+<section class="sheet" id="sh-book" aria-hidden="true" aria-label="Livre">
+  <div class="sh-head">
+    <button class="lbl box" data-close-book>← Retour</button>
+    <div class="sh-brand"><span class="lbl">Librairie Martelle</span><i class="ln"></i><span class="lbl" id="bkCrumb">Catalogue</span></div>
+  </div>
+  <div class="bk-body"><div class="bk-stage" id="bkStage"><i class="b3d-sh"></i></div><div class="bk-info" id="bkInfo"></div></div>
+</section>
+
+<!-- ===== sheet: menu ===== -->
+<section class="sheet" id="sh-menu" aria-hidden="true" aria-label="Menu">
+  <div class="sh-head">
+    <button class="lbl box" data-close>Fermer</button>
+    <div class="sh-brand"><span class="lbl">Librairie Martelle</span><i class="ln"></i><span class="lbl">Amiens</span></div>
+  </div>
+  <div style="padding:10px var(--pad) 60px">
+    <ul class="menu-l">
+      <li class="dm"><a href="#accueil" data-scroll="accueil"><small>01</small>Les rayons</a></li>
+      <li class="dm"><a href="#histoire" data-scroll="histoire"><small>02</small>Histoire</a></li>
+      <li class="dm"><a href="#visite" data-scroll="visite"><small>03</small>La librairie</a></li>
+      <li class="dm"><a href="#nouveautes" data-scroll="nouveautes"><small>04</small>Nouveautés</a></li>
+      <li class="dm"><a href="#rencontres" data-scroll="rencontres"><small>05</small>Rencontres</a></li>
+      <li class="dm"><a href="#venir" data-scroll="venir"><small>06</small>Venir &amp; horaires</a></li>
+    </ul>
+    <div class="menu-f">
+      <div class="dm"><div>3 rue des Vergeaux<br>80000 Amiens</div></div>
+      <div class="dm"><div><a class="ulink" href="tel:+33322715454">03 22 71 54 54</a><br><a class="ulink" href="mailto:commandes@librairiemartelle.com">commandes@librairiemartelle.com</a></div></div>
+      <div class="dm"><div><a class="btn fill lbl" href="https://www.leslibraires.fr/presentation/librairie-martelle/" target="_blank" rel="noopener">Commander en ligne</a></div></div>
+    </div>
+    <div class="dm"><p class="disclaim"><b>Concept proposé par Estalia — démonstration non officielle.</b> Le logo typographique, la palette, les illustrations de couvertures, les textes des rayons, les nouveautés et les coups de cœur sont des contenus de démonstration. Adresse, contact, horaires, services : fiche de la librairie sur leslibraires.fr (11/11/2026). Histoire : Livres Hebdo (2015), La Gazette (2017), La vie des livres etc. (2017).</p></div>
+  </div>
+</section>
+
+<!-- ===== intro curtain ===== -->
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro-in">
+    <div class="il lbl" style="color:var(--accent)"><span>Librairie indépendante · Amiens</span></div>
+    <div class="iwm" id="introWm"></div>
+    <div class="ibar"><i id="ibar"></i></div>
+    <div class="il lbl" style="color:var(--muted)"><span>Depuis 1957, rue des Vergeaux</span></div>
+  </div>
+  <div class="es lbl estalia">Concept proposé par Estalia — démonstration non officielle</div>
+</div>
+
+<div class="annc" id="annc" role="status" hidden></div>
+<div class="grain" aria-hidden="true"></div>
+<script src="config.js"></script>
+<div class="cur" id="cur" aria-hidden="true"><i class="cur-ring"></i><i class="cur-dot"></i><span class="cur-lbl" id="curLbl">OUVRIR</span></div>
+
+<script type="module" src="assets/js/home.js"></script>
+</body>
+</html>
