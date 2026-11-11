@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <title>Administration</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3l3 10 10 3-10 3-3 10-3-10-10-3 10-3z' fill='%23151515'/%3E%3C/svg%3E">
+  <script type="module" src="../src/admin.js"></script>
+</head>
+<body>
+  <!-- Connexion -->
+  <section class="ad-login" data-vue="connexion" hidden aria-labelledby="login-t">
+    <form class="ad-login__box" data-login novalidate>
+      <p class="ad-marque" data-nom-boutique></p>
+      <h1 id="login-t">Administration</h1>
+      <label class="f"><span>E-mail</span><input type="email" name="email" autocomplete="username" required></label>
+      <label class="f"><span>Mot de passe</span><input type="password" name="mdp" autocomplete="current-password" required></label>
+      <p class="err" data-login-err aria-live="polite"></p>
+      <button class="btn" type="submit">Se connecter</button>
+    </form>
+  </section>
+
+  <div class="ad" data-vue="app" hidden>
+    <header class="ad-top">
+      <p class="ad-marque" data-nom-boutique></p>
+      <nav class="ad-nav" aria-label="Administration">
+        <a href="#vetements" data-onglet="vetements">Vêtements</a>
+        <a href="#collections" data-onglet="collections">Collections</a>
+        <a href="#commandes" data-onglet="commandes">Commandes <span class="pastille" data-a-traiter hidden></span></a>
+        <a href="#boutique" data-onglet="boutique">Boutique</a>
+      </nav>
+      <div class="ad-top__r">
+        <a class="lnk" href="/" target="_blank" rel="noopener">Voir la boutique ↗</a>
+        <button class="lnk lnk--mute" type="button" data-deco>Se déconnecter</button>
+      </div>
+    </header>
+
+    <main class="ad-main">
+      <!-- Vêtements -->
+      <section data-panneau="vetements" hidden>
+        <div class="ad-head">
+          <div><h1>Vêtements</h1><p class="sub" data-resume></p></div>
+          <button class="btn btn--big" type="button" data-nouveau>+ Ajouter un vêtement</button>
+        </div>
+        <div class="ad-table" role="table" aria-label="Vêtements">
+          <div class="ad-tr ad-tr--h" role="row"><span role="columnheader">Vêtement</span><span role="columnheader">Prix</span><span role="columnheader">Stock</span><span role="columnheader">En ligne</span><span role="columnheader"><span class="sr">Ordre</span></span></div>
+          <div data-liste-produits role="rowgroup"></div>
+        </div>
+        <p class="sub">Les 12 premiers vêtements en ligne sont sur le portant ; tous sont dans la boutique. Les flèches règlent l’ordre.</p>
+      </section>
+
+      <!-- Collections -->
+      <section data-panneau="collections" hidden>
+        <div class="ad-head"><div><h1>Collections</h1><p class="sub">Elles servent de filtres dans la boutique (ex. Hiver, Nouveautés, Soldes).</p></div></div>
+        <form class="ad-inline" data-form-collection>
+          <label class="f f--grow"><span class="sr">Nom de la collection</span><input name="nom" placeholder="Nom de la nouvelle collection" required></label>
+          <button class="btn" type="submit">Ajouter</button>
+        </form>
+        <ul class="ad-cols" data-liste-collections role="list"></ul>
+      </section>
+
+      <!-- Commandes -->
+      <section data-panneau="commandes" hidden>
+        <div class="ad-head">
+          <div><h1>Commandes</h1><p class="sub" data-resume-commandes></p></div>
+          <div class="seg" role="group" aria-label="Filtre">
+            <button type="button" data-filtre="a_traiter" aria-pressed="true">À traiter</button>
+            <button type="button" data-filtre="toutes" aria-pressed="false">Toutes</button>
+          </div>
+        </div>
+        <div class="ad-cmds">
+          <ul class="ad-cmd-liste" data-liste-commandes role="list"></ul>
+          <article class="ad-cmd" data-commande hidden aria-live="polite"></article>
+        </div>
+      </section>
+
+      <!-- Boutique -->
+      <section data-panneau="boutique" hidden>
+        <div class="ad-head"><div><h1>Boutique</h1><p class="sub">Identité, livraison et paiement.</p></div></div>
+        <form class="ad-form" data-form-boutique novalidate>
+          <fieldset class="carte">
+            <legend>Identité</legend>
+            <label class="f"><span>Nom de la boutique</span><input name="nom" required></label>
+            <label class="f"><span>Phrase d’accroche <small>(sous le portant)</small></span><input name="slogan" placeholder="Ex. Paris 11e, depuis 2012"></label>
+            <div class="f"><span>Logo</span>
+              <div class="logo-zone"><span class="logo-apercu" data-logo-apercu>Aucun logo</span><label class="btn btn--line btn--s">Choisir une image<input type="file" accept="image/*" data-logo-fichier hidden></label></div>
+            </div>
+            <div class="couleurs-boutique">
+              <label class="f"><span>Fond</span><input type="color" name="fond"></label>
+              <label class="f"><span>Texte</span><input type="color" name="texte"></label>
+              <label class="f"><span>Accent</span><input type="color" name="accent"></label>
+            </div>
+          </fieldset>
+          <fieldset class="carte">
+            <legend>Livraison</legend>
+            <div class="row2">
+              <label class="f"><span>Prix de la livraison</span><span class="euro"><input name="livraison" inputmode="decimal"><b>€</b></span></label>
+              <label class="f"><span>Offerte à partir de</span><span class="euro"><input name="offerte" inputmode="decimal"><b>€</b></span></label>
+            </div>
+            <label class="f"><span>Adresse de retrait en boutique <small>(vide = pas de retrait)</small></span><input name="retrait" placeholder="12 rue de Charonne, 75011 Paris · mar.–sam. 11 h–19 h"></label>
+          </fieldset>
+          <fieldset class="carte">
+            <legend>Paiement</legend>
+            <p class="sub" data-stripe-etat></p>
+            <label class="choix"><input type="radio" name="paiement" value="stripe"> <span><b>Stripe</b> — cartes bancaires, Apple Pay, Google Pay. L’argent arrive sur votre compte Stripe.</span></label>
+            <label class="choix"><input type="radio" name="paiement" value="test"> <span><b>Paiement de test</b> — pour essayer la boutique, sans argent réel.</span></label>
+            <button class="btn btn--line btn--s" type="button" data-stripe-lier>Relier mon compte Stripe</button>
+          </fieldset>
+          <fieldset class="carte">
+            <legend>Adresse du site</legend>
+            <ul class="domaines" data-domaines role="list"></ul>
+            <p class="sub">Pour relier un autre nom de domaine, contactez Estalia Studio.</p>
+          </fieldset>
+          <p class="err" data-err-boutique aria-live="polite"></p>
+          <div class="barre"><button class="btn" type="submit">Enregistrer</button></div>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <!-- Fiche d'un vêtement -->
+  <div class="fiche" data-fiche hidden role="dialog" aria-modal="true" aria-labelledby="fiche-t">
+    <form class="fiche__in" data-form-produit novalidate>
+      <div class="fiche__bar">
+        <button class="lnk" type="button" data-fiche-fermer>← Vêtements</button>
+        <h2 id="fiche-t" data-fiche-titre>Nouveau vêtement</h2>
+        <div class="fiche__actions">
+          <label class="interrupteur"><input type="checkbox" name="visible"> <span>En ligne</span></label>
+          <button class="btn" type="submit" data-enregistrer>Enregistrer</button>
+        </div>
+      </div>
+      <div class="fiche__corps">
+        <section class="carte" aria-labelledby="photos-t">
+          <h3 id="photos-t">Photos</h3>
+          <p class="sub">Une photo par vue (devant, dos) et par couleur. Le fond est enlevé automatiquement et le vêtement est placé sur un cintre.</p>
+          <label class="depot" data-depot>
+            <input type="file" accept="image/*" multiple data-fichiers>
+            <b>Importer des photos</b>
+            <span>Glissez-les ici ou cliquez. Plusieurs à la fois possibles.</span>
+          </label>
+          <ul class="photos" data-photos role="list"></ul>
+        </section>
+
+        <section class="carte" aria-labelledby="infos-t">
+          <h3 id="infos-t">Informations</h3>
+          <div class="row2">
+            <label class="f"><span>Nom</span><input name="nom" required placeholder="Ex. Belleville, pull grosse maille"></label>
+            <label class="f"><span>Référence</span><input name="reference" required autocapitalize="characters" placeholder="PULL-BELL"></label>
+          </div>
+          <div class="row3">
+            <label class="f"><span>Prix</span><span class="euro"><input name="prix" inputmode="decimal" required placeholder="89"><b>€</b></span></label>
+            <label class="f"><span>Type <small>(affiché sur la fiche)</small></span><input name="type" list="types" placeholder="Pull"></label>
+            <label class="interrupteur interrupteur--f"><input type="checkbox" name="nouveau"> <span>Étiquette « Nouveau »</span></label>
+          </div>
+          <datalist id="types"><option>T-shirt</option><option>Chemise</option><option>Pull</option><option>Gilet</option><option>Cardigan</option><option>Sweat</option><option>Veste</option><option>Manteau</option><option>Robe</option><option>Jupe</option><option>Pantalon</option><option>Polo</option></datalist>
+          <label class="f"><span>Description</span><textarea name="description" rows="3" placeholder="Matière, coupe, entretien…"></textarea></label>
+          <div class="f"><span>Collections</span><div class="puces" data-fiche-collections></div></div>
+        </section>
+
+        <section class="carte" aria-labelledby="var-t">
+          <h3 id="var-t">Tailles, couleurs et stock</h3>
+          <div class="f"><span>Tailles</span>
+            <div class="puces" data-tailles></div>
+            <div class="ad-inline ad-inline--s"><input placeholder="Autre taille (ex. 38, Unique)" data-nouvelle-taille aria-label="Ajouter une taille"><button class="btn btn--line btn--s" type="button" data-ajouter-taille>Ajouter</button></div>
+          </div>
+          <div class="f"><span>Couleurs</span>
+            <ul class="couleurs" data-couleurs role="list"></ul>
+            <button class="btn btn--line btn--s" type="button" data-ajouter-couleur>+ Ajouter une couleur</button>
+          </div>
+          <div class="f"><span>Stock par taille et couleur</span>
+            <div class="stock" data-stock></div>
+          </div>
+        </section>
+
+        <p class="err" data-err-produit aria-live="polite"></p>
+        <button class="lnk lnk--danger" type="button" data-supprimer>Supprimer ce vêtement</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Correction du détourage -->
+  <div class="editeur" data-editeur hidden role="dialog" aria-modal="true" aria-labelledby="edit-t">
+    <div class="editeur__in">
+      <div class="fiche__bar">
+        <button class="lnk" type="button" data-edit-fermer>Fermer</button>
+        <h2 id="edit-t">Corriger la photo</h2>
+        <span></span>
+      </div>
+      <div class="editeur__corps">
+        <div class="editeur__vues">
+          <figure class="editeur__vue">
+            <figcaption>Détourage <small>passez la gomme ou le pinceau sur la photo</small></figcaption>
+            <div class="editeur__toile" data-zone><canvas data-canvas aria-label="Photo originale avec le détourage"></canvas></div>
+          </figure>
+          <figure class="editeur__vue editeur__vue--portant">
+            <figcaption>Sur le portant</figcaption>
+            <div class="editeur__portant"><i class="tringle" aria-hidden="true"></i><img data-edit-portant alt="Aperçu de la pièce sur le portant"></div>
+          </figure>
+        </div>
+        <div class="editeur__outils">
+          <div class="groupe">
+            <span class="groupe__t">Retouche</span>
+            <div class="seg" role="group" aria-label="Outil">
+              <button type="button" data-outil="gomme" aria-pressed="true">Gomme</button>
+              <button type="button" data-outil="pinceau" aria-pressed="false">Restaurer</button>
+            </div>
+            <label class="curseur"><span>Pinceau</span><input type="range" min="6" max="120" value="36" data-taille-pinceau></label>
+            <button class="lnk" type="button" data-defaire disabled>Annuler le trait</button>
+            <button class="btn btn--s" type="button" data-enregistrer-masque disabled>Appliquer la retouche</button>
+          </div>
+          <div class="groupe">
+            <span class="groupe__t">Position</span>
+            <div class="seg" role="group" aria-label="Cintre">
+              <button type="button" data-cintre="auto">Auto</button>
+              <button type="button" data-cintre="ajout">Ajouter un cintre</button>
+              <button type="button" data-cintre="mien">Garder le mien</button>
+            </div>
+            <label class="curseur"><span>Taille</span><input type="range" min="0.5" max="1.6" step="0.02" value="1" data-reglage="echelle"></label>
+            <label class="curseur"><span>Gauche / droite</span><input type="range" min="-160" max="160" step="2" value="0" data-reglage="dx"></label>
+            <label class="curseur"><span>Haut / bas</span><input type="range" min="-160" max="160" step="2" value="0" data-reglage="dy"></label>
+            <button class="lnk" type="button" data-reinit-position>Revenir au placement automatique</button>
+          </div>
+          <p class="sub" data-edit-etat aria-live="polite"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" data-toast role="status" aria-live="polite"></div>
+</body>
+</html>

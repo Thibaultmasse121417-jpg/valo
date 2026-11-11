@@ -1,0 +1,141 @@
+/* Parcours complet dans un vrai navigateur :
+   la boutique ajoute un vêtement → détourage automatique → correction → portant → achat client → stock.
+   Prérequis : serveur lancé (BASE), boutique « alba » (gerant@alba.fr / motdepasse-alba).
+   node tests/parcours.e2e.js <photo> [dossier-captures] */
+import { createRequire } from 'node:module'
+const { chromium, devices } = createRequire(import.meta.url)('playwright')
+import assert from 'node:assert/strict'
+import { mkdirSync } from 'node:fs'
+
+const PORT = process.env.PORT || 8787
+const ADMIN = `http://alba.localhost:${PORT}`
+const [photo, captures = '/tmp/captures-portant'] = process.argv.slice(2)
+mkdirSync(captures, { recursive: true })
+const etape = (t) => console.log('✓', t)
+const cap = (p, n) => p.screenshot({ path: `${captures}/${n}.png` })
+
+const navigateur = await chromium.launch()
+const erreurs = []
+const surveiller = (p, qui) => {
+  p.on('pageerror', (e) => erreurs.push(`${qui} : ${e.message}`))
+  p.on('console', (m) => { if (m.type() === 'error' && !/401|404/.test(m.text())) erreurs.push(`${qui} : ${m.text()}`) })
+}
+
+/* ---------- La boutique ajoute un vêtement ---------- */
+const a = await (await navigateur.newContext({ viewport: { width: 1360, height: 900 } })).newPage()
+surveiller(a, 'admin')
+await a.goto(`${ADMIN}/admin/`)
+await a.fill('[name="email"]', 'gerant@alba.fr')
+await a.fill('[name="mdp"]', 'motdepasse-alba')
+await a.click('[data-login] button[type="submit"]')
+await a.waitForSelector('[data-panneau="vetements"]:not([hidden])')
+etape('connexion à l’administration')
+
+await a.click('[data-nouveau]')
+await a.waitForSelector('[data-fiche]:not([hidden])')
+await a.setInputFiles('[data-fichiers]', photo)
+await a.waitForSelector('.ph .rond', { timeout: 10000 }).catch(() => {})
+const t0 = Date.now()
+await a.waitForSelector('.ph__img img', { timeout: 60000 })
+etape(`photo importée et détourée automatiquement en ${Date.now() - t0} ms`)
+await a.waitForFunction(() => document.querySelectorAll('[data-nom-couleur]').length > 0, null, { timeout: 5000 })
+const couleur = await a.inputValue('[data-nom-couleur]')
+etape(`couleur reconnue et proposée : ${couleur}`)
+await cap(a, '1-fiche-photo')
+
+await a.fill('[data-form-produit] [name="nom"]', 'Montmartre, pull torsadé')
+await a.fill('[data-form-produit] [name="reference"]', 'PULL-MTM')
+await a.fill('[data-form-produit] [name="prix"]', '119')
+await a.fill('[data-form-produit] [name="type"]', 'Pull')
+await a.fill('[data-form-produit] [name="description"]', 'Grosse maille torsadée, laine et alpaga.')
+await a.check('[data-tailles] input[value="XS"]', { force: true })
+const cases = await a.$$('[data-stock] input')
+assert.equal(cases.length, 4, 'XS, S, M, L pour une couleur')
+for (const [i, n] of [[0, 0], [1, 2], [2, 1], [3, 3]]) await cases[i].fill(String(n))
+await a.check('[data-form-produit] [name="visible"]', { force: true })
+await cap(a, '2-fiche-remplie')
+await a.click('[data-enregistrer]')
+await a.waitForFunction(() => document.querySelector('[data-toast]').textContent.includes('en ligne'), null, { timeout: 10000 })
+etape('fiche enregistrée : prix, tailles XS→L, stock par taille, en ligne')
+
+// Correction : un peu plus grand, et une retouche à la gomme
+await a.click('[data-corriger="0"]')
+await a.waitForSelector('[data-editeur]:not([hidden])')
+await a.waitForFunction(() => document.querySelector('[data-edit-etat]').textContent === '', null, { timeout: 15000 })
+const avant = await a.getAttribute('[data-edit-portant]', 'src')
+await a.$eval('[data-reglage="echelle"]', (el) => { el.value = '1.12'; el.dispatchEvent(new Event('input', { bubbles: true })) })
+await a.waitForFunction((s) => document.querySelector('[data-edit-portant]').getAttribute('src') !== s, avant, { timeout: 15000 })
+const bb = await (await a.$('[data-canvas]')).boundingBox()
+await a.mouse.move(bb.x + 8, bb.y + 8); await a.mouse.down(); await a.mouse.move(bb.x + 60, bb.y + 60, { steps: 6 }); await a.mouse.up()
+const avant2 = await a.getAttribute('[data-edit-portant]', 'src')
+await a.click('[data-enregistrer-masque]')
+await a.waitForFunction((s) => document.querySelector('[data-edit-portant]').getAttribute('src') !== s, avant2, { timeout: 15000 })
+await cap(a, '3-correction')
+await a.click('[data-edit-fermer]')
+etape('correction manuelle : taille ajustée et retouche du détourage appliquées')
+await a.click('[data-fiche-fermer]')
+await a.waitForSelector('[data-fiche]', { state: 'hidden' })
+await cap(a, '4-liste')
+
+/* ---------- Un client achète sur téléphone ---------- */
+const ctx = await navigateur.newContext({ ...devices['iPhone 13'] })
+const c = await ctx.newPage()
+surveiller(c, 'client')
+await c.goto(`${ADMIN}/`)
+await c.waitForSelector('.piece__btn')
+const premier = await c.getAttribute('.piece__btn', 'aria-label')
+assert.ok(premier.startsWith('Montmartre'), `le vêtement est sur le portant (trouvé : ${premier})`)
+await c.waitForTimeout(600)
+await cap(c, '5-portant-mobile')
+etape('le vêtement apparaît sur le portant de la boutique')
+
+await c.tap('.piece__btn[data-i="0"]')
+await c.waitForSelector('[data-qv]:not([hidden])')
+const xs = await c.$('[data-qv-sizes] button:has-text("XS")')
+assert.equal(await xs.isDisabled(), true, 'XS est épuisé')
+await c.tap('[data-qv-sizes] button:has-text("M")')
+await c.waitForTimeout(400)
+await cap(c, '6-fiche-client')
+await c.tap('[data-qv-add]')
+await c.tap('[data-qv-close]')
+await c.waitForSelector('[data-qv]', { state: 'hidden' })
+await c.tap('[data-open-cart]')
+await c.waitForSelector('[data-cart].is-on')
+await c.tap('[data-checkout]')
+await c.fill('[data-checkout-form] [name="email"]', 'lea@exemple.fr')
+await c.fill('[data-checkout-form] [name="nom"]', 'Léa Martin')
+await c.fill('[data-checkout-form] [name="ligne"]', '3 rue des Lilas')
+await c.fill('[data-checkout-form] [name="code_postal"]', '75011')
+await c.fill('[data-checkout-form] [name="ville"]', 'Paris')
+await cap(c, '7-commande')
+await c.tap('[data-checkout]')
+await c.waitForURL(/paiement-test/)
+await c.waitForSelector('[data-payer]:not([disabled])')
+await cap(c, '8-paiement')
+await c.tap('[data-payer]')
+await c.waitForURL(/\/commande\//)
+await c.waitForFunction(() => document.querySelector('[data-titre]').textContent === 'Commande confirmée')
+const total = await c.textContent('dd.pg-total')
+await cap(c, '9-confirmation')
+etape(`achat payé, confirmation affichée (total ${total.trim()})`)
+
+/* ---------- La boutique voit la commande ; le stock a baissé ---------- */
+await a.goto(`${ADMIN}/admin/#commandes`)
+await a.waitForSelector('[data-cmd]')
+await a.click('[data-cmd]')
+await a.waitForSelector('[data-commande]:not([hidden]) [data-statut="expediee"]')
+assert.match(await a.textContent('[data-commande]'), /PULL-MTM-.*-M/)
+await cap(a, '10-commande-admin')
+await a.click('[data-statut="expediee"]')
+await a.waitForFunction(() => document.querySelector('[data-commande] .badge').textContent === 'Expédiée')
+await a.goto(`${ADMIN}/admin/#vetements`)
+await a.waitForSelector('[data-ouvrir]')
+await a.click('[data-ouvrir]')
+await a.waitForSelector('[data-stock] input')
+const stockM = await a.inputValue('[data-stock-cle$="|M"]')
+assert.equal(stockM, '0', 'la dernière pièce M est vendue')
+etape('la commande est dans l’administration (référence de variante), expédiée ; stock M passé de 1 à 0')
+
+await navigateur.close()
+if (erreurs.length) { console.error('\nErreurs dans les pages :\n' + erreurs.join('\n')); process.exit(1) }
+console.log(`\nParcours complet réussi. Captures : ${captures}`)
