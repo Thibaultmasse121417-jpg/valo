@@ -2,6 +2,7 @@
 import { requete } from './db.js'
 import { config } from './config.js'
 import { urlPublique } from './stockage.js'
+import { CATEGORIES, lireTheme, lireContenus } from './vitrine.js'
 
 const cache = new Map()
 const DUREE = 30_000
@@ -32,6 +33,8 @@ export async function boutiqueDeRequete (c) {
 
 export const boutiquePublique = (b) => ({
   nom: b.nom, slogan: b.slogan, logo: urlPublique(b.logo_chemin), couleurs: b.couleurs, devise: b.devise,
+  theme: lireTheme(b), contenus: lireContenus(b), categories: CATEGORIES,
+  banniere: urlPublique(b.banniere_chemin), presentation_image: urlPublique(b.presentation_chemin),
   livraison_centimes: b.livraison_centimes, livraison_offerte_centimes: b.livraison_offerte_centimes,
   retrait: b.retrait_adresse ? { adresse: b.retrait_adresse } : null
 })

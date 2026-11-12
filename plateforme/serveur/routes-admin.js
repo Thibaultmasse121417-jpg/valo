@@ -11,6 +11,7 @@ import { normaliserOriginal } from './images.js'
 import { ecrire, lire, supprimer } from './stockage.js'
 import { reveil, recomposer } from './file.js'
 import { oublierBoutique } from './boutique.js'
+import { CATEGORIES, estCategorie, surCintre, lireTheme, lireContenus, validerTheme, validerContenus } from './vitrine.js'
 import { stripe, lienStripe, etatStripe } from './paiement.js'
 import { config } from './config.js'
 
@@ -98,7 +99,11 @@ function validerProduit (d) {
   if (!tailles.length) return 'Choisissez au moins une taille.'
   if (d.visible && !(prix > 0)) return 'Indiquez un prix avant de mettre le vêtement en ligne.'
   for (const col of d.couleurs || []) if (!String(col.nom || '').trim() || !/^#[0-9a-fA-F]{6}$/.test(col.hex || '')) return 'Chaque couleur a besoin d’un nom.'
-  return { ...d, nom, reference, prix_centimes: prix, tailles, couleurs: (d.couleurs || []).map((x) => ({ ...x, nom: String(x.nom).trim() })) }
+  const categorie = estCategorie(d.categorie) ? d.categorie : 'pulls-sweats'
+  let promo = d.prix_promo_centimes === null || d.prix_promo_centimes === '' || d.prix_promo_centimes === undefined ? null : Math.round(Number(d.prix_promo_centimes))
+  if (promo !== null && !(promo >= 0 && promo < prix)) return 'Le prix soldé doit être inférieur au prix normal.'
+  if (promo === 0) promo = null
+  return { ...d, nom, reference, prix_centimes: prix, prix_promo_centimes: promo, categorie, mis_en_avant: !!d.mis_en_avant, tailles, couleurs: (d.couleurs || []).map((x) => ({ ...x, nom: String(x.nom).trim() })) }
 }
 
 admin.put('/produits/:id', async (c) => {
@@ -109,8 +114,11 @@ admin.put('/produits/:id', async (c) => {
     if (!pretes) return err(c, 'Ajoutez au moins une photo de face prête avant de mettre le vêtement en ligne.')
   }
   try {
+    const avant = await db(c, async (x) => (await x.query('select categorie from produits where id = $1', [c.req.param('id')])).rows[0])
     const id = await db(c, (x) => enregistrerProduit(x, c.get('boutique').id, c.req.param('id'), v))
     if (!id) return err(c, 'Produit introuvable.', 404)
+    // Passage vêtement ↔ accessoire : les photos sont refaites avec ou sans cintre.
+    if (avant && surCintre(avant.categorie) !== surCintre(v.categorie)) await representer(c, id, surCintre(v.categorie) ? 'auto' : 'aucun')
     const [p] = await db(c, (x) => lireProduits(x, { id }))
     return ok(c, p)
   } catch (e) {
@@ -162,10 +170,12 @@ admin.post('/produits/:id/photos', async (c) => {
     const id = randomUUID()
     const chemin = await ecrire(`${b.id}/${id}-original.jpg`, o.buffer)
     const ph = await db(c, async (x) => {
-      const { rows: [n] } = await x.query("select count(*)::int n, count(*) filter (where role = 'face')::int f from photos where produit_id = $1", [pid])
+      const { rows: [n] } = await x.query(`select count(*)::int n, count(*) filter (where role = 'face')::int f,
+        (select categorie from produits where id = $1) as categorie from photos where produit_id = $1`, [pid])
       const r = role || (n.f === 0 ? 'face' : 'dos')
-      return (await x.query(`insert into photos (id, boutique_id, produit_id, couleur_id, role, ordre, original_chemin)
-        values ($1, $2, $3, (select id from couleurs where id = $4::uuid and produit_id = $3), $5, $6, $7) returning id, role, couleur_id, statut`, [id, b.id, pid, couleur, r, n.n, chemin])).rows[0]
+      const reglages = { cintre: surCintre(n.categorie) ? 'auto' : 'aucun', echelle: 1, dx: 0, dy: 0 }
+      return (await x.query(`insert into photos (id, boutique_id, produit_id, couleur_id, role, ordre, original_chemin, reglages)
+        values ($1, $2, $3, (select id from couleurs where id = $4::uuid and produit_id = $3), $5, $6, $7, $8) returning id, role, couleur_id, statut`, [id, b.id, pid, couleur, r, n.n, chemin, reglages])).rows[0]
     })
     crees.push(ph)
   }
@@ -297,24 +307,42 @@ admin.get('/boutique', async (c) => {
   const domaines = await db(c, async (x) => (await x.query('select domaine from domaines where boutique_id = $1 order by domaine', [b.id])).rows.map((r) => r.domaine))
   const s = await etatStripe(b).catch(() => ({ configure: !!stripe, connecte: !!b.stripe_compte }))
   return ok(c, {
-    nom: b.nom, slogan: b.slogan, logo: b.logo_chemin ? `/medias/${b.logo_chemin}` : null, couleurs: b.couleurs,
+    nom: b.nom, slogan: b.slogan, logo: b.logo_chemin ? `/medias/${b.logo_chemin}` : null,
+    banniere: b.banniere_chemin ? `/medias/${b.banniere_chemin}` : null, presentation_image: b.presentation_chemin ? `/medias/${b.presentation_chemin}` : null,
+    theme: lireTheme(b), contenus: lireContenus(b),
     livraison_centimes: b.livraison_centimes, livraison_offerte_centimes: b.livraison_offerte_centimes, retrait_adresse: b.retrait_adresse,
     paiement_mode: b.paiement_mode, stripe: s, domaines
   })
 })
 admin.put('/boutique', async (c) => {
   const b = c.get('boutique'); const d = await c.req.json()
-  const hex = (v, def) => (/^#[0-9a-fA-F]{6}$/.test(v || '') ? v : def)
-  const couleurs = { accent: hex(d.couleurs?.accent, b.couleurs.accent), fond: hex(d.couleurs?.fond, b.couleurs.fond), texte: hex(d.couleurs?.texte, b.couleurs.texte) }
   const nom = String(d.nom ?? b.nom).trim(); if (nom.length < 2) return err(c, 'Nom de boutique trop court.')
   const centimes = (v, def) => (Number.isFinite(Number(v)) && Number(v) >= 0 ? Math.round(Number(v)) : def)
+  const theme = validerTheme(d.theme || {}, lireTheme(b))
+  const contenus = d.contenus ? validerContenus(d.contenus) : lireContenus(b)
   await db(c, (x) => x.query(`update boutiques set nom = $2, slogan = $3, couleurs = $4, livraison_centimes = $5, livraison_offerte_centimes = $6, retrait_adresse = $7,
-    paiement_mode = $8 where id = $1`, [b.id, nom, String(d.slogan ?? b.slogan).trim(), couleurs, centimes(d.livraison_centimes, b.livraison_centimes),
-    centimes(d.livraison_offerte_centimes, b.livraison_offerte_centimes), String(d.retrait_adresse ?? b.retrait_adresse).trim(),
-    d.paiement_mode === 'stripe' ? 'stripe' : 'test']))
+    paiement_mode = $8, theme = $9, contenus = $10 where id = $1`, [b.id, nom, String(d.slogan ?? b.slogan).trim().slice(0, 120),
+    { fond: theme.fond, texte: theme.texte, accent: theme.accent }, centimes(d.livraison_centimes, b.livraison_centimes),
+    centimes(d.livraison_offerte_centimes, b.livraison_offerte_centimes), String(d.retrait_adresse ?? b.retrait_adresse).trim().slice(0, 200),
+    d.paiement_mode === 'stripe' ? 'stripe' : 'test', theme, contenus]))
   oublierBoutique(b.id)
   return ok(c)
 })
+// Images de la page d'accueil : bannière et photo de la boutique.
+for (const [route, colonne, largeur] of [['banniere', 'banniere_chemin', 2400], ['presentation', 'presentation_chemin', 1400]]) {
+  admin.post(`/boutique/${route}`, async (c) => {
+    const b = c.get('boutique'); const f = (await c.req.parseBody()).image
+    if (!f || typeof f !== 'object') return err(c, 'Aucune image reçue.')
+    let webp
+    try { webp = await sharp(Buffer.from(await f.arrayBuffer())).rotate().resize({ width: largeur, withoutEnlargement: true }).webp({ quality: 82 }).toBuffer() } catch { return err(c, 'Image illisible.') }
+    const chemin = await ecrire(`${b.id}/${route}-${Date.now()}-vitrine.webp`, webp)
+    await db(c, (x) => x.query(`update boutiques set ${colonne} = $2 where id = $1`, [b.id, chemin]))
+    if (b[colonne]) await supprimer(b[colonne])
+    oublierBoutique(b.id)
+    return ok(c, { url: `/medias/${chemin}` })
+  })
+}
+admin.get('/categories', (c) => ok(c, { categories: CATEGORIES }))
 admin.post('/boutique/logo', async (c) => {
   const b = c.get('boutique'); const corps = await c.req.parseBody()
   const f = corps.logo
@@ -337,3 +365,11 @@ admin.post('/boutique/stripe', async (c) => {
 })
 
 function pick (o, cles) { const r = {}; for (const k of cles) if (k in o) r[k] = o[k]; return r }
+
+// Refait les images d'un produit avec ou sans cintre (changement de catégorie).
+async function representer (c, produitId, cintre) {
+  const b = c.get('boutique')
+  const photos = await db(c, async (x) => (await x.query(`update photos set reglages = reglages || jsonb_build_object('cintre', $2::text)
+    where produit_id = $1 returning *`, [produitId, cintre])).rows)
+  for (const ph of photos) if (ph.statut === 'pret') await recomposer(b.id, ph)
+}

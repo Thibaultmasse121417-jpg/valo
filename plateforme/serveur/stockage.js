@@ -25,4 +25,4 @@ export const supprimer = (relatif) => rm(chemin(relatif), { force: true })
 // Adresse publique d'un fichier public (portant, vignette, logo).
 export const urlPublique = (relatif) => (relatif ? `/medias/${relatif}` : null)
 // Seuls ces fichiers sont servis publiquement.
-export const estPublic = (relatif) => /-(portant|vignette)(-\d+)?\.webp$|\/logo-[\w-]+\.(webp|png)$/.test(relatif)
+export const estPublic = (relatif) => /-(portant|vignette)(-\d+)?\.webp$|\/logo-[\w-]+\.(webp|png)$|-vitrine\.webp$/.test(relatif)

@@ -1,5 +1,6 @@
 /* Lecture et écriture des produits d'une boutique (toujours dans avecBoutique). */
 import { urlPublique } from './stockage.js'
+import { surCintre } from './vitrine.js'
 
 const slug = (t) => String(t).normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().replace(/[^A-Z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 16) || 'X'
 export const skuAuto = (reference, couleur, taille) => `${reference}-${slug(couleur)}-${slug(taille)}`
@@ -15,11 +16,12 @@ export async function lireProduits (c, { public: pub = false, id = null } = {}) 
   const { rows: produits } = await c.query(`select * from produits p ${where} order by p.ordre, p.created_at desc`, params)
   if (!produits.length) return []
   const ids = produits.map((p) => p.id)
-  const [couleurs, photos, variantes, liens] = await Promise.all([
+  const [couleurs, photos, variantes, liens, ventes] = await Promise.all([
     c.query('select * from couleurs where produit_id = any($1) order by ordre, nom', [ids]),
     c.query('select * from photos where produit_id = any($1) order by ordre, created_at', [ids]),
     c.query('select * from variantes where produit_id = any($1)', [ids]),
-    c.query('select produit_id, collection_id from produit_collections where produit_id = any($1)', [ids])
+    c.query('select produit_id, collection_id from produit_collections where produit_id = any($1)', [ids]),
+    c.query('select produit_id, ventes from ventes_produits where produit_id = any($1)', [ids])
   ])
   return produits.map((p) => {
     const cols = couleurs.rows.filter((x) => x.produit_id === p.id)
@@ -27,7 +29,9 @@ export async function lireProduits (c, { public: pub = false, id = null } = {}) 
     const vars = variantes.rows.filter((x) => x.produit_id === p.id)
     const base = {
       id: p.id, reference: p.reference, nom: p.nom, type: p.type, description: p.description,
-      prix_centimes: p.prix_centimes, tailles: p.tailles, nouveau: p.nouveau,
+      prix_centimes: p.prix_centimes, prix_promo_centimes: p.prix_promo_centimes, tailles: p.tailles, nouveau: p.nouveau,
+      categorie: p.categorie, presentation: surCintre(p.categorie) ? 'cintre' : 'objet', mis_en_avant: p.mis_en_avant,
+      ventes: ventes.rows.find((v) => v.produit_id === p.id)?.ventes || 0, created_at: p.created_at,
       collections: liens.rows.filter((l) => l.produit_id === p.id).map((l) => l.collection_id)
     }
     if (pub) {
@@ -47,7 +51,7 @@ export async function lireProduits (c, { public: pub = false, id = null } = {}) 
       }
     }
     return {
-      ...base, visible: p.visible, ordre: p.ordre, created_at: p.created_at,
+      ...base, visible: p.visible, ordre: p.ordre,
       couleurs: cols.map((col) => ({ id: col.id, nom: col.nom, hex: col.hex })),
       photos: phs.map((x) => ({
         id: x.id, couleur_id: x.couleur_id, role: x.role, ordre: x.ordre, statut: x.statut, erreur: x.erreur,
@@ -63,16 +67,17 @@ export async function lireProduits (c, { public: pub = false, id = null } = {}) 
    donnees : { reference, nom, type, description, prix_centimes, tailles[], visible, nouveau,
                collections[], couleurs: [{ id?, cle, nom, hex }], stocks: [{ couleur (id ou cle), taille, stock, sku? }] } */
 export async function enregistrerProduit (c, boutiqueId, id, d) {
-  const champs = [d.reference, d.nom, d.type || '', d.description || '', d.prix_centimes, d.tailles, d.visible !== false, !!d.nouveau]
+  const champs = [d.reference, d.nom, d.type || '', d.description || '', d.prix_centimes, d.tailles, d.visible !== false, !!d.nouveau,
+    d.categorie || 'pulls-sweats', d.prix_promo_centimes ?? null, !!d.mis_en_avant]
   let pid = id
   if (pid) {
     const r = await c.query(`update produits set reference = $1, nom = $2, type = $3, description = $4, prix_centimes = $5,
-      tailles = $6, visible = $7, nouveau = $8, updated_at = now() where id = $9`, [...champs, pid])
+      tailles = $6, visible = $7, nouveau = $8, categorie = $9, prix_promo_centimes = $10, mis_en_avant = $11, updated_at = now() where id = $12`, [...champs, pid])
     if (!r.rowCount) return null
   } else {
     const { rows: [o] } = await c.query('select coalesce(min(ordre), 1) - 1 as o from produits')
-    const { rows: [p] } = await c.query(`insert into produits (boutique_id, reference, nom, type, description, prix_centimes, tailles, visible, nouveau, ordre)
-      values ($9, $1, $2, $3, $4, $5, $6, $7, $8, $10) returning id`, [...champs, boutiqueId, o.o])
+    const { rows: [p] } = await c.query(`insert into produits (boutique_id, reference, nom, type, description, prix_centimes, tailles, visible, nouveau,
+      categorie, prix_promo_centimes, mis_en_avant, ordre) values ($12, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $13) returning id`, [...champs, boutiqueId, o.o])
     pid = p.id
   }
   // Collections

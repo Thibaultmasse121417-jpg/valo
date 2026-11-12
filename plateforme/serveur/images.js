@@ -123,15 +123,17 @@ function svgCintre (largeur, haut) {
 export async function composer (original, masque, reglages = {}) {
   const a = await analyser(masque)
   if (!a) throw new Error('Aucune pièce trouvée sur la photo')
-  const cintre = reglages.cintre === 'ajout' || reglages.cintre === 'mien' ? reglages.cintre : (a.cintre ? 'mien' : 'ajout')
+  // 'aucun' : accessoire (sac, bijou, chaussure), posé au centre sans cintre.
+  const cintre = ['ajout', 'mien', 'aucun'].includes(reglages.cintre) ? reglages.cintre : (a.cintre ? 'mien' : 'ajout')
   const echelle = clamp(Number(reglages.echelle) || 1, 0.3, 2.5)
   const dx = clamp(Number(reglages.dx) || 0, -400, 400)
   const dy = clamp(Number(reglages.dy) || 0, -400, 400)
   const { boite: b } = a
   const haut = cintre === 'ajout' ? 64 : CROCHET_HAUT
-  const s = Math.min(620 / b.w, (SORTIE.h - haut - 26) / b.h) * echelle
+  const s = (cintre === 'aucun' ? Math.min(560 / b.w, 640 / b.h) : Math.min(620 / b.w, (SORTIE.h - haut - 26) / b.h)) * echelle
   const w = Math.max(1, Math.round(b.w * s)); const h = Math.max(1, Math.round(b.h * s))
-  const left = Math.round((SORTIE.l - w) / 2 + dx); const top = Math.round(haut + dy)
+  const left = Math.round((SORTIE.l - w) / 2 + dx)
+  const top = Math.round((cintre === 'aucun' ? (SORTIE.h - h) / 2 : haut) + dy)
 
   // Pièce détourée, recadrée et mise à l'échelle.
   const alpha = await sharp(masque).greyscale().extract({ left: b.x, top: b.y, width: b.w, height: b.h }).raw().toBuffer()

@@ -32,7 +32,7 @@ export async function creerCommande (boutique, corps, paiementMode) {
   return avecBoutique(boutique.id, async (c) => {
     const ids = [...parVariante.keys()]
     // Verrouille les variantes demandées : deux clients ne peuvent pas acheter la dernière pièce.
-    const { rows } = await c.query(`select v.id, v.stock, v.taille, v.sku, v.produit_id, p.nom, p.prix_centimes, p.visible, co.nom as couleur
+    const { rows } = await c.query(`select v.id, v.stock, v.taille, v.sku, v.produit_id, p.nom, coalesce(p.prix_promo_centimes, p.prix_centimes) as prix_centimes, p.visible, co.nom as couleur
       from variantes v join produits p on p.id = v.produit_id join couleurs co on co.id = v.couleur_id
       where v.id = any($1::uuid[]) for update of v`, [ids])
     if (rows.length !== ids.length) throw new ErreurClient('Un article n’existe plus. Rechargez la page.', 409)
