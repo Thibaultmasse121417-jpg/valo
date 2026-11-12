@@ -19,6 +19,10 @@
     "vite": "^8.3.5"
   },
   "dependencies": {
+    "@fontsource-variable/dm-sans": "^5.2.6",
+    "@fontsource/cormorant-garamond": "^5.2.6",
+    "@fontsource/dm-serif-display": "^5.2.6",
+    "@fontsource/playfair-display": "^5.2.6",
     "@hono/node-server": "^1.14.4",
     "hono": "^4.7.10",
     "onnxruntime-node": "^1.22.0",

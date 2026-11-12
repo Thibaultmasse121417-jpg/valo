@@ -254,14 +254,15 @@ admin.get('/collections', async (c) => ok(c, {
     from collections c order by ordre, nom`)).rows)
 }))
 admin.post('/collections', async (c) => {
-  const { nom } = await c.req.json(); if (!String(nom || '').trim()) return err(c, 'Donnez un nom à la collection.')
-  const r = await db(c, async (x) => (await x.query('insert into collections (boutique_id, nom, ordre) values ($1, $2, (select coalesce(max(ordre), 0) + 1 from collections)) returning *', [c.get('boutique').id, String(nom).trim()])).rows[0])
+  const { nom, description = '' } = await c.req.json(); if (!String(nom || '').trim()) return err(c, 'Donnez un nom à la collection.')
+  const r = await db(c, async (x) => (await x.query('insert into collections (boutique_id, nom, description, ordre) values ($1, $2, $3, (select coalesce(max(ordre), 0) + 1 from collections)) returning *', [c.get('boutique').id, String(nom).trim(), String(description).trim().slice(0, 200)])).rows[0])
   return ok(c, r)
 })
 admin.put('/collections/:id', async (c) => {
   const d = await c.req.json()
-  const r = await db(c, (x) => x.query('update collections set nom = coalesce($2, nom), visible = coalesce($3, visible), ordre = coalesce($4, ordre) where id = $1',
-    [c.req.param('id'), d.nom ? String(d.nom).trim() : null, typeof d.visible === 'boolean' ? d.visible : null, Number.isInteger(d.ordre) ? d.ordre : null]))
+  const r = await db(c, (x) => x.query('update collections set nom = coalesce($2, nom), visible = coalesce($3, visible), ordre = coalesce($4, ordre), description = coalesce($5, description) where id = $1',
+    [c.req.param('id'), d.nom ? String(d.nom).trim() : null, typeof d.visible === 'boolean' ? d.visible : null, Number.isInteger(d.ordre) ? d.ordre : null,
+      typeof d.description === 'string' ? d.description.trim().slice(0, 200) : null]))
   return r.rowCount ? ok(c) : err(c, 'Collection introuvable.', 404)
 })
 admin.delete('/collections/:id', async (c) => {

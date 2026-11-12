@@ -25,6 +25,31 @@ Ce dossier est indépendant de `site-v10/` (page de vente et démo statique), qu
 - Panier, commande (livraison ou retrait en boutique), paiement, page de confirmation et de suivi.
 - Prix, stock et frais de livraison sont toujours recalculés par le serveur. Le stock est réservé pendant 30 minutes au moment de la commande, puis rendu si le paiement n'aboutit pas. Deux clients ne peuvent pas acheter la même dernière pièce.
 
+## Créer une nouvelle boutique (sans toucher au code)
+
+Tout ce qui distingue une boutique d'une autre se règle dans son administration, onglet **Boutique** :
+- **Identité** : nom, logo (sinon le nom s'écrit dans la police des titres), six couleurs (fond, cartes, texte, texte discret, accent, bandeaux), police des titres (Cormorant, Playfair, DM Serif, Inter Tight), police du texte, titres en italique ou non.
+- **Page d'accueil** : annonces du bandeau, image et textes de la bannière, titre et texte du portant.
+- **La boutique** : photo, présentation, adresse, horaires, téléphone, e-mail, réseaux sociaux, texte du pied de page.
+- **Livraison, retrait, paiement.**
+
+Les produits, collections et promotions se gèrent dans les onglets Produits et Collections.
+
+Étapes :
+1. `npm run boutique:creer -- --slug ma-boutique --nom "…" --domaine ma-boutique.fr --email … --mdp "…"`
+2. La commerçante se connecte sur `https://ma-boutique.fr/admin/`, règle l'onglet Boutique et ajoute ses produits.
+
+`tests/creer-ambre.js` fait exactement cela par l'API pour la boutique de démonstration **Ambre & Strass** : réglages, 3 collections, 22 produits (photo → détourage serveur → fiche → stock → en ligne), 3 commandes payées.
+
+### Page d'accueil de la boutique
+Bannière, portant interactif (vêtements sur cintre, 12 premiers), collections, nouveautés, catégories, coups de cœur (ventes réelles, puis produits mis en avant), promotions (prix barré, pourcentage), catalogue filtrable par catégorie, collection ou promotion, triable par nouveauté, popularité ou prix, présentation de la boutique, services et pied de page complet.
+
+### Catégories
+Blouses et chemisiers, Pulls et sweats, Tops et t-shirts, Vestes et manteaux, Pantalons et shorts, Robes et jupes, Combinaisons et ensembles (sur cintre, sur le portant) ; Bijoux, Sacs, Chaussures (accessoires : photo détourée et posée au centre, sans cintre, dans la boutique mais pas sur le portant) ; Promotions (tout produit avec un prix soldé). La liste est dans `serveur/vitrine.js`.
+
+### Promotions
+Dans la fiche produit, un **prix soldé** inférieur au prix normal met le produit en promotion. La boutique affiche alors le prix barré et le pourcentage, et le paiement se fait au prix soldé (calculé par le serveur).
+
 ## Isolation des boutiques
 
 - La boutique est reconnue au **nom de domaine** de la requête (table `domaines`).
@@ -72,6 +97,8 @@ L'argent va directement sur le compte Stripe du commerçant. La plateforme peut 
 npm start &                                          # boutiques alba et nova créées
 node tests/api.js chemin/vers/photo.jpg              # API : détourage, variantes, isolation, achat, stock
 node tests/parcours.e2e.js chemin/vers/photo.jpg     # navigateur : admin → détourage → portant → achat
+node tests/creer-ambre.js                            # crée la boutique Ambre & Strass par l'API admin
+node tests/ambre.e2e.js                              # vitrine : identité, accessoire, promo, achat au prix soldé
 ```
 
 ## Limites actuelles

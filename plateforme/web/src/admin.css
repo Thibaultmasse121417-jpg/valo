@@ -37,7 +37,7 @@ h3 { font-size: 17px; margin-bottom: 4px; }
 .f { display: grid; gap: 6px; min-width: 0; }
 .f > span:first-child { font-weight: 600; font-size: 14px; }
 .f small { font-weight: 400; color: var(--mute); }
-.f input:not([type='checkbox']):not([type='radio']):not([type='color']):not([type='range']), .f select, .f textarea, .ad-inline input, .couleur input:not([type='color']), .col input:not([type='checkbox']) {
+.f input:not([type='checkbox']):not([type='radio']):not([type='color']):not([type='range']), .f select, .f textarea, .ad-inline input:not([type="checkbox"]), .couleur input:not([type='color']), .col input:not([type='checkbox']) {
   width: 100%; min-height: 44px; padding: 9px 12px; font-size: 15px; background: #fff; border: 1px solid #cdc8be; border-radius: 9px;
 }
 .f textarea { resize: vertical; }
@@ -215,3 +215,14 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--ink); outli
   .fiche__bar h2 { display: none; }
   .col { grid-template-columns: 1fr auto; }
 }
+
+/* Vitrine */
+.interrupteurs { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+.ad-filtres { gap: 18px; }
+.ad-filtres select { min-height: 38px !important; }
+.promo { color: #b4582a; }
+.ad-tr s { color: var(--mute); font-size: 12.5px; }
+.image-apercu { min-width: 160px; min-height: 70px; display: grid; place-items: center; border: 1px dashed #c9c4b9; border-radius: 10px; color: var(--mute); font-size: 13px; background: #fff; overflow: hidden; }
+.image-apercu img { max-height: 90px; width: auto; }
+.couleurs-boutique { flex-wrap: wrap; }
+.col__txt { display: grid; gap: 6px; }

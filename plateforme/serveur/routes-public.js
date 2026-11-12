@@ -20,7 +20,7 @@ publique.get('/catalogue', async (c) => {
   const b = c.get('boutique')
   const res = await avecBoutique(b.id, async (db) => {
     const produits = (await lireProduits(db, { public: true })).filter((p) => p.couleurs.length)
-    const { rows: collections } = await db.query(`select id, nom from collections where visible
+    const { rows: collections } = await db.query(`select id, nom, description from collections where visible
       and exists (select 1 from produit_collections pc join produits p on p.id = pc.produit_id where pc.collection_id = collections.id and p.visible)
       order by ordre, nom`)
     return { produits, collections }

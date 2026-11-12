@@ -41,10 +41,14 @@
       <section data-panneau="vetements" hidden>
         <div class="ad-head">
           <div><h1>Vêtements</h1><p class="sub" data-resume></p></div>
-          <button class="btn btn--big" type="button" data-nouveau>+ Ajouter un vêtement</button>
+          <button class="btn btn--big" type="button" data-nouveau>+ Ajouter un produit</button>
+        </div>
+        <div class="ad-inline ad-filtres">
+          <label class="f"><span class="sr">Catégorie</span><select data-filtre-cat><option value="">Toutes les catégories</option></select></label>
+          <label class="interrupteur"><input type="checkbox" data-filtre-promo> <span>En promotion</span></label>
         </div>
         <div class="ad-table" role="table" aria-label="Vêtements">
-          <div class="ad-tr ad-tr--h" role="row"><span role="columnheader">Vêtement</span><span role="columnheader">Prix</span><span role="columnheader">Stock</span><span role="columnheader">En ligne</span><span role="columnheader"><span class="sr">Ordre</span></span></div>
+          <div class="ad-tr ad-tr--h" role="row"><span role="columnheader">Produit</span><span role="columnheader">Prix</span><span role="columnheader">Stock</span><span role="columnheader">En ligne</span><span role="columnheader"><span class="sr">Ordre</span></span></div>
           <div data-liste-produits role="rowgroup"></div>
         </div>
         <p class="sub">Les 12 premiers vêtements en ligne sont sur le portant ; tous sont dans la boutique. Les flèches règlent l’ordre.</p>
@@ -55,6 +59,7 @@
         <div class="ad-head"><div><h1>Collections</h1><p class="sub">Elles servent de filtres dans la boutique (ex. Hiver, Nouveautés, Soldes).</p></div></div>
         <form class="ad-inline" data-form-collection>
           <label class="f f--grow"><span class="sr">Nom de la collection</span><input name="nom" placeholder="Nom de la nouvelle collection" required></label>
+          <label class="f f--grow"><span class="sr">Description</span><input name="description" placeholder="Description courte (facultatif)"></label>
           <button class="btn" type="submit">Ajouter</button>
         </form>
         <ul class="ad-cols" data-liste-collections role="list"></ul>
@@ -81,16 +86,67 @@
         <form class="ad-form" data-form-boutique novalidate>
           <fieldset class="carte">
             <legend>Identité</legend>
-            <label class="f"><span>Nom de la boutique</span><input name="nom" required></label>
-            <label class="f"><span>Phrase d’accroche <small>(sous le portant)</small></span><input name="slogan" placeholder="Ex. Paris 11e, depuis 2012"></label>
-            <div class="f"><span>Logo</span>
+            <div class="row2">
+              <label class="f"><span>Nom de la boutique</span><input name="nom" required></label>
+              <label class="f"><span>Accroche <small>(onglet du navigateur)</small></span><input name="slogan" placeholder="Ex. Concept store mode femme"></label>
+            </div>
+            <div class="f"><span>Logo <small>(sinon le nom s’affiche dans la police des titres)</small></span>
               <div class="logo-zone"><span class="logo-apercu" data-logo-apercu>Aucun logo</span><label class="btn btn--line btn--s">Choisir une image<input type="file" accept="image/*" data-logo-fichier hidden></label></div>
             </div>
             <div class="couleurs-boutique">
-              <label class="f"><span>Fond</span><input type="color" name="fond"></label>
-              <label class="f"><span>Texte</span><input type="color" name="texte"></label>
-              <label class="f"><span>Accent</span><input type="color" name="accent"></label>
+              <label class="f"><span>Fond</span><input type="color" name="t_fond"></label>
+              <label class="f"><span>Cartes</span><input type="color" name="t_surface"></label>
+              <label class="f"><span>Texte</span><input type="color" name="t_texte"></label>
+              <label class="f"><span>Texte discret</span><input type="color" name="t_attenue"></label>
+              <label class="f"><span>Accent</span><input type="color" name="t_accent"></label>
+              <label class="f"><span>Bandeaux et pied</span><input type="color" name="t_bandeau"></label>
             </div>
+            <div class="row3">
+              <label class="f"><span>Police des titres</span><select name="t_police_titres">
+                <option value="cormorant">Cormorant (élégante)</option><option value="playfair">Playfair (classique)</option><option value="dm-serif">DM Serif (affirmée)</option><option value="inter-tight">Inter Tight (moderne)</option>
+              </select></label>
+              <label class="f"><span>Police du texte</span><select name="t_police_texte"><option value="inter-tight">Inter Tight</option><option value="dm-sans">DM Sans</option></select></label>
+              <label class="interrupteur interrupteur--f"><input type="checkbox" name="t_titres_italiques"> <span>Titres en italique</span></label>
+            </div>
+          </fieldset>
+          <fieldset class="carte">
+            <legend>Page d’accueil</legend>
+            <label class="f"><span>Annonces du bandeau <small>(une par ligne, 6 au plus)</small></span><textarea name="annonces" rows="3"></textarea></label>
+            <div class="f"><span>Image de la bannière <small>(large, au moins 1600 px)</small></span>
+              <div class="logo-zone"><span class="image-apercu" data-banniere-apercu>Aucune image</span><label class="btn btn--line btn--s">Choisir une image<input type="file" accept="image/*" data-banniere-fichier hidden></label></div>
+            </div>
+            <div class="row2">
+              <label class="f"><span>Surtitre de la bannière</span><input name="b_surtitre" placeholder="Nouvelle collection"></label>
+              <label class="f"><span>Texte du bouton</span><input name="b_bouton" placeholder="Découvrir la collection"></label>
+            </div>
+            <label class="f"><span>Titre de la bannière</span><input name="b_titre"></label>
+            <label class="f"><span>Texte de la bannière</span><textarea name="b_texte" rows="2"></textarea></label>
+            <div class="row2">
+              <label class="f"><span>Titre du portant</span><input name="p_titre"></label>
+              <label class="f"><span>Texte du portant</span><input name="p_texte"></label>
+            </div>
+          </fieldset>
+          <fieldset class="carte">
+            <legend>La boutique et contact</legend>
+            <div class="f"><span>Photo de la boutique</span>
+              <div class="logo-zone"><span class="image-apercu" data-presentation-apercu>Aucune image</span><label class="btn btn--line btn--s">Choisir une image<input type="file" accept="image/*" data-presentation-fichier hidden></label></div>
+            </div>
+            <label class="f"><span>Titre de la présentation</span><input name="m_titre"></label>
+            <label class="f"><span>Présentation <small>(un paragraphe par ligne)</small></span><textarea name="m_texte" rows="4"></textarea></label>
+            <div class="row2">
+              <label class="f"><span>Adresse</span><input name="m_adresse"></label>
+              <label class="f"><span>Horaires <small>(une ligne par jour ou période)</small></span><textarea name="m_horaires" rows="2"></textarea></label>
+            </div>
+            <div class="row2">
+              <label class="f"><span>Téléphone</span><input name="m_telephone" type="tel"></label>
+              <label class="f"><span>E-mail</span><input name="m_email" type="email"></label>
+            </div>
+            <div class="row3">
+              <label class="f"><span>Instagram</span><input name="r_instagram" placeholder="https://instagram.com/…"></label>
+              <label class="f"><span>Facebook</span><input name="r_facebook" placeholder="https://facebook.com/…"></label>
+              <label class="f"><span>TikTok</span><input name="r_tiktok" placeholder="https://tiktok.com/@…"></label>
+            </div>
+            <label class="f"><span>Texte du pied de page</span><input name="pied"></label>
           </fieldset>
           <fieldset class="carte">
             <legend>Livraison</legend>
@@ -98,7 +154,7 @@
               <label class="f"><span>Prix de la livraison</span><span class="euro"><input name="livraison" inputmode="decimal"><b>€</b></span></label>
               <label class="f"><span>Offerte à partir de</span><span class="euro"><input name="offerte" inputmode="decimal"><b>€</b></span></label>
             </div>
-            <label class="f"><span>Adresse de retrait en boutique <small>(vide = pas de retrait)</small></span><input name="retrait" placeholder="12 rue de Charonne, 75011 Paris · mar.–sam. 11 h–19 h"></label>
+            <label class="f"><span>Adresse de retrait en boutique <small>(vide = pas de retrait)</small></span><input name="retrait"></label>
           </fieldset>
           <fieldset class="carte">
             <legend>Paiement</legend>
@@ -113,7 +169,7 @@
             <p class="sub">Pour relier un autre nom de domaine, contactez Estalia Studio.</p>
           </fieldset>
           <p class="err" data-err-boutique aria-live="polite"></p>
-          <div class="barre"><button class="btn" type="submit">Enregistrer</button></div>
+          <div class="barre"><button class="btn" type="submit">Enregistrer</button> <a class="lnk" href="/" target="_blank" rel="noopener">Voir le résultat ↗</a></div>
         </form>
       </section>
     </main>
@@ -149,9 +205,18 @@
             <label class="f"><span>Référence</span><input name="reference" required autocapitalize="characters" placeholder="PULL-BELL"></label>
           </div>
           <div class="row3">
-            <label class="f"><span>Prix</span><span class="euro"><input name="prix" inputmode="decimal" required placeholder="89"><b>€</b></span></label>
+            <label class="f"><span>Catégorie</span><select name="categorie" data-categories-select></select></label>
             <label class="f"><span>Type <small>(affiché sur la fiche)</small></span><input name="type" list="types" placeholder="Pull"></label>
-            <label class="interrupteur interrupteur--f"><input type="checkbox" name="nouveau"> <span>Étiquette « Nouveau »</span></label>
+            <span class="sub" data-presentation-info></span>
+          </div>
+          <div class="row3">
+            <label class="f"><span>Prix</span><span class="euro"><input name="prix" inputmode="decimal" required placeholder="89"><b>€</b></span></label>
+            <label class="f"><span>Prix soldé <small>(vide = pas de promotion)</small></span><span class="euro"><input name="promo" inputmode="decimal" placeholder="—"><b>€</b></span></label>
+            <span class="sub" data-remise></span>
+          </div>
+          <div class="interrupteurs">
+            <label class="interrupteur"><input type="checkbox" name="nouveau"> <span>Étiquette « Nouveau »</span></label>
+            <label class="interrupteur"><input type="checkbox" name="mis_en_avant"> <span>Mettre en avant (« Vos coups de cœur »)</span></label>
           </div>
           <datalist id="types"><option>T-shirt</option><option>Chemise</option><option>Pull</option><option>Gilet</option><option>Cardigan</option><option>Sweat</option><option>Veste</option><option>Manteau</option><option>Robe</option><option>Jupe</option><option>Pantalon</option><option>Polo</option></datalist>
           <label class="f"><span>Description</span><textarea name="description" rows="3" placeholder="Matière, coupe, entretien…"></textarea></label>

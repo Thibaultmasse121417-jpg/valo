@@ -50,6 +50,7 @@ function client (hote) {
   }
 }
 const etape = (t) => console.log('✓', t)
+const REF = `PULL-T${Date.now().toString(36).toUpperCase().slice(-5)}` // unique : le test peut être relancé
 
 const alba = client('alba.localhost'); const nova = client('nova.localhost'); const visiteur = client('alba.localhost')
 
@@ -75,14 +76,14 @@ etape(`photo détourée en ${Date.now() - t0} ms (cintre : ${etat.reglages.cintr
 
 // 3. Fiche : couleur, tailles, stock par variante, collection, mise en ligne
 p = await alba('PUT', `/api/admin/produits/${p.id}`, {
-  reference: 'PULL-TORS', nom: 'Montmartre, pull torsadé', type: 'Pull', description: 'Laine épaisse.', prix_centimes: 11900,
+  reference: REF, nom: 'Montmartre, pull torsadé', type: 'Pull', description: 'Laine épaisse.', prix_centimes: 11900,
   tailles: ['S', 'M', 'L'], visible: true, nouveau: true, collections: [col.id],
   couleurs: [{ cle: 'c1', nom: 'Ocre', hex: etat.reglages.hex }],
   photos: [{ id: ph.id, couleur: 'c1', role: 'face', ordre: 0 }],
   stocks: [{ couleur: 'c1', taille: 'S', stock: 2 }, { couleur: 'c1', taille: 'M', stock: 1 }, { couleur: 'c1', taille: 'L', stock: 0 }]
 })
 assert.equal(p.variantes.length, 3)
-assert.equal(p.variantes.find((v) => v.taille === 'M').sku, 'PULL-TORS-OCRE-M')
+assert.equal(p.variantes.find((v) => v.taille === 'M').sku, `${REF}-OCRE-M`)
 etape('fiche enregistrée : 3 variantes, références générées, en ligne')
 
 // 4. Correction manuelle : agrandir et décaler, puis masque retouché
@@ -95,7 +96,7 @@ etape('correction manuelle (position + masque) : image du portant refaite')
 
 // 5. Côté client : le vêtement est sur le portant
 const cat = await visiteur('GET', '/api/catalogue')
-const pub = cat.produits.find((x) => x.reference === 'PULL-TORS')
+const pub = cat.produits.find((x) => x.reference === REF)
 assert.ok(pub, 'visible dans le catalogue public')
 assert.ok(pub.couleurs[0].face.startsWith('/medias/'))
 const img = await fetch(BASE + pub.couleurs[0].face, { headers: { host: 'alba.localhost' } })

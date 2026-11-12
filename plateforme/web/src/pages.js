@@ -1,14 +1,14 @@
 /* Pages simples : confirmation de commande et paiement de test. */
 import '@fontsource-variable/inter-tight'
 import './pages.css'
-import { $, esc, euros, api, appliquerCouleurs } from './commun.js'
+import { $, esc, euros, api, appliquerTheme } from './commun.js'
 
 const jeton = new URLSearchParams(location.search).get('n') || ''
 const page = document.body.dataset.page
 
 const B = await api('/api/boutique').catch(() => null)
 if (B) {
-  appliquerCouleurs(B.couleurs)
+  appliquerTheme(B.theme)
   $('[data-logo]').innerHTML = B.logo ? `<img src="${esc(B.logo)}" alt="${esc(B.nom)}">` : esc(B.nom)
 }
 

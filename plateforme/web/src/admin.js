@@ -11,7 +11,7 @@ const STATUTS = {
 const ACTIONS = { payee: ['preparee', 'expediee', 'retiree', 'annulee'], preparee: ['expediee', 'retiree', 'annulee'] }
 const LIBELLE_ACTION = { preparee: 'Marquer en préparation', expediee: 'Marquer expédiée', retiree: 'Marquer retirée', annulee: 'Annuler (remet en stock)' }
 
-let produits = []; let collections = []
+let produits = []; let collections = []; let CATS = []
 
 /* ---------- Démarrage et navigation ---------- */
 async function demarrer () {
@@ -26,6 +26,10 @@ async function demarrer () {
 const montrer = (v) => { for (const el of $$('[data-vue]')) el.hidden = el.dataset.vue !== v }
 async function entrer () {
   montrer('app')
+  CATS = (await appel('/api/admin/categories')).categories
+  const opts = CATS.map((c) => `<option value="${c.slug}">${esc(c.nom)}</option>`).join('')
+  $('[data-categories-select]').innerHTML = opts
+  $('[data-filtre-cat]').innerHTML = '<option value="">Toutes les catégories</option>' + opts
   await Promise.all([chargerProduits(), chargerCollections(), compterCommandes()])
   route()
 }
@@ -58,20 +62,24 @@ async function appel (chemin, opts) {
 async function chargerProduits () {
   produits = (await appel('/api/admin/produits')).produits
   const enLigne = produits.filter((p) => p.visible)
-  $('[data-resume]').textContent = `${produits.length} vêtement${produits.length > 1 ? 's' : ''}, ${enLigne.length} en ligne`
+  const portant = enLigne.filter((p) => p.presentation === 'cintre').slice(0, 12)
+  const fc = $('[data-filtre-cat]').value; const fp = $('[data-filtre-promo]').checked
+  const nomCat = (s) => CATS.find((c) => c.slug === s)?.nom || ''
+  $('[data-resume]').textContent = `${produits.length} produit${produits.length > 1 ? 's' : ''}, ${enLigne.length} en ligne, ${produits.filter((p) => p.prix_promo_centimes != null).length} en promotion`
   $('[data-liste-produits]').innerHTML = produits.length
     ? produits.map((p, i) => {
+      if ((fc && p.categorie !== fc) || (fp && p.prix_promo_centimes == null)) return ''
       const stock = p.variantes.reduce((s, v) => s + v.stock, 0)
       const ph = p.photos.find((x) => x.role === 'face' && x.vignette) || p.photos.find((x) => x.vignette)
-      const surPortant = p.visible && enLigne.indexOf(p) < 12
+      const surPortant = portant.includes(p)
       return `<div class="ad-tr${p.visible ? '' : ' is-off'}" role="row">
         <span role="cell" class="ad-prod">
           <button type="button" class="ad-prod__btn" data-ouvrir="${p.id}">
             <span class="ad-prod__img">${ph ? `<img src="${esc(ph.vignette)}" alt="" width="66" height="88" loading="lazy">` : '<i aria-hidden="true">?</i>'}</span>
-            <span><b>${esc(p.nom)}</b><small>${esc(p.reference)} · ${p.couleurs.length} couleur${p.couleurs.length > 1 ? 's' : ''}${surPortant ? ' · sur le portant' : ''}</small></span>
+            <span><b>${esc(p.nom)}</b><small>${esc(nomCat(p.categorie))} · ${esc(p.reference)} · ${p.couleurs.length} couleur${p.couleurs.length > 1 ? 's' : ''}${surPortant ? ' · sur le portant' : ''}${p.mis_en_avant ? ' · mis en avant' : ''}</small></span>
           </button>
         </span>
-        <span role="cell">${euros(p.prix_centimes)}</span>
+        <span role="cell">${p.prix_promo_centimes != null ? `<b class="promo">${euros(p.prix_promo_centimes)}</b> <s>${euros(p.prix_centimes)}</s>` : euros(p.prix_centimes)}</span>
         <span role="cell" class="${stock ? '' : 'rouge'}">${stock ? `${stock} pièce${stock > 1 ? 's' : ''}` : 'Épuisé'}</span>
         <span role="cell"><label class="interrupteur"><input type="checkbox" data-visible="${p.id}" ${p.visible ? 'checked' : ''} aria-label="${esc(p.nom)} en ligne"><span class="sr">En ligne</span></label></span>
         <span role="cell" class="ad-ordre">
@@ -80,8 +88,10 @@ async function chargerProduits () {
         </span>
       </div>`
     }).join('')
-    : '<p class="vide">Aucun vêtement pour l’instant. Cliquez sur « Ajouter un vêtement » et importez une photo.</p>'
+    : '<p class="vide">Aucun produit pour l’instant. Cliquez sur « Ajouter un produit » et importez une photo.</p>'
 }
+$('[data-filtre-cat]').addEventListener('change', chargerProduits)
+$('[data-filtre-promo]').addEventListener('change', chargerProduits)
 $('[data-liste-produits]').addEventListener('click', async (e) => {
   const o = e.target.closest('[data-ouvrir]'); if (o) { ouvrirFiche(o.dataset.ouvrir); return }
   const up = e.target.closest('[data-monter]'); const down = e.target.closest('[data-descendre]')
@@ -117,7 +127,10 @@ async function ouvrirFiche (id, estNouveau = false) {
   form.nom.value = estNouveau ? '' : P.nom; form.reference.value = P.reference
   form.prix.value = P.prix_centimes ? String(P.prix_centimes / 100).replace('.', ',') : ''
   form.type.value = P.type; form.description.value = P.description
-  form.nouveau.checked = P.nouveau; form.visible.checked = P.visible
+  form.nouveau.checked = P.nouveau; form.visible.checked = P.visible; form.mis_en_avant.checked = P.mis_en_avant
+  form.categorie.value = P.categorie
+  form.promo.value = P.prix_promo_centimes != null ? String(P.prix_promo_centimes / 100).replace('.', ',') : ''
+  majRemise(); majPresentation()
   $('[data-fiche-titre]').textContent = estNouveau ? 'Nouveau vêtement' : P.nom
   $('[data-err-produit]').textContent = ''
   peindreFiche()
@@ -126,6 +139,18 @@ async function ouvrirFiche (id, estNouveau = false) {
   if (estNouveau) $('[data-depot]').focus()
   suivrePhotos()
 }
+const centimes = (v) => Math.round(Number(String(v).replace(/\s/g, '').replace(',', '.')) * 100)
+function majRemise () {
+  const p = centimes(form.prix.value); const pr = form.promo.value.trim() ? centimes(form.promo.value) : null
+  $('[data-remise]').textContent = pr != null && p > 0 ? (pr < p ? `Remise de ${Math.round((1 - pr / p) * 100)} %, affichée en promotion.` : 'Le prix soldé doit être inférieur au prix.') : ''
+}
+function majPresentation () {
+  const c = CATS.find((x) => x.slug === form.categorie.value)
+  $('[data-presentation-info]').textContent = c?.presentation === 'objet' ? 'Accessoire : présenté sans cintre, dans la boutique (pas sur le portant).' : 'Vêtement : présenté sur cintre et sur le portant.'
+}
+form.prix.addEventListener('input', majRemise)
+form.promo.addEventListener('input', majRemise)
+form.categorie.addEventListener('change', majPresentation)
 function depuisProduit (p) {
   const stocks = {}
   for (const v of p.variantes) stocks[`${v.couleur_id}|${v.taille}`] = { stock: v.stock, avant: v.stock, sku: v.sku }
@@ -307,6 +332,8 @@ form.addEventListener('submit', async (e) => {
     reference: form.reference.value.trim().toUpperCase(), nom: form.nom.value.trim(), type: form.type.value.trim(),
     description: form.description.value.trim(), prix_centimes: Number.isFinite(prix) ? prix : -1,
     tailles: E.tailles, visible: form.visible.checked, nouveau: form.nouveau.checked, collections: [...E.collections],
+    categorie: form.categorie.value, mis_en_avant: form.mis_en_avant.checked,
+    prix_promo_centimes: form.promo.value.trim() ? Math.round(Number(form.promo.value.replace(/\s/g, '').replace(',', '.')) * 100) : null,
     couleurs: E.couleurs.map((c) => ({ id: c.id, cle: c.cle, nom: c.nom.trim(), hex: c.hex })),
     photos: E.photos.map((x, i) => ({ id: x.id, couleur: x.couleur, role: x.role, ordre: i })),
     stocks: Object.entries(E.stocks).map(([k, s]) => { const [couleur, ...t] = k.split('|'); return { couleur, taille: t.join('|'), stock: s.stock, avant: s.avant ?? null } })
@@ -448,7 +475,7 @@ $('[data-edit-fermer]').addEventListener('click', () => {
 async function chargerCollections () {
   collections = (await appel('/api/admin/collections')).collections
   $('[data-liste-collections]').innerHTML = collections.map((c) => `<li class="col">
-    <input value="${esc(c.nom)}" data-col-nom="${c.id}" aria-label="Nom de la collection">
+    <span class="col__txt"><input value="${esc(c.nom)}" data-col-nom="${c.id}" aria-label="Nom de la collection"><input value="${esc(c.description || '')}" data-col-desc="${c.id}" placeholder="Description (facultatif)" aria-label="Description de la collection"></span>
     <span class="sub">${c.nb} vêtement${c.nb > 1 ? 's' : ''}</span>
     <label class="interrupteur"><input type="checkbox" data-col-visible="${c.id}" ${c.visible ? 'checked' : ''}> <span>Visible</span></label>
     <button type="button" class="lnk lnk--danger" data-col-suppr="${c.id}">Supprimer</button>
@@ -456,11 +483,14 @@ async function chargerCollections () {
 }
 $('[data-form-collection]').addEventListener('submit', async (e) => {
   e.preventDefault(); const i = e.currentTarget.nom
-  try { await appel('/api/admin/collections', { method: 'POST', body: { nom: i.value } }); i.value = ''; chargerCollections() } catch (er) { toast(er.message) }
+  const d = e.currentTarget.description
+  try { await appel('/api/admin/collections', { method: 'POST', body: { nom: i.value, description: d.value } }); i.value = ''; d.value = ''; chargerCollections() } catch (er) { toast(er.message) }
 })
 $('[data-liste-collections]').addEventListener('change', async (e) => {
   const n = e.target.dataset.colNom; const v = e.target.dataset.colVisible
   if (n) await appel(`/api/admin/collections/${n}`, { method: 'PUT', body: { nom: e.target.value } })
+  const dd = e.target.dataset.colDesc
+  if (dd) await appel(`/api/admin/collections/${dd}`, { method: 'PUT', body: { description: e.target.value } })
   if (v) await appel(`/api/admin/collections/${v}`, { method: 'PUT', body: { visible: e.target.checked } })
   toast('Collection enregistrée.'); chargerCollections()
 })
@@ -515,12 +545,24 @@ $('[data-commande]').addEventListener('click', async (e) => {
 const fb = $('[data-form-boutique]')
 async function chargerBoutique () {
   const b = await appel('/api/admin/boutique')
+  const t = b.theme; const c = b.contenus
   fb.nom.value = b.nom; fb.slogan.value = b.slogan
-  fb.fond.value = b.couleurs.fond; fb.texte.value = b.couleurs.texte; fb.accent.value = b.couleurs.accent
+  for (const k of ['fond', 'surface', 'texte', 'attenue', 'accent', 'bandeau']) fb[`t_${k}`].value = t[k]
+  fb.t_police_titres.value = t.police_titres; fb.t_police_texte.value = t.police_texte; fb.t_titres_italiques.checked = !!t.titres_italiques
+  fb.annonces.value = c.annonces.join('\n')
+  fb.b_surtitre.value = c.banniere.surtitre; fb.b_titre.value = c.banniere.titre; fb.b_texte.value = c.banniere.texte; fb.b_bouton.value = c.banniere.bouton
+  fb.p_titre.value = c.portant.titre; fb.p_texte.value = c.portant.texte
+  const m = c.presentation
+  fb.m_titre.value = m.titre; fb.m_texte.value = m.texte; fb.m_adresse.value = m.adresse; fb.m_horaires.value = m.horaires.join('\n')
+  fb.m_telephone.value = m.telephone; fb.m_email.value = m.email
+  fb.r_instagram.value = c.reseaux.instagram; fb.r_facebook.value = c.reseaux.facebook; fb.r_tiktok.value = c.reseaux.tiktok
+  fb.pied.value = c.pied
   fb.livraison.value = String(b.livraison_centimes / 100).replace('.', ','); fb.offerte.value = String(b.livraison_offerte_centimes / 100).replace('.', ',')
   fb.retrait.value = b.retrait_adresse
   fb.paiement.value = b.paiement_mode
   $('[data-logo-apercu]').innerHTML = b.logo ? `<img src="${esc(b.logo)}" alt="Logo actuel">` : 'Aucun logo'
+  $('[data-banniere-apercu]').innerHTML = b.banniere ? `<img src="${esc(b.banniere)}" alt="Bannière actuelle">` : 'Aucune image'
+  $('[data-presentation-apercu]').innerHTML = b.presentation_image ? `<img src="${esc(b.presentation_image)}" alt="Photo actuelle">` : 'Aucune image'
   $('[data-domaines]').innerHTML = b.domaines.map((d) => `<li><a href="https://${esc(d)}" target="_blank" rel="noopener">${esc(d)}</a></li>`).join('') || '<li class="sub">Aucun domaine relié.</li>'
   const s = b.stripe
   $('[data-stripe-etat]').textContent = !s.configure ? 'Stripe n’est pas encore activé sur la plateforme : seul le paiement de test est disponible.'
@@ -528,13 +570,24 @@ async function chargerBoutique () {
   $('[data-stripe-lier]').hidden = !s.configure || !!s.paiements_actifs
 }
 const euroVersCentimes = (v) => Math.round(Number(String(v).replace(/\s/g, '').replace(',', '.')) * 100)
+const lignes = (v) => v.split('\n').map((x) => x.trim()).filter(Boolean)
 fb.addEventListener('submit', async (e) => {
   e.preventDefault(); $('[data-err-boutique]').textContent = ''
   try {
     await appel('/api/admin/boutique', {
       method: 'PUT',
       body: {
-        nom: fb.nom.value, slogan: fb.slogan.value, couleurs: { fond: fb.fond.value, texte: fb.texte.value, accent: fb.accent.value },
+        nom: fb.nom.value, slogan: fb.slogan.value,
+        theme: { fond: fb.t_fond.value, surface: fb.t_surface.value, texte: fb.t_texte.value, attenue: fb.t_attenue.value, accent: fb.t_accent.value, bandeau: fb.t_bandeau.value,
+          police_titres: fb.t_police_titres.value, police_texte: fb.t_police_texte.value, titres_italiques: fb.t_titres_italiques.checked },
+        contenus: {
+          annonces: lignes(fb.annonces.value),
+          banniere: { surtitre: fb.b_surtitre.value, titre: fb.b_titre.value, texte: fb.b_texte.value, bouton: fb.b_bouton.value },
+          portant: { titre: fb.p_titre.value, texte: fb.p_texte.value },
+          presentation: { titre: fb.m_titre.value, texte: fb.m_texte.value, adresse: fb.m_adresse.value, horaires: lignes(fb.m_horaires.value), telephone: fb.m_telephone.value, email: fb.m_email.value },
+          reseaux: { instagram: fb.r_instagram.value, facebook: fb.r_facebook.value, tiktok: fb.r_tiktok.value },
+          pied: fb.pied.value
+        },
         livraison_centimes: euroVersCentimes(fb.livraison.value), livraison_offerte_centimes: euroVersCentimes(fb.offerte.value),
         retrait_adresse: fb.retrait.value, paiement_mode: fb.paiement.value
       }
@@ -542,6 +595,14 @@ fb.addEventListener('submit', async (e) => {
     toast('Réglages enregistrés.'); for (const el of $$('[data-nom-boutique]')) el.textContent = fb.nom.value
   } catch (er) { $('[data-err-boutique]').textContent = er.message }
 })
+for (const [attr, route, apercu] of [['data-banniere-fichier', 'banniere', 'data-banniere-apercu'], ['data-presentation-fichier', 'presentation', 'data-presentation-apercu']]) {
+  $(`[${attr}]`).addEventListener('change', async (e) => {
+    const f = e.target.files[0]; if (!f) return
+    const fd = new FormData(); fd.append('image', f, f.name)
+    try { const r = await appel(`/api/admin/boutique/${route}`, { method: 'POST', body: fd }); $(`[${apercu}]`).innerHTML = `<img src="${esc(r.url)}" alt="">`; toast('Image enregistrée.') } catch (er) { toast(er.message) }
+    e.target.value = ''
+  })
+}
 $('[data-logo-fichier]').addEventListener('change', async (e) => {
   const f = e.target.files[0]; if (!f) return
   const fd = new FormData(); fd.append('logo', f, f.name)

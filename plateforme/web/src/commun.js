@@ -34,6 +34,25 @@ export function appliquerCouleurs (c = {}) {
   const meta = document.querySelector('meta[name="theme-color"]') || Object.assign(document.head.appendChild(document.createElement('meta')), { name: 'theme-color' })
   meta.content = c.fond || '#f3f1ec'
 }
+/* Identité complète de la boutique (couleurs et polices choisies dans l'administration). */
+const POLICES = {
+  cormorant: "'Cormorant Garamond', 'Times New Roman', Georgia, serif",
+  playfair: "'Playfair Display', Georgia, serif",
+  'dm-serif': "'DM Serif Display', Georgia, serif",
+  'inter-tight': "'Inter Tight Variable', ui-sans-serif, system-ui, sans-serif",
+  'dm-sans': "'DM Sans Variable', ui-sans-serif, system-ui, sans-serif"
+}
+export function appliquerTheme (t = {}) {
+  const s = document.documentElement.style
+  const set = (k, v) => { if (v) s.setProperty(k, v) }
+  set('--bg', t.fond); set('--paper', t.surface); set('--ink', t.texte); set('--mute', t.attenue)
+  set('--accent', t.accent); set('--bandeau', t.bandeau)
+  if (t.fond && t.texte) set('--line', melange(t.fond, t.texte, 0.14))
+  set('--titres', POLICES[t.police_titres]); set('--font', POLICES[t.police_texte])
+  s.setProperty('--titres-style', t.titres_italiques ? 'italic' : 'normal')
+  const meta = document.querySelector('meta[name="theme-color"]') || Object.assign(document.head.appendChild(document.createElement('meta')), { name: 'theme-color' })
+  meta.content = t.fond || '#f3f1ec'
+}
 function melange (a, b, t) {
   const p = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16))
   const x = p(a); const y = p(b)
