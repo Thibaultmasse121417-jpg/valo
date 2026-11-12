@@ -42,19 +42,34 @@
       <p class="rail-aide" data-rail-aide></p>
     </section>
 
-    <!-- 6. Sélection de produits -->
+    <!-- 6. Nouveautés -->
     <section class="section" id="selection" data-bloc-selection aria-labelledby="selection-t" hidden>
       <div class="wrap">
-        <div class="tete"><div><h2 id="selection-t" data-selection-titre>Notre sélection</h2></div><a class="lien" href="/boutique/" data-selection-lien>Toute la boutique</a></div>
+        <div class="tete"><div><h2 id="selection-t" data-selection-titre>Les nouveautés</h2><p class="tete__sous" data-selection-sous>Les dernières pièces arrivées en boutique.</p></div><a class="lien" href="/boutique/?cat=nouveautes" data-selection-lien>Voir toutes les nouveautés</a></div>
         <ul class="grille" data-selection role="list"></ul>
       </div>
     </section>
 
-    <!-- 7. Catégories -->
+    <!-- Tenues de fêtes : bloc éditorial -->
+    <section class="section" id="fetes" data-bloc-fetes aria-labelledby="fetes-t" hidden>
+      <div class="wrap edito">
+        <figure class="edito__img" data-fetes-img></figure>
+        <div class="edito__txt">
+          <p class="surtitre">La sélection du moment</p>
+          <h2 id="fetes-t" data-fetes-titre></h2>
+          <p class="tete__sous" data-fetes-texte></p>
+          <ul class="grille" data-fetes role="list"></ul>
+          <p style="margin-top:28px"><a class="btn btn--ligne" href="#" data-fetes-lien>Voir toute la sélection</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Rayons -->
     <section class="section" id="categories" data-bloc-categories aria-labelledby="categories-t" hidden>
       <div class="wrap">
-        <div class="tete"><h2 id="categories-t">Nos rayons</h2></div>
-        <ul class="rayons" data-categories role="list"></ul>
+        <div class="tete"><h2 id="categories-t">Nos rayons</h2><a class="lien" href="/boutique/">Tous nos produits</a></div>
+        <ul class="univers" data-univers role="list"></ul>
+        <div class="sous-rayons" data-categories></div>
       </div>
     </section>
 
@@ -82,6 +97,17 @@
           <div class="maison__p" data-maison-texte></div>
           <dl class="maison__infos" data-maison-infos></dl>
         </div>
+      </div>
+    </section>
+
+    <!-- Réassurance -->
+    <section class="atouts-bande" aria-label="Nos engagements"><ul data-atouts-bande></ul></section>
+
+    <!-- Questions fréquentes -->
+    <section class="section" id="faq" aria-labelledby="faq-t">
+      <div class="wrap faq">
+        <div><h2 id="faq-t">Questions fréquentes</h2><p class="tete__sous">Livraison, retours, tailles : l’essentiel avant de commander.</p><p style="margin-top:18px"><a class="lien" href="/faq/">Toutes les réponses</a></p></div>
+        <div class="faq__liste" data-faq></div>
       </div>
     </section>
 

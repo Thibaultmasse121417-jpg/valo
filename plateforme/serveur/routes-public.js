@@ -94,3 +94,19 @@ publique.post('/newsletter', async (c) => {
   await avecBoutique(b.id, (db) => db.query('insert into newsletter (boutique_id, email) values ($1, $2) on conflict do nothing', [b.id, e]))
   return c.json({ ok: true })
 })
+
+// Formulaire de contact : le message est enregistré et lisible dans l'administration.
+const derniersContacts = new Map()
+publique.post('/contact', async (c) => {
+  const b = c.get('boutique')
+  const d = await c.req.json().catch(() => ({}))
+  const email = String(d.email || '').trim().toLowerCase(); const message = String(d.message || '').trim()
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return c.json({ erreur: 'Indiquez une adresse e-mail valide.' }, 400)
+  if (message.length < 5) return c.json({ erreur: 'Écrivez votre message.' }, 400)
+  const ip = c.req.header('x-forwarded-for')?.split(',')[0] || 'local'
+  if (Date.now() - (derniersContacts.get(ip) || 0) < 20_000) return c.json({ erreur: 'Merci de patienter quelques secondes avant un nouvel envoi.' }, 429)
+  derniersContacts.set(ip, Date.now())
+  await avecBoutique(b.id, (db) => db.query('insert into messages (boutique_id, nom, email, telephone, message) values ($1, $2, $3, $4, $5)',
+    [b.id, String(d.nom || '').trim().slice(0, 120), email, String(d.telephone || '').trim().slice(0, 30), message.slice(0, 3000)]))
+  return c.json({ ok: true })
+})

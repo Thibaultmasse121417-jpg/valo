@@ -127,10 +127,17 @@ admin.put('/produits/:id', async (c) => {
   }
 })
 
-admin.patch('/produits/:id', async (c) => { // masquer / afficher rapidement
-  const { visible } = await c.req.json()
-  const r = await db(c, (x) => x.query('update produits set visible = $2, updated_at = now() where id = $1 and (not $2 or exists (select 1 from photos where produit_id = $1 and statut = \'pret\' and role = \'face\') and prix_centimes > 0)', [c.req.param('id'), !!visible]))
-  return r.rowCount ? ok(c) : err(c, visible ? 'Il faut un prix et une photo prête pour mettre en ligne.' : 'Produit introuvable.', visible ? 400 : 404)
+admin.patch('/produits/:id', async (c) => { // modifications rapides : en ligne, composition, précommande, collection
+  const d = await c.req.json(); const id = c.req.param('id')
+  if (typeof d.visible === 'boolean') {
+    const { visible } = d
+    const r = await db(c, (x) => x.query('update produits set visible = $2, updated_at = now() where id = $1 and (not $2 or exists (select 1 from photos where produit_id = $1 and statut = \'pret\' and role = \'face\') and prix_centimes > 0)', [id, visible]))
+    if (!r.rowCount) return err(c, visible ? 'Il faut un prix et une photo prête pour mettre en ligne.' : 'Produit introuvable.', visible ? 400 : 404)
+  }
+  if (typeof d.composition === 'string') await db(c, (x) => x.query('update produits set composition = $2, updated_at = now() where id = $1', [id, d.composition.trim().slice(0, 600)]))
+  if ('expedition_prevue' in d) await db(c, (x) => x.query('update produits set expedition_prevue = $2, updated_at = now() where id = $1', [id, /^\d{4}-\d{2}-\d{2}$/.test(d.expedition_prevue || '') ? d.expedition_prevue : null]))
+  if (d.ajouter_collection) await db(c, (x) => x.query('insert into produit_collections (boutique_id, produit_id, collection_id) select $1, $2, id from collections where id = $3 on conflict do nothing', [c.get('boutique').id, id, d.ajouter_collection]))
+  return ok(c)
 })
 
 admin.delete('/produits/:id', async (c) => {
@@ -311,7 +318,7 @@ admin.get('/boutique', async (c) => {
     nom: b.nom, slogan: b.slogan, logo: b.logo_chemin ? `/medias/${b.logo_chemin}` : null,
     banniere: b.banniere_chemin ? `/medias/${b.banniere_chemin}` : null, presentation_image: b.presentation_chemin ? `/medias/${b.presentation_chemin}` : null,
     theme: lireTheme(b), contenus: lireContenus(b),
-    livraison_centimes: b.livraison_centimes, livraison_offerte_centimes: b.livraison_offerte_centimes, retrait_adresse: b.retrait_adresse,
+    livraison_centimes: b.livraison_centimes, livraison_offerte_centimes: b.livraison_offerte_centimes, retrait_adresse: b.retrait_adresse, relais_centimes: b.relais_centimes,
     paiement_mode: b.paiement_mode, stripe: s, domaines
   })
 })
@@ -322,10 +329,11 @@ admin.put('/boutique', async (c) => {
   const theme = validerTheme(d.theme || {}, lireTheme(b))
   const contenus = d.contenus ? validerContenus(d.contenus) : lireContenus(b)
   await db(c, (x) => x.query(`update boutiques set nom = $2, slogan = $3, couleurs = $4, livraison_centimes = $5, livraison_offerte_centimes = $6, retrait_adresse = $7,
-    paiement_mode = $8, theme = $9, contenus = $10 where id = $1`, [b.id, nom, String(d.slogan ?? b.slogan).trim().slice(0, 120),
+    paiement_mode = $8, theme = $9, contenus = $10, relais_centimes = $11 where id = $1`, [b.id, nom, String(d.slogan ?? b.slogan).trim().slice(0, 120),
     { fond: theme.fond, texte: theme.texte, accent: theme.accent }, centimes(d.livraison_centimes, b.livraison_centimes),
     centimes(d.livraison_offerte_centimes, b.livraison_offerte_centimes), String(d.retrait_adresse ?? b.retrait_adresse).trim().slice(0, 200),
-    d.paiement_mode === 'stripe' ? 'stripe' : 'test', theme, contenus]))
+    d.paiement_mode === 'stripe' ? 'stripe' : 'test', theme, contenus,
+    d.relais_centimes === null || d.relais_centimes === '' ? null : centimes(d.relais_centimes, b.relais_centimes)]))
   oublierBoutique(b.id)
   return ok(c)
 })
@@ -352,6 +360,8 @@ admin.get('/newsletter', async (c) => {
   }
   return ok(c, { inscrits: rows })
 })
+admin.get('/messages', async (c) => ok(c, { messages: await db(c, async (x) => (await x.query('select id, nom, email, telephone, message, lu, created_at from messages order by created_at desc limit 200')).rows) }))
+admin.patch('/messages/:id', async (c) => { await db(c, (x) => x.query('update messages set lu = true where id = $1', [c.req.param('id')])); return ok(c) })
 admin.delete('/newsletter/:email', async (c) => {
   await db(c, (x) => x.query('delete from newsletter where email = $1', [decodeURIComponent(c.req.param('email')).toLowerCase()]))
   return ok(c)

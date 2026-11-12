@@ -108,6 +108,8 @@ for (const [i, [reference, nom, type, categorie, prix, promo, tailles, cols, nou
   n++
   console.log(`  ${String(n).padStart(2)}. ${nom} (${couleurs.length} couleur${couleurs.length > 1 ? 's' : ''}) en ligne en ${Date.now() - t0} ms`)
 }
+await appliquerIdentite(appel) // collections, compositions et précommandes, une fois les produits créés
+console.log('Compositions, précommandes et collections de démonstration enregistrées.')
 
 }
 

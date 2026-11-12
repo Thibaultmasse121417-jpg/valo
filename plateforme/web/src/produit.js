@@ -1,6 +1,7 @@
 /* Fiche produit : galerie (face, dos, détails), zoom, couleurs, tailles, guide des tailles,
    disponibilité réelle, quantité, ajout au panier, description, composition, suggestions. */
-import { $, $$, esc, euros, B, C, PIECES, NOMS_CAT, RAYONS, remise, prixHtml, carte, lienRayon, ajouter, dansPanier, piegerFocus, reduce } from './coquille.js'
+import { $, $$, esc, euros, B, C, PIECES, NOMS_CAT, RAYONS, remise, prixHtml, carte, lienRayon, ajouter, dansPanier, piegerFocus, reduce, dateFr, prix } from './coquille.js'
+import { JOURS_RETOUR, tarifs } from './textes.js'
 
 const ref = new URLSearchParams(location.search).get('ref') || ''
 const p = PIECES.find((x) => x.reference === ref)
@@ -18,18 +19,34 @@ function monter (p) {
   const rayon = RAYONS.find((c) => c.slug === p.categorie)
   $('[data-fil]').innerHTML = `<a href="/">Accueil</a><span aria-hidden="true">/</span>${rayon ? `<a href="${lienRayon(rayon.groupe)}">${rayon.groupe === 'accessoires' ? 'Accessoires' : 'Vêtements'}</a><span aria-hidden="true">/</span><a href="${lienRayon(rayon.slug)}">${esc(rayon.nom)}</a>` : '<a href="/boutique/">La boutique</a>'}`
   $('[data-nom]').textContent = p.nom
-  $('[data-prix]').innerHTML = prixHtml(p) + (remise(p) ? ` <span class="etiquette etiquette--promo">−${remise(p)} %</span>` : '') + (p.nouveau ? ' <span class="etiquette">Nouveau</span>' : '')
+  $('[data-prix]').innerHTML = prixHtml(p) + (remise(p) ? ` <span class="etiquette etiquette--promo">−${remise(p)} %</span>` : '') + (p.expedition_prevue ? ' <span class="etiquette etiquette--pre">Précommande</span>' : p.nouveau ? ' <span class="etiquette">Nouveau</span>' : '')
+  if (p.expedition_prevue) { $('[data-precommande]').hidden = false; $('[data-precommande]').innerHTML = `<b>Précommande : expédition à partir du ${dateFr(p.expedition_prevue)}</b><span>Si votre commande contient cette pièce, tous les articles partent ensemble à cette date.</span>` }
   $('[data-description]').innerHTML = (p.description || '').split(/\n+/).filter(Boolean).map((t) => `<p>${esc(t)}</p>`).join('') + (p.type ? `<p>${esc(p.type)}. Référence ${esc(p.reference)}.</p>` : `<p>Référence ${esc(p.reference)}.</p>`)
   if (p.composition) { $('[data-pli-composition]').hidden = false; $('[data-composition]').innerHTML = p.composition.split(/\n+/).map((t) => `<p>${esc(t)}</p>`).join('') }
   $('[data-livraison]').innerHTML = [
-    `<p>Livraison à domicile : ${euros(B.livraison_centimes)}, offerte dès ${euros(B.livraison_offerte_centimes)} d’achat.</p>`,
-    B.retrait ? `<p>Retrait gratuit en boutique : ${esc(B.retrait.adresse)}.</p>` : '',
+    ...tarifs(B).map((t) => `<p><b>${esc(t.nom)}</b> : ${esc(t.prix.charAt(0).toLowerCase() + t.prix.slice(1))}.</p>`),
+    `<p>${JOURS_RETOUR} jours pour changer d’avis${B.retrait ? ', retour gratuit en boutique' : ''}. <a class="lien-petit" href="/retours/">Conditions de retour</a></p>`,
     `<p>${B.paiement === 'stripe' ? 'Paiement par carte bancaire via Stripe.' : B.paiement === 'test' ? 'Boutique de démonstration : le paiement est simulé, aucune somme n’est débitée.' : 'La commande en ligne sera bientôt disponible.'}</p>`
   ].join('')
   $('[data-atouts]').innerHTML = [
-    `<li>Livraison offerte dès ${euros(B.livraison_offerte_centimes)}</li>`,
-    B.retrait ? '<li>Retrait gratuit en boutique</li>' : ''
+    `<li>Livraison offerte dès ${euros(B.livraison_offerte_centimes)}${B.relais ? ', point relais ou domicile' : ''}</li>`,
+    B.retrait ? '<li>Retrait gratuit en boutique</li>' : '',
+    `<li>${JOURS_RETOUR} jours pour changer d’avis</li>`
   ].join('')
+
+  // Barre d'achat collante sur téléphone, quand le bouton principal sort de l'écran
+  const barre = $('[data-barre-achat]')
+  $('[data-barre-nom]').textContent = p.nom
+  $('[data-barre-prix]').textContent = euros(prix(p))
+  new IntersectionObserver(([e]) => {
+    const on = !e.isIntersecting // bouton principal hors de l'écran, au-dessus ou en dessous
+    barre.classList.toggle('is-on', on); barre.setAttribute('aria-hidden', String(!on))
+  }).observe($('[data-ajouter]'))
+  $('[data-barre-ajouter]').addEventListener('click', () => {
+    $('[data-ajouter]').click()
+    if (!$('[data-err]').textContent) return
+    $('[data-bloc-tailles]').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' })
+  })
 
   /* État de la sélection */
   const sel = { c: 0, v: null, q: 1 }

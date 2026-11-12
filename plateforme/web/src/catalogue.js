@@ -1,6 +1,7 @@
 /* Catalogue : rayons, collections, nouveautés, promotions, recherche ; filtre par taille ; tri.
    L'état est dans l'adresse (?cat=…&taille=…&tri=…&q=…) : on peut partager ou revenir en arrière. */
-import { $, $$, esc, B, PIECES, RAYONS, COLLECTIONS, NOUVEAUTES, PROMOS, prix, parDate, carte, chercher } from './coquille.js'
+import { $, $$, esc, euros, B, PIECES, RAYONS, COLLECTIONS, NOUVEAUTES, PROMOS, PETITS, FETES, prix, epuise, parDate, carte, chercher } from './coquille.js'
+import { PETITS_PRIX } from './textes.js'
 
 const ORDRE_TAILLES = ['TU', 'XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '34', '35', '36', '37', '38', '39', '40', '41', '42', '44', '46', '48']
 const rang = (t) => { const i = ORDRE_TAILLES.indexOf(String(t).toUpperCase()); return i < 0 ? 999 : i }
@@ -11,6 +12,7 @@ const FILTRES = [
   ...(RAYONS.some((c) => c.groupe === 'vetements') ? [{ id: 'vetements', nom: 'Vêtements', titre: 'Vêtements', l: () => PIECES.filter((p) => RAYONS.find((c) => c.slug === p.categorie)?.groupe === 'vetements'), cache: true }] : []),
   ...(RAYONS.some((c) => c.groupe === 'accessoires') ? [{ id: 'accessoires', nom: 'Accessoires', titre: 'Accessoires', l: () => PIECES.filter((p) => RAYONS.find((c) => c.slug === p.categorie)?.groupe === 'accessoires'), cache: true }] : []),
   ...RAYONS.map((c) => ({ id: c.slug, nom: c.nom, titre: c.nom, l: () => c.pieces })),
+  ...(PETITS.length ? [{ id: 'petits-prix', nom: `Moins de ${euros(PETITS_PRIX)}`, titre: `Moins de ${euros(PETITS_PRIX)}`, sous: 'Les petits prix de la boutique, pour se faire plaisir sans trop compter.', l: () => PETITS }] : []),
   ...(PROMOS.length ? [{ id: 'promotions', nom: 'Promotions', titre: 'Promotions', l: () => PROMOS }] : []),
   ...COLLECTIONS.map((c) => ({ id: c.id, nom: c.nom, titre: c.nom, sous: c.description, l: () => c.pieces }))
 ]
@@ -20,7 +22,8 @@ const etat = {
   cat: FILTRES.some((f) => f.id === q0.get('cat')) ? q0.get('cat') : 'tout',
   taille: q0.get('taille') || '',
   tri: ['nouveautes', 'populaires', 'prix-asc', 'prix-desc'].includes(q0.get('tri')) ? q0.get('tri') : 'nouveautes',
-  q: (q0.get('q') || '').slice(0, 80)
+  q: (q0.get('q') || '').slice(0, 80),
+  dispo: q0.get('dispo') === '1'
 }
 
 // Les puces : les rayons principaux, pas les regroupements (Vêtements / Accessoires restent dans le menu).
@@ -36,6 +39,7 @@ function peindre () {
   const f = FILTRES.find((x) => x.id === etat.cat)
   let l = etat.q ? chercher(etat.q) : f.l()
   if (etat.q && etat.cat !== 'tout') { const base = new Set(f.l()); l = l.filter((p) => base.has(p)) }
+  if (etat.dispo) l = l.filter((p) => !epuise(p))
   if (etat.taille) l = l.filter((p) => p.couleurs.some((c) => c.variantes.some((v) => v.disponible && v.taille === etat.taille)))
   const tri = etat.tri
   l = [...l].sort(tri === 'prix-asc' ? (a, b) => prix(a) - prix(b)
@@ -60,7 +64,7 @@ function peindre () {
       : etat.q ? 'Essayez un autre mot, une couleur ou un type de vêtement.'
         : etat.taille ? `Aucune pièce n’est disponible en ${etat.taille} dans ce rayon pour l’instant.` : 'Ce rayon se remplit bientôt.'
   }
-  const filtre = etat.cat !== 'tout' || etat.taille || etat.q
+  const filtre = etat.cat !== 'tout' || etat.taille || etat.q || etat.dispo
   for (const b of $$('[data-reinit]')) b.hidden = !filtre || !PIECES.length
   for (const c of $$('[data-f]')) { const on = c.dataset.f === etat.cat && !etat.q; c.classList.toggle('is-on', on); c.setAttribute('aria-pressed', String(on)) }
   const u = new URLSearchParams()
@@ -68,6 +72,7 @@ function peindre () {
   if (etat.taille) u.set('taille', etat.taille)
   if (etat.tri !== 'nouveautes') u.set('tri', etat.tri)
   if (etat.q) u.set('q', etat.q)
+  if (etat.dispo) u.set('dispo', '1')
   history.replaceState(null, '', u.size ? `?${u}` : location.pathname)
 }
 
@@ -77,9 +82,11 @@ $('[data-chips]').addEventListener('click', (e) => {
   c.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' })
 })
 $('[data-taille]').addEventListener('change', (e) => { etat.taille = e.target.value; peindre() })
+$('[data-dispo]').checked = etat.dispo
+$('[data-dispo]').addEventListener('change', (e) => { etat.dispo = e.target.checked; peindre() })
 $('[data-tri]').addEventListener('change', (e) => { etat.tri = e.target.value; peindre() })
 document.addEventListener('click', (e) => {
-  if (e.target.closest('[data-reinit]')) { Object.assign(etat, { cat: 'tout', taille: '', q: '' }); $('[data-taille]').value = ''; peindre() }
+  if (e.target.closest('[data-reinit]')) { Object.assign(etat, { cat: 'tout', taille: '', q: '', dispo: false }); $('[data-taille]').value = ''; $('[data-dispo]').checked = false; peindre() }
 })
 peindre()
 $(`[data-f="${CSS.escape(etat.cat)}"]`)?.scrollIntoView({ block: 'nearest', inline: 'center' })

@@ -11,14 +11,19 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 /* Crée la commande et réserve le stock. Renvoie { id, jeton, total_centimes }. */
 export async function creerCommande (boutique, corps, paiementMode) {
   const client = corps?.client || {}
-  const mode = corps?.livraison_mode === 'retrait' ? 'retrait' : 'livraison'
+  const mode = ['retrait', 'relais'].includes(corps?.livraison_mode) ? corps.livraison_mode : 'livraison'
+  if (mode === 'relais' && boutique.relais_centimes == null) throw new ErreurClient('La livraison en point relais n’est pas proposée.')
   const email = String(client.email || '').trim().toLowerCase()
   const nom = String(client.nom || '').trim()
   if (!EMAIL.test(email)) throw new ErreurClient('Adresse e-mail invalide.')
   if (nom.length < 2) throw new ErreurClient('Indiquez votre nom.')
-  const adresse = client.adresse || {}
-  if (mode === 'livraison' && (!String(adresse.ligne || '').trim() || !/^\d{4,5}$/.test(String(adresse.code_postal || '').trim()) || !String(adresse.ville || '').trim())) {
-    throw new ErreurClient('Adresse de livraison incomplète.')
+  const a = client.adresse || {}
+  const adresse = { ligne: String(a.ligne || '').trim().slice(0, 200), code_postal: String(a.code_postal || '').trim(), ville: String(a.ville || '').trim().slice(0, 100), pays: a.pays === 'BE' ? 'BE' : 'FR' }
+  if (mode !== 'retrait') {
+    // France : 5 chiffres ; Belgique : 4 chiffres, en point relais uniquement.
+    if (adresse.pays === 'BE' && mode !== 'relais') throw new ErreurClient('Pour la Belgique, la livraison se fait en point relais.')
+    const cp = adresse.pays === 'BE' ? /^\d{4}$/ : /^\d{5}$/
+    if ((mode === 'livraison' && !adresse.ligne) || !cp.test(adresse.code_postal) || !adresse.ville) throw new ErreurClient('Adresse de livraison incomplète.')
   }
   const lignes = Array.isArray(corps?.lignes) ? corps.lignes : []
   if (!lignes.length || lignes.length > 50) throw new ErreurClient('Panier vide.')
@@ -41,10 +46,10 @@ export async function creerCommande (boutique, corps, paiementMode) {
       if (r.stock < parVariante.get(r.id)) throw new ErreurClient(r.stock ? `Plus que ${r.stock} « ${r.nom} » en ${r.taille}.` : `« ${r.nom} » en ${r.taille} est épuisé.`, 409)
     }
     const sousTotal = rows.reduce((s, r) => s + r.prix_centimes * parVariante.get(r.id), 0)
-    const livraison = mode === 'retrait' || sousTotal >= boutique.livraison_offerte_centimes ? 0 : boutique.livraison_centimes
+    const livraison = mode === 'retrait' || sousTotal >= boutique.livraison_offerte_centimes ? 0 : mode === 'relais' ? boutique.relais_centimes : boutique.livraison_centimes
     const { rows: [cmd] } = await c.query(`insert into commandes (boutique_id, client, livraison_mode, sous_total_centimes, livraison_centimes, total_centimes, paiement_mode)
       values ($1, $2, $3, $4, $5, $6, $7) returning id, jeton, numero, total_centimes`,
-    [boutique.id, { email, nom, telephone: String(client.telephone || '').trim(), adresse: mode === 'livraison' ? adresse : null }, mode, sousTotal, livraison, sousTotal + livraison, paiementMode])
+    [boutique.id, { email, nom, telephone: String(client.telephone || '').trim(), adresse: mode === 'retrait' ? null : adresse }, mode, sousTotal, livraison, sousTotal + livraison, paiementMode])
     for (const r of rows) {
       const q = parVariante.get(r.id)
       await c.query(`insert into lignes_commande (boutique_id, commande_id, variante_id, produit_id, nom, couleur, taille, sku, prix_unitaire_centimes, quantite)

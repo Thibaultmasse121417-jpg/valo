@@ -126,7 +126,7 @@ async function ouvrirFiche (id, estNouveau = false) {
   E = depuisProduit(P)
   form.nom.value = estNouveau ? '' : P.nom; form.reference.value = P.reference
   form.prix.value = P.prix_centimes ? String(P.prix_centimes / 100).replace('.', ',') : ''
-  form.type.value = P.type; form.description.value = P.description; form.composition.value = P.composition || ''
+  form.type.value = P.type; form.description.value = P.description; form.composition.value = P.composition || ''; form.expedition_prevue.value = P.expedition_prevue || ''
   form.nouveau.checked = P.nouveau; form.visible.checked = P.visible; form.mis_en_avant.checked = P.mis_en_avant
   form.categorie.value = P.categorie
   form.promo.value = P.prix_promo_centimes != null ? String(P.prix_promo_centimes / 100).replace('.', ',') : ''
@@ -330,7 +330,7 @@ form.addEventListener('submit', async (e) => {
   const prix = Math.round(Number(form.prix.value.replace(/\s/g, '').replace(',', '.')) * 100)
   const corps = {
     reference: form.reference.value.trim().toUpperCase(), nom: form.nom.value.trim(), type: form.type.value.trim(),
-    description: form.description.value.trim(), composition: form.composition.value.trim(), prix_centimes: Number.isFinite(prix) ? prix : -1,
+    description: form.description.value.trim(), composition: form.composition.value.trim(), expedition_prevue: form.expedition_prevue.value || null, prix_centimes: Number.isFinite(prix) ? prix : -1,
     tailles: E.tailles, visible: form.visible.checked, nouveau: form.nouveau.checked, collections: [...E.collections],
     categorie: form.categorie.value, mis_en_avant: form.mis_en_avant.checked,
     prix_promo_centimes: form.promo.value.trim() ? Math.round(Number(form.promo.value.replace(/\s/g, '').replace(',', '.')) * 100) : null,
@@ -513,7 +513,7 @@ async function chargerCommandes () {
   const ca = toutes.filter((c) => !['en_attente_paiement', 'annulee', 'expiree'].includes(c.statut)).reduce((s, c) => s + c.total_centimes, 0)
   $('[data-resume-commandes]').textContent = `${toutes.length} commande${toutes.length > 1 ? 's' : ''} · ${euros(ca)} encaissés`
   $('[data-liste-commandes]').innerHTML = liste.map((c) => `<li><button type="button" class="cmd" data-cmd="${c.id}">
-    <span><b>n° ${c.numero}</b> · ${esc(c.client.nom)}<small>${new Date(c.created_at).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' })} · ${c.articles} article${c.articles > 1 ? 's' : ''} · ${c.livraison_mode === 'retrait' ? 'retrait' : 'livraison'}</small></span>
+    <span><b>n° ${c.numero}</b> · ${esc(c.client.nom)}<small>${new Date(c.created_at).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' })} · ${c.articles} article${c.articles > 1 ? 's' : ''} · ${c.livraison_mode === 'retrait' ? 'retrait' : c.livraison_mode === 'relais' ? 'point relais' : 'livraison'}</small></span>
     <span class="cmd__r"><b>${euros(c.total_centimes)}</b><span class="badge badge--${c.statut}">${STATUTS[c.statut]}</span></span>
   </button></li>`).join('') || `<li class="sub">${filtre === 'a_traiter' ? 'Aucune commande à traiter.' : 'Aucune commande.'}</li>`
 }
@@ -527,8 +527,8 @@ async function afficherCommande (id) {
     <p class="sub">${new Date(c.created_at).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' })}${c.payee_at ? ` · payée le ${new Date(c.payee_at).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' })}` : ''}</p>
     <h3>Client</h3>
     <p>${esc(c.client.nom)}<br><a href="mailto:${esc(c.client.email)}">${esc(c.client.email)}</a>${c.client.telephone ? `<br>${esc(c.client.telephone)}` : ''}</p>
-    <h3>${c.livraison_mode === 'retrait' ? 'Retrait en boutique' : 'Livraison'}</h3>
-    <p>${a ? `${esc(a.ligne)}<br>${esc(a.code_postal)} ${esc(a.ville)}` : 'Le client passe en boutique.'}</p>
+    <h3>${c.livraison_mode === 'retrait' ? 'Retrait en boutique' : c.livraison_mode === 'relais' ? 'Point relais' : 'Livraison'}</h3>
+    <p>${a ? `${a.ligne ? esc(a.ligne) + '<br>' : ''}${esc(a.code_postal)} ${esc(a.ville)}${a.pays === 'BE' ? ', Belgique' : ''}${c.livraison_mode === 'relais' ? '<br><small>Choisir le point relais le plus proche et l’indiquer à la cliente par e-mail.</small>' : ''}` : 'Le client passe en boutique.'}</p>
     <h3>Articles</h3>
     <ul class="lignes">${c.lignes.map((l) => `<li><span>${esc(l.nom)}<small>${esc(l.couleur)} · ${esc(l.taille)} · réf. ${esc(l.sku)}</small></span><span>× ${l.quantite}</span><b>${euros(l.prix_unitaire_centimes * l.quantite)}</b></li>`).join('')}</ul>
     <p class="totaux">Livraison ${c.livraison_centimes ? euros(c.livraison_centimes) : 'offerte'} · <b>Total ${euros(c.total_centimes)}</b></p>
@@ -558,6 +558,10 @@ async function chargerBoutique () {
   fb.r_instagram.value = c.reseaux.instagram; fb.r_facebook.value = c.reseaux.facebook; fb.r_tiktok.value = c.reseaux.tiktok
   fb.pied.value = c.pied
   fb.guide_tailles.value = c.guide_tailles || ''; fb.n_titre.value = c.newsletter?.titre || ''; fb.n_texte.value = c.newsletter?.texte || ''
+  appel('/api/admin/messages').then(({ messages }) => {
+    $('[data-messages-n]').textContent = `(${messages.length})`
+    $('[data-messages]').innerHTML = messages.map((m) => `<li><span><b>${esc(m.nom || m.email)}</b> <a href="mailto:${esc(m.email)}">${esc(m.email)}</a>${m.telephone ? ` · ${esc(m.telephone)}` : ''}<br>${esc(m.message)}</span><small>${new Date(m.created_at).toLocaleDateString('fr-FR')}</small></li>`).join('') || '<li class="sub">Aucun message pour le moment.</li>'
+  }).catch(() => {})
   appel('/api/admin/newsletter').then(({ inscrits }) => {
     $('[data-inscrits-n]').textContent = `(${inscrits.length})`
     $('[data-inscrits-csv]').hidden = !inscrits.length
@@ -565,6 +569,7 @@ async function chargerBoutique () {
   }).catch(() => {})
   fb.livraison.value = String(b.livraison_centimes / 100).replace('.', ','); fb.offerte.value = String(b.livraison_offerte_centimes / 100).replace('.', ',')
   fb.retrait.value = b.retrait_adresse
+  fb.relais.value = b.relais_centimes == null ? '' : String(b.relais_centimes / 100).replace('.', ',')
   fb.paiement.value = b.paiement_mode
   $('[data-logo-apercu]').innerHTML = b.logo ? `<img src="${esc(b.logo)}" alt="Logo actuel">` : 'Aucun logo'
   $('[data-banniere-apercu]').innerHTML = b.banniere ? `<img src="${esc(b.banniere)}" alt="Bannière actuelle">` : 'Aucune image'
@@ -597,7 +602,7 @@ fb.addEventListener('submit', async (e) => {
           newsletter: { titre: fb.n_titre.value, texte: fb.n_texte.value }
         },
         livraison_centimes: euroVersCentimes(fb.livraison.value), livraison_offerte_centimes: euroVersCentimes(fb.offerte.value),
-        retrait_adresse: fb.retrait.value, paiement_mode: fb.paiement.value
+        retrait_adresse: fb.retrait.value, relais_centimes: fb.relais.value.trim() === '' ? null : euroVersCentimes(fb.relais.value), paiement_mode: fb.paiement.value
       }
     })
     toast('Réglages enregistrés.'); for (const el of $$('[data-nom-boutique]')) el.textContent = fb.nom.value

@@ -2,8 +2,9 @@
    rayons, meilleures ventes (réelles), présentation de la boutique, newsletter. */
 import {
   $, $$, esc, euros, reduce, B, C, PIECES, NOMS_CAT, RAYONS, COLLECTIONS, NOUVEAUTES,
-  prix, remise, epuise, prixHtml, carte, lienProduit, lienRayon, ajouter, avantOuvrirPanier, piegerFocus
+  prix, remise, epuise, prixHtml, carte, lienProduit, lienRayon, ajouter, avantOuvrirPanier, piegerFocus, FETES, PETITS
 } from './coquille.js'
+import { IMAGES, PETITS_PRIX, JOURS_RETOUR, faq } from './textes.js'
 import { api } from './commun.js'
 
 const narrow = matchMedia('(max-width: 720px)')
@@ -33,23 +34,36 @@ $('[data-portant-texte]').hidden = !COLLECTIONS[0]?.description
 $('[data-collection-lien]').href = lienRayon('nouveautes')
 $('[data-rail-aide]').textContent = narrow.matches ? 'Faites glisser le portant, touchez une pièce pour la découvrir.' : 'Passez sur une pièce pour la faire tourner, cliquez pour la découvrir.'
 
-/* ---------- Sélection : les pièces choisies par la boutique, sinon les nouveautés ---------- */
-const choisies = PIECES.filter((p) => p.mis_en_avant)
-const selection = (choisies.length >= 4 ? choisies : NOUVEAUTES).slice(0, 8)
+/* ---------- Nouveautés (la sélection de la boutique passe en premier) ---------- */
+const choisies = NOUVEAUTES.filter((p) => p.mis_en_avant)
+const selection = [...choisies, ...NOUVEAUTES.filter((p) => !p.mis_en_avant)].filter((p) => !epuise(p)).slice(0, 8)
 const garde = (n) => n >= 4 ? n - (n % 4) : n // rangées complètes
 $('[data-selection]').innerHTML = selection.slice(0, garde(selection.length)).map(carte).join('')
 $('[data-bloc-selection]').hidden = !selection.length
-if (choisies.length < 4) { $('[data-selection-titre]').textContent = 'Les nouveautés'; $('[data-selection-lien]').href = lienRayon('nouveautes'); $('[data-selection-lien]').textContent = 'Toutes les nouveautés' }
 
-/* ---------- Rayons avec photographies ---------- */
-$('[data-categories]').innerHTML = RAYONS.map((c) => {
-  const p = c.pieces.find((x) => x.mis_en_avant) || c.pieces[0]
-  return `<li class="rayon"><a href="${lienRayon(c.slug)}" data-filtre="${esc(c.slug)}">
-    <span class="rayon__img rayon__img--${c.presentation}"><img src="${esc(p.couleurs[0].face)}" alt="" loading="lazy" width="660" height="876"></span>
-    <span class="rayon__nom">${esc(c.nom)}<span>${c.pieces.length}</span></span></a></li>`
-}).join('')
-$('[data-bloc-categories]').hidden = RAYONS.length < 2
-$('[data-categories]').style.setProperty('--cols', RAYONS.length <= 4 ? RAYONS.length : [5, 9, 10].includes(RAYONS.length) ? 5 : RAYONS.length === 6 ? 3 : 4)
+/* ---------- Tenues de fêtes : photo éditoriale + trois pièces ---------- */
+if (FETES) {
+  $('[data-bloc-fetes]').hidden = false
+  $('[data-fetes-img]').innerHTML = `<img src="${IMAGES.fetes}" alt="Robe longue à sequins et veste en fausse fourrure" loading="lazy" width="1120" height="1400">`
+  $('[data-fetes-titre]').textContent = FETES.nom
+  $('[data-fetes-texte]').textContent = FETES.description || ''
+  $('[data-fetes]').innerHTML = FETES.pieces.filter((p) => !epuise(p)).sort((a, b) => b.mis_en_avant - a.mis_en_avant).slice(0, 3).map(carte).join('')
+  $('[data-fetes-lien]').href = lienRayon(FETES.id)
+  $('[data-fetes-lien]').textContent = `Voir les ${FETES.pieces.length} pièces`
+}
+
+/* ---------- Rayons : grandes photos, puis tous les sous-rayons ---------- */
+const nbGroupe = (g) => RAYONS.filter((c) => c.groupe === g).reduce((s, c) => s + c.pieces.length, 0)
+const chauss = RAYONS.find((c) => c.slug === 'chaussures')
+const univers = [
+  nbGroupe('vetements') && [lienRayon('vetements'), IMAGES.vetements, 'Vêtements', `${nbGroupe('vetements')} pièces`],
+  nbGroupe('accessoires') - (chauss?.pieces.length || 0) > 0 && [lienRayon('accessoires'), IMAGES.accessoires, 'Accessoires', 'Sacs, bijoux, foulards'],
+  chauss && [lienRayon('chaussures'), IMAGES.chaussures, 'Chaussures', `${chauss.pieces.length} modèles`],
+  PETITS.length && [lienRayon('petits-prix'), IMAGES.essentiels, `Moins de ${euros(PETITS_PRIX)}`, 'Les petits prix de la boutique']
+].filter(Boolean)
+$('[data-univers]').innerHTML = univers.map(([h, img, nom, sous]) => `<li><a href="${h}"><img src="${img}" alt="" loading="lazy" width="1120" height="1400"><span class="univers__txt"><span class="univers__nom">${esc(nom)}</span><span class="univers__sous">${esc(sous)}</span></span></a></li>`).join('')
+$('[data-categories]').innerHTML = RAYONS.map((c) => `<a class="chip" href="${lienRayon(c.slug)}" data-filtre="${esc(c.slug)}">${esc(c.nom)}</a>`).join('')
+$('[data-bloc-categories]').hidden = !univers.length
 
 /* ---------- Meilleures ventes : uniquement des ventes réelles ---------- */
 const ventes = PIECES.filter((p) => p.ventes > 0 && !epuise(p)).sort((a, b) => b.ventes - a.ventes).slice(0, 3)
@@ -73,6 +87,15 @@ const infos = [
 $('[data-maison-infos]').innerHTML = infos.map(([t, v]) => `<div><dt>${t}</dt><dd>${v}</dd></div>`).join('')
 $('[data-maison-infos]').hidden = !infos.length
 if (!pr.texte && !infos.length && !B.presentation_image) $('#maison').hidden = true
+
+/* ---------- Engagements et questions fréquentes (d'après les vrais réglages) ---------- */
+$('[data-atouts-bande]').innerHTML = [
+  [`Livraison offerte dès ${euros(B.livraison_offerte_centimes)}`, B.relais ? `En point relais ou à domicile, en France${B.relais ? ' et en Belgique' : ''}.` : 'À domicile, en France métropolitaine.'],
+  B.retrait && ['Retrait gratuit en boutique', C.presentation.adresse || B.retrait.adresse],
+  [`${JOURS_RETOUR} jours pour changer d’avis`, 'Retour gratuit en boutique, remboursement sous 48 h.'],
+  ['Expédiée sous 3 jours', 'Chaque commande est préparée à la main.']
+].filter(Boolean).map(([t, p]) => `<li><b>${esc(t)}</b><span>${esc(p)}</span></li>`).join('')
+$('[data-faq]').innerHTML = faq(B).slice(0, 5).map(([q, r]) => `<details><summary>${esc(q)}</summary><p>${esc(r)}</p></details>`).join('')
 
 /* ---------- Newsletter (inscription réelle) ---------- */
 $('[data-lettre-titre]').textContent = C.newsletter.titre || 'Les nouvelles pièces, en premier'

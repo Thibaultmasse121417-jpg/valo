@@ -31,6 +31,7 @@
           <div class="sizes" role="group" aria-label="Taille" data-tailles></div>
         </div>
 
+        <div class="precommande" data-precommande hidden></div>
         <p class="dispo" data-dispo aria-live="polite"></p>
         <div class="achat">
           <div class="qte" data-qte><button type="button" data-qte-moins aria-label="Retirer un">−</button><output data-qte-n aria-label="Quantité">1</output><button type="button" data-qte-plus aria-label="Ajouter un">+</button></div>
@@ -41,8 +42,8 @@
 
         <div class="plis">
           <details open data-pli-description><summary>Description</summary><div class="plis__corps" data-description></div></details>
-          <details data-pli-composition hidden><summary>Composition et entretien</summary><div class="plis__corps" data-composition></div></details>
-          <details><summary>Livraison et retrait</summary><div class="plis__corps" data-livraison></div></details>
+          <details data-pli-composition hidden><summary>Composition et mesures</summary><div class="plis__corps" data-composition></div></details>
+          <details><summary>Livraison, retrait et retours</summary><div class="plis__corps" data-livraison></div></details>
         </div>
       </div>
     </article>
@@ -61,6 +62,7 @@
     </div>
     <div class="section section--fin"></div>
   </main>
+  <div class="barre-achat" data-barre-achat aria-hidden="true"><p class="barre-achat__txt"><span data-barre-nom></span><span data-barre-prix></span></p><button class="btn" type="button" data-barre-ajouter tabindex="-1">Ajouter au panier</button></div>
   <div data-bas></div>
 
   <!-- Visionneuse plein écran -->

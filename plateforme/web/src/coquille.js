@@ -14,6 +14,7 @@ import '@fontsource/dm-serif-display/400.css'
 import '@fontsource/dm-serif-display/400-italic.css'
 import './style.css'
 import { $, $$, esc, euros, api, appliquerTheme } from './commun.js'
+import { IMAGES, PETITS_PRIX } from './textes.js'
 
 export { $, $$, esc, euros }
 export const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -43,6 +44,9 @@ export const NOUVEAUTES = (() => {
 export const PROMOS = PIECES.filter((p) => p.prix_promo_centimes != null).sort((a, b) => remise(b) - remise(a))
 export const RAYONS = B.categories.map((c) => ({ ...c, pieces: PIECES.filter((p) => p.categorie === c.slug) })).filter((c) => c.pieces.length)
 export const COLLECTIONS = CAT.collections.map((c) => ({ ...c, pieces: PIECES.filter((p) => p.collections.includes(c.id)) })).filter((c) => c.pieces.length)
+export const FETES = COLLECTIONS.find((c) => /f[êe]te|soir|c[ée]r[ée]monie/i.test(c.nom))
+export const PETITS = PIECES.filter((p) => prix(p) <= PETITS_PRIX)
+export const dateFr = (iso) => new Date(iso + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })
 
 // Tailles disponibles d'une pièce (toutes couleurs confondues), dans l'ordre de la fiche.
 export function taillesDe (p) {
@@ -55,19 +59,23 @@ export function carte (p) {
   const c0 = p.couleurs[0]
   const tailles = taillesDe(p)
   const unique = tailles.length === 1 && /^(tu|taille unique|unique)$/i.test(tailles[0].t)
-  return `<li><a class="carte" href="${lienProduit(p)}" data-ref="${esc(p.reference)}">
-    <span class="carte__img carte__img--${p.presentation}">
-      <img src="${esc(c0.face)}" alt="${esc(p.nom)}" width="660" height="876" loading="lazy">
-      ${c0.dos ? `<img class="carte__dos" src="${esc(c0.dos)}" alt="" width="660" height="876" loading="lazy">` : ''}
-      <span class="etiquettes">${epuise(p) ? '<span class="etiquette etiquette--off">Épuisé</span>' : `${p.nouveau ? '<span class="etiquette">Nouveau</span>' : ''}${remise(p) ? `<span class="etiquette etiquette--promo">−${remise(p)} %</span>` : ''}`}</span>
-    </span>
-    <span class="carte__txt">
-      <span class="carte__nom card__name">${esc(p.nom)}</span>
-      <span class="carte__prix">${prixHtml(p)}</span>
-      ${tailles.length && !unique ? `<span class="carte__tailles" aria-label="Tailles disponibles">${tailles.map((x) => x.ok ? `<span>${esc(x.t)}</span>` : `<s aria-label="${esc(x.t)} épuisé">${esc(x.t)}</s>`).join('')}</span>` : ''}
-      ${p.couleurs.length > 1 ? `<span class="carte__couleurs" aria-label="${p.couleurs.length} couleurs">${p.couleurs.map((c) => `<i style="--c:${esc(c.hex)}" title="${esc(c.nom)}"></i>`).join('')}</span>` : ''}
-    </span>
-  </a></li>`
+  const off = epuise(p)
+  return `<li class="carte">
+    <a class="carte__lien" href="${lienProduit(p)}" data-ref="${esc(p.reference)}">
+      <span class="carte__img carte__img--${p.presentation}">
+        <img src="${esc(c0.face)}" alt="${esc(p.nom)}" width="660" height="876" loading="lazy">
+        ${c0.dos ? `<img class="carte__dos" src="${esc(c0.dos)}" alt="" width="660" height="876" loading="lazy">` : ''}
+        <span class="etiquettes">${off ? '<span class="etiquette etiquette--off">Épuisé</span>' : `${p.expedition_prevue ? '<span class="etiquette etiquette--pre">Précommande</span>' : p.nouveau ? '<span class="etiquette">Nouveau</span>' : ''}${remise(p) ? `<span class="etiquette etiquette--promo">−${remise(p)} %</span>` : ''}`}</span>
+      </span>
+      <span class="carte__txt">
+        <span class="carte__nom card__name">${esc(p.nom)}</span>
+        <span class="carte__prix">${prixHtml(p)}</span>
+        ${tailles.length && !unique ? `<span class="carte__tailles" aria-label="Tailles disponibles">${tailles.map((x) => x.ok ? `<span>${esc(x.t)}</span>` : `<s aria-label="${esc(x.t)} épuisé">${esc(x.t)}</s>`).join('')}</span>` : unique ? '<span class="carte__tailles">Taille unique</span>' : ''}
+        ${p.couleurs.length > 1 ? `<span class="carte__couleurs" aria-label="${p.couleurs.length} couleurs">${p.couleurs.map((c) => `<i style="--c:${esc(c.hex)}" title="${esc(c.nom)}"></i>`).join('')}</span>` : ''}
+      </span>
+    </a>
+    ${off ? '' : `<button type="button" class="carte__plus" data-ajout-rapide="${esc(p.reference)}" aria-label="Ajout rapide : ${esc(p.nom)}"><span>Ajout rapide</span><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.4"/></svg></button>`}
+  </li>`
 }
 
 /* ---------- Identité ---------- */
@@ -96,6 +104,28 @@ const annonces = [...(C.bandeau_livraison ? [C.bandeau_livraison] : []), ...C.an
 if (!annonces.length) annonces.push(`Livraison offerte dès ${euros(B.livraison_offerte_centimes)}${B.retrait ? ', retrait gratuit en boutique' : ''}`)
 const vet = RAYONS.filter((c) => c.groupe === 'vetements'); const acc = RAYONS.filter((c) => c.groupe === 'accessoires')
 const lienSous = (c) => `<a href="${lienRayon(c.slug)}" data-filtre="${esc(c.slug)}">${esc(c.nom)}<span>${c.pieces.length}</span></a>`
+const chaussures = RAYONS.find((c) => c.slug === 'chaussures')
+const accSans = acc.filter((c) => c.slug !== 'chaussures')
+const nb = (l) => l.reduce((s, c) => s + c.pieces.length, 0)
+const visuel = (href, img, titre, sous) => `<a class="mega__visuel" href="${href}"><span class="mega__photo"><img src="${img}" alt="" loading="lazy" width="560" height="700"></span><span class="mega__legende">${esc(titre)}</span><span class="mega__sous">${esc(sous)}</span></a>`
+const selections = [
+  NOUVEAUTES.length && [lienRayon('nouveautes'), 'Nouveautés'],
+  FETES && [lienRayon(FETES.id), FETES.nom],
+  PETITS.length && [lienRayon('petits-prix'), `Moins de ${euros(PETITS_PRIX)}`],
+  PROMOS.length && [lienRayon('promotions'), 'Promotions']
+].filter(Boolean)
+const megaVet = vet.length ? `<div class="mega" data-sous-liste="vetements" hidden><div class="mega__in">
+  <div class="mega__col"><p class="mega__t">Vêtements</p><a href="${lienRayon('vetements')}">Tous les vêtements<span>${nb(vet)}</span></a>${vet.map(lienSous).join('')}</div>
+  <div class="mega__col"><p class="mega__t">Nos sélections</p>${selections.map(([h, n]) => `<a href="${h}">${esc(n)}</a>`).join('')}</div>
+  ${visuel(lienRayon('nouveautes'), IMAGES.vetements, 'La nouvelle collection', 'Satin, maille et velours')}
+  ${FETES ? visuel(lienRayon(FETES.id), IMAGES.fetes, FETES.nom, FETES.description || 'Pour les soirs de fête') : ''}
+</div></div>` : ''
+const megaAcc = accSans.length ? `<div class="mega" data-sous-liste="accessoires" hidden><div class="mega__in">
+  <div class="mega__col"><p class="mega__t">Accessoires</p><a href="${lienRayon('accessoires')}">Tous les accessoires<span>${nb(acc)}</span></a>${accSans.map(lienSous).join('')}${chaussures ? lienSous(chaussures) : ''}</div>
+  <div class="mega__col"><p class="mega__t">Nos sélections</p>${selections.map(([h, n]) => `<a href="${h}">${esc(n)}</a>`).join('')}</div>
+  ${visuel(lienRayon('accessoires'), IMAGES.accessoires, 'Sacs et bijoux', 'La touche finale')}
+  ${chaussures ? visuel(lienRayon('chaussures'), IMAGES.chaussures, 'Chaussures', 'Escarpins, bottines') : ''}
+</div></div>` : ''
 const courant = (cat) => page === 'catalogue' && new URLSearchParams(location.search).get('cat') === cat ? ' aria-current="page"' : ''
 
 $('[data-haut]').outerHTML = `
@@ -107,8 +137,10 @@ $('[data-haut]').outerHTML = `
         <button class="outil burger" type="button" data-burger aria-expanded="false" aria-controls="tiroir" aria-label="Menu">${ICONES.menu}</button>
         <nav class="nav" aria-label="Rayons">
           <a href="${lienRayon('nouveautes')}"${courant('nouveautes')}>Nouveautés</a>
-          ${vet.length ? `<div class="nav__groupe"><button type="button" class="nav__btn" aria-expanded="false" data-sous="vetements">Vêtements</button><div class="nav__sous" data-sous-liste="vetements" hidden><a href="${lienRayon('vetements')}">Tous les vêtements<span>${vet.reduce((s, c) => s + c.pieces.length, 0)}</span></a>${vet.map(lienSous).join('')}</div></div>` : ''}
-          ${acc.length ? `<div class="nav__groupe"><button type="button" class="nav__btn" aria-expanded="false" data-sous="accessoires">Accessoires</button><div class="nav__sous" data-sous-liste="accessoires" hidden><a href="${lienRayon('accessoires')}">Tous les accessoires<span>${acc.reduce((s, c) => s + c.pieces.length, 0)}</span></a>${acc.map(lienSous).join('')}</div></div>` : ''}
+          ${vet.length ? `<div class="nav__groupe"><button type="button" class="nav__btn" aria-expanded="false" data-sous="vetements">Vêtements</button>${megaVet}</div>` : ''}
+          ${FETES ? `<a href="${lienRayon(FETES.id)}"${courant(FETES.id)}>${esc(FETES.nom)}</a>` : ''}
+          ${accSans.length ? `<div class="nav__groupe"><button type="button" class="nav__btn" aria-expanded="false" data-sous="accessoires">Accessoires</button>${megaAcc}</div>` : ''}
+          ${chaussures ? `<a href="${lienRayon('chaussures')}"${courant('chaussures')}>Chaussures</a>` : ''}
           ${PROMOS.length ? `<a class="nav__promo" href="${lienRayon('promotions')}"${courant('promotions')} data-lien-promos>Promotions</a>` : ''}
         </nav>
       </div>
@@ -126,11 +158,15 @@ $('[data-haut]').outerHTML = `
       <nav class="tiroir__liens" data-tiroir-liens aria-label="Rayons">
         <a href="${lienRayon('nouveautes')}">Nouveautés</a>
         ${vet.length ? `<details open><summary>Vêtements</summary><a href="${lienRayon('vetements')}">Tous les vêtements</a>${vet.map(lienSous).join('')}</details>` : ''}
+        ${FETES ? `<a href="${lienRayon(FETES.id)}">${esc(FETES.nom)}</a>` : ''}
         ${acc.length ? `<details><summary>Accessoires</summary><a href="${lienRayon('accessoires')}">Tous les accessoires</a>${acc.map(lienSous).join('')}</details>` : ''}
+        ${PETITS.length ? `<a href="${lienRayon('petits-prix')}">Moins de ${euros(PETITS_PRIX)}</a>` : ''}
         ${PROMOS.length ? `<a href="${lienRayon('promotions')}" data-filtre="promotions">Promotions</a>` : ''}
         <div class="tiroir__sep"></div>
         <a class="tiroir__petit" href="${lienRayon('tout')}">Toute la boutique</a>
-        <a class="tiroir__petit" href="/#maison">La boutique</a>
+        <a class="tiroir__petit" href="/la-boutique/">Notre boutique</a>
+        <a class="tiroir__petit" href="/livraison/">Livraison et retours</a>
+        <a class="tiroir__petit" href="/contact/">Nous contacter</a>
         <button class="tiroir__petit" type="button" data-ouvrir-recherche style="display:flex;width:100%;min-height:46px;padding:0 var(--g);align-items:center">Rechercher</button>
       </nav>
     </div>
@@ -250,25 +286,32 @@ $('[data-bas]').outerHTML = `
           <p data-pied-texte>${esc(C.pied || B.slogan || '')}</p>
           ${['instagram', 'facebook', 'tiktok'].some((k) => R[k]) ? `<p class="reseaux">${[['instagram', 'Instagram'], ['facebook', 'Facebook'], ['tiktok', 'TikTok']].filter(([k]) => R[k]).map(([k, n]) => `<a href="${esc(R[k])}" target="_blank" rel="noopener">${n}</a>`).join('')}</p>` : ''}
         </div>
-        <div><h3>Boutique</h3><ul>
+        <div><h3>La boutique</h3><ul>
           <li><a href="${lienRayon('nouveautes')}">Nouveautés</a></li>
           ${vet.length ? `<li><a href="${lienRayon('vetements')}">Vêtements</a></li>` : ''}
+          ${FETES ? `<li><a href="${lienRayon(FETES.id)}">${esc(FETES.nom)}</a></li>` : ''}
           ${acc.length ? `<li><a href="${lienRayon('accessoires')}">Accessoires</a></li>` : ''}
           ${PROMOS.length ? `<li><a href="${lienRayon('promotions')}">Promotions</a></li>` : ''}
-          <li><a href="${lienRayon('tout')}">Toute la boutique</a></li>
+          <li><a href="${lienRayon('tout')}">Tous nos produits</a></li>
         </ul></div>
-        <div><h3>Commander</h3><ul data-pied-aide>
-          <li>Livraison ${euros(B.livraison_centimes)}, offerte dès ${euros(B.livraison_offerte_centimes)}</li>
-          ${B.retrait ? '<li>Retrait gratuit en boutique</li>' : ''}
-          <li>${esc(PAIEMENT.pied)}</li>
+        <div><h3>Aide</h3><ul data-pied-aide>
+          <li><a href="/livraison/">Livraison et retrait</a></li>
+          <li><a href="/retours/">Retours et échanges</a></li>
+          <li><a href="/faq/">Questions fréquentes</a></li>
+          <li><a href="/contact/">Nous contacter</a></li>
+          <li class="pied__paiement">${esc(PAIEMENT.pied)}</li>
         </ul></div>
         <div class="pied__contact"><h3>Nous trouver</h3>
           ${[pr.adresse && `<p>${esc(pr.adresse)}</p>`, pr.horaires.length && `<p>${pr.horaires.map(esc).join('<br>')}</p>`, pr.telephone && `<p><a href="tel:${esc(pr.telephone.replace(/\s/g, ''))}">${esc(pr.telephone)}</a></p>`, pr.email && `<p><a href="mailto:${esc(pr.email)}">${esc(pr.email)}</a></p>`].filter(Boolean).join('') || `<p>${esc(B.nom)}</p>`}
+          <p><a class="pied__lien" href="/la-boutique/">Venir en boutique</a></p>
         </div>
       </div>
-      <p class="pied__bas"><span>© ${new Date().getFullYear()} ${esc(B.nom)}</span><span>Boutique en ligne réalisée par Estalia Studio</span></p>
+      <p class="pied__bas"><span>© ${new Date().getFullYear()} ${esc(B.nom)}</span><a href="/mentions-legales/">Mentions légales et conditions de vente</a><span>Site de démonstration réalisé par Estalia Studio</span></p>
     </div>
   </footer>
+
+  <div class="feuille-voile" data-feuille-voile hidden></div>
+  <div class="feuille" data-feuille role="dialog" aria-modal="true" aria-labelledby="feuille-nom" hidden></div>
 
   <div class="voile" data-cart-veil hidden></div>
   <aside class="cart" data-cart aria-label="Panier" aria-hidden="true" inert>
@@ -285,15 +328,18 @@ $('[data-bas]').outerHTML = `
       <fieldset class="ck-mode">
         <legend>Réception</legend>
         <label><input type="radio" name="mode" value="livraison" checked><span>Livraison à domicile <small data-prix-livraison></small></span></label>
+        ${B.relais ? `<label><input type="radio" name="mode" value="relais"><span>Point relais <small>${euros(B.relais.prix_centimes)}, offert dès ${euros(B.livraison_offerte_centimes)}</small></span></label>` : ''}
         ${B.retrait ? '<label data-retrait-choix><input type="radio" name="mode" value="retrait"><span>Retrait en boutique <small>Gratuit</small></span></label>' : ''}
       </fieldset>
       ${B.retrait ? `<p class="ck-retrait" data-retrait-adresse hidden>À retirer : ${esc(B.retrait.adresse)}</p>` : ''}
+      ${B.relais ? '<p class="ck-retrait" data-relais-info hidden>Indiquez votre code postal : nous vous confirmons par e-mail le point relais le plus proche avant l’expédition.</p>' : ''}
       <p class="ck-titre">Vos coordonnées</p>
       <label class="ck-f"><span>E-mail</span><input name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" required></label>
       <label class="ck-f"><span>Nom et prénom</span><input name="nom" autocomplete="name" required></label>
       <label class="ck-f"><span>Téléphone <small>(facultatif)</small></span><input name="telephone" type="tel" autocomplete="tel" inputmode="tel"></label>
       <div data-adresse>
-        <label class="ck-f"><span>Adresse</span><input name="ligne" autocomplete="street-address"></label>
+        ${B.relais ? '<label class="ck-f"><span>Pays</span><span class="select select--plein"><select name="pays"><option value="FR">France</option><option value="BE">Belgique (point relais)</option></select></span></label>' : ''}
+        <label class="ck-f" data-ligne><span>Adresse</span><input name="ligne" autocomplete="street-address"></label>
         <div class="ck-row">
           <label class="ck-f"><span>Code postal</span><input name="code_postal" autocomplete="postal-code" inputmode="numeric" maxlength="5"></label>
           <label class="ck-f"><span>Ville</span><input name="ville" autocomplete="address-level2"></label>
@@ -341,7 +387,8 @@ export function ajouter (vid, q = 1) {
 const save = () => { store.set(items); peindrePanier() }
 const sousTotal = () => items.reduce((s, x) => s + x.q * prix(VAR.get(x.v).p), 0)
 const modeLivraison = () => form.mode.value || 'livraison'
-const fraisLivraison = () => modeLivraison() === 'retrait' || sousTotal() >= B.livraison_offerte_centimes ? 0 : B.livraison_centimes
+const pays = () => form.pays?.value || 'FR'
+const fraisLivraison = () => modeLivraison() === 'retrait' || sousTotal() >= B.livraison_offerte_centimes ? 0 : modeLivraison() === 'relais' ? B.relais.prix_centimes : B.livraison_centimes
 function peindrePanier () {
   const n = items.reduce((s, x) => s + x.q, 0); const st = sousTotal()
   const pastille = $('[data-bag-n]'); pastille.textContent = n; pastille.toggleAttribute('data-vide', !n)
@@ -352,7 +399,7 @@ function peindrePanier () {
   $('[data-ship-bar]').style.width = `${Math.min(100, (st / B.livraison_offerte_centimes) * 100)}%`
   const frais = fraisLivraison(); const commande = etape === 'commande'
   $('[data-cart-sous-total]').textContent = euros(st)
-  $('[data-cart-livraison]').textContent = modeLivraison() === 'retrait' ? 'Retrait gratuit' : frais ? euros(frais) : 'Offerte'
+  $('[data-cart-livraison]').textContent = modeLivraison() === 'retrait' ? 'Retrait gratuit' : frais ? `${euros(frais)}${modeLivraison() === 'relais' ? ' (point relais)' : ''}` : 'Offerte'
   $('[data-cart-total]').textContent = euros(st + frais)
   $('[data-checkout]').disabled = !n || !B.paiement
   if (commande) $('[data-checkout]').textContent = B.paiement === 'stripe' ? `Payer ${euros(st + frais)}` : PAIEMENT.bouton
@@ -397,10 +444,16 @@ veil.addEventListener('click', fermerPanier)
 
 /* ---------- Commande ---------- */
 $('[data-prix-livraison]').textContent = `${euros(B.livraison_centimes)}, offerte dès ${euros(B.livraison_offerte_centimes)}`
-form.addEventListener('change', () => {
-  const r = modeLivraison() === 'retrait'
-  $('[data-adresse]').hidden = r
-  if (B.retrait) $('[data-retrait-adresse]').hidden = !r
+form.addEventListener('change', (e) => {
+  // La Belgique n'est livrée qu'en point relais
+  if (e.target.name === 'pays' && pays() === 'BE') form.mode.value = 'relais'
+  if (e.target.name === 'mode' && modeLivraison() === 'livraison' && form.pays) form.pays.value = 'FR'
+  const m = modeLivraison()
+  $('[data-adresse]').hidden = m === 'retrait'
+  $('[data-ligne]').hidden = m === 'relais'
+  if (B.retrait) $('[data-retrait-adresse]').hidden = m !== 'retrait'
+  if (B.relais) $('[data-relais-info]').hidden = m !== 'relais'
+  form.code_postal.maxLength = pays() === 'BE' ? 4 : 5
   peindrePanier()
 })
 form.addEventListener('input', (e) => e.target.removeAttribute('aria-invalid'))
@@ -422,7 +475,8 @@ $('[data-checkout]').addEventListener('click', async () => {
   const mode = modeLivraison()
   const manque = [['email', /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email.value.trim()), 'Indiquez une adresse e-mail valide.'],
     ['nom', f.nom.value.trim().length >= 2, 'Indiquez votre nom.'],
-    ...(mode === 'livraison' ? [['ligne', !!f.ligne.value.trim(), 'Indiquez votre adresse.'], ['code_postal', /^\d{5}$/.test(f.code_postal.value.trim()), 'Le code postal comporte 5 chiffres.'], ['ville', !!f.ville.value.trim(), 'Indiquez la ville.']] : [])]
+    ...(mode === 'livraison' ? [['ligne', !!f.ligne.value.trim(), 'Indiquez votre adresse.']] : []),
+    ...(mode !== 'retrait' ? [['code_postal', (pays() === 'BE' ? /^\d{4}$/ : /^\d{5}$/).test(f.code_postal.value.trim()), pays() === 'BE' ? 'Le code postal belge comporte 4 chiffres.' : 'Le code postal comporte 5 chiffres.'], ['ville', !!f.ville.value.trim(), 'Indiquez la ville.']] : [])]
     .find(([, ok]) => !ok)
   if (manque) { err.textContent = manque[2]; f[manque[0]].setAttribute('aria-invalid', 'true'); f[manque[0]].focus(); return }
   const b = $('[data-checkout]'); b.disabled = true; b.textContent = 'Un instant…'; err.textContent = ''
@@ -430,7 +484,7 @@ $('[data-checkout]').addEventListener('click', async () => {
     const r = await api('/api/commandes', {
       method: 'POST',
       body: {
-        client: { email: f.email.value.trim(), nom: f.nom.value.trim(), telephone: f.telephone.value.trim(), adresse: mode === 'livraison' ? { ligne: f.ligne.value.trim(), code_postal: f.code_postal.value.trim(), ville: f.ville.value.trim(), pays: 'FR' } : null },
+        client: { email: f.email.value.trim(), nom: f.nom.value.trim(), telephone: f.telephone.value.trim(), adresse: mode !== 'retrait' ? { ligne: mode === 'livraison' ? f.ligne.value.trim() : '', code_postal: f.code_postal.value.trim(), ville: f.ville.value.trim(), pays: pays() } : null },
         livraison_mode: mode,
         lignes: items.map((x) => ({ variante_id: x.v, quantite: x.q }))
       }
@@ -457,4 +511,48 @@ tst.addEventListener('click', async (e) => {
   tst.classList.remove('is-on')
   for (const f of avantPanier) await f()
   ouvrirPanier()
+})
+
+/* ---------- Ajout rapide depuis une carte produit (taille choisie sans quitter la page) ---------- */
+const feuille = $('[data-feuille]'); const feuilleVoile = $('[data-feuille-voile]')
+const rapide = { p: null, c: 0 }
+function peindreFeuille () {
+  const p = rapide.p; const col = p.couleurs[rapide.c]
+  feuille.innerHTML = `<div class="feuille__poignee" aria-hidden="true"></div>
+    <div class="feuille__haut">
+      <span class="feuille__img carte__img--${p.presentation}"><img src="${esc(col.face)}" alt="" width="660" height="876"></span>
+      <div><p class="feuille__nom" id="feuille-nom">${esc(p.nom)}</p><p class="carte__prix">${prixHtml(p)}</p>
+        ${p.expedition_prevue ? `<p class="feuille__note">Précommande : expédition à partir du ${dateFr(p.expedition_prevue)}</p>` : ''}
+        <a class="lien-petit" href="${lienProduit(p)}">Voir la fiche complète</a></div>
+      <button class="fermer feuille__fermer" type="button" data-feuille-fermer aria-label="Fermer">${ICONES.croix}</button>
+    </div>
+    ${p.couleurs.length > 1 ? `<p class="feuille__t">Couleur : ${esc(col.nom)}</p><div class="nuancier">${p.couleurs.map((c, k) => `<button type="button" class="sw${k === rapide.c ? ' is-on' : ''}" style="--c:${esc(c.hex)}" data-feuille-c="${k}" aria-pressed="${k === rapide.c}" aria-label="${esc(c.nom)}"></button>`).join('')}</div>` : ''}
+    <p class="feuille__t">Choisissez votre taille</p>
+    <div class="sizes">${col.variantes.map((v) => `<button type="button" class="size${v.disponible ? '' : ' is-off'}" data-feuille-v="${esc(v.id)}" ${v.disponible ? '' : `disabled aria-label="${esc(v.taille)}, épuisé"`}>${esc(v.taille)}</button>`).join('')}</div>
+    <p class="feuille__aide">La pièce est ajoutée au panier dès que vous touchez une taille.</p>`
+}
+function ouvrirFeuille (p) {
+  rapide.p = p; rapide.c = Math.max(0, p.couleurs.findIndex((c) => c.variantes.some((v) => v.disponible)))
+  peindreFeuille()
+  feuille.hidden = false; feuilleVoile.hidden = false
+  requestAnimationFrame(() => { feuille.classList.add('is-on'); feuilleVoile.classList.add('is-on') })
+  ouvrirCouche(feuille, { focus: $('.size:not([disabled])', feuille) || $('[data-feuille-fermer]', feuille), fermer: fermerFeuille })
+}
+function fermerFeuille () {
+  feuille.classList.remove('is-on'); feuilleVoile.classList.remove('is-on')
+  setTimeout(() => { if (!feuille.classList.contains('is-on')) { feuille.hidden = true; feuilleVoile.hidden = true } }, reduce ? 0 : 300)
+  fermerCouche(feuille)
+}
+feuilleVoile.addEventListener('click', fermerFeuille)
+feuille.addEventListener('click', (e) => {
+  if (e.target.closest('[data-feuille-fermer]')) fermerFeuille()
+  const c = e.target.closest('[data-feuille-c]'); if (c) { rapide.c = +c.dataset.feuilleC; peindreFeuille() }
+  const v = e.target.closest('[data-feuille-v]'); if (v && !v.disabled && ajouter(v.dataset.feuilleV)) fermerFeuille()
+})
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-ajout-rapide]'); if (!b) return
+  const p = PIECES.find((x) => x.reference === b.dataset.ajoutRapide); if (!p) return
+  const libres = p.couleurs.flatMap((c) => c.variantes.filter((v) => v.disponible))
+  if (p.couleurs.length === 1 && libres.length === 1 && p.couleurs[0].variantes.length === 1) ajouter(libres[0].id) // taille unique : directement au panier
+  else ouvrirFeuille(p)
 })

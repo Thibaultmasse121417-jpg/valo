@@ -60,7 +60,7 @@ for (const [nom, options] of [['ordinateur', { viewport: { width: 1440, height: 
   etape(`${nom} : catalogue Vêtements ${total} → ${prix.length} en ${taille}, triés par prix`)
 
   // Fiche produit
-  await toucher('[data-grid] .carte')
+  await toucher('[data-grid] .carte__lien')
   await p.waitForURL(/\/produit\//)
   await p.waitForSelector('[data-fiche]:not([hidden])')
   assert.ok(await p.$$eval('[data-galerie] img', (n) => n.length) >= 1, 'galerie')
@@ -110,6 +110,59 @@ for (const [nom, options] of [['ordinateur', { viewport: { width: 1440, height: 
   // Vider le panier pour le test suivant
   await p.evaluate(() => localStorage.clear())
   await ctx.close()
+}
+
+// Fonctions reprises de la boutique d'origine : méga-menu, ajout rapide, point relais, précommande, pages, contact
+{
+  const p = await (await nav.newContext({ viewport: { width: 1440, height: 900 } })).newPage(); surveiller(p, 'ordinateur+')
+  await p.goto(`${URL_B}/`)
+  await p.hover('[data-sous="vetements"]')
+  await p.waitForSelector('[data-sous-liste="vetements"]:not([hidden]) .mega__visuel')
+  const liens = await p.$$eval('[data-sous-liste="vetements"] .mega__col a', (a) => a.map((x) => x.getAttribute('href')))
+  assert.ok(liens.some((h) => h.includes('cat=petits-prix')), 'méga-menu : « Moins de 25 € »')
+  etape(`méga-menu Vêtements : ${liens.length} liens et deux visuels`)
+
+  await p.goto(`${URL_B}/boutique/?cat=vetements`)
+  await p.hover('[data-grid] .carte:first-child')
+  await p.click('[data-grid] .carte:first-child [data-ajout-rapide] span')
+  await p.waitForSelector('[data-feuille]:not([hidden]) .size')
+  await p.click('[data-feuille] .size:not([disabled])')
+  await p.waitForFunction(() => document.querySelector('[data-bag-n]').textContent === '1')
+  await p.waitForSelector('[data-feuille]', { state: 'hidden' })
+  etape('ajout rapide depuis le catalogue : taille choisie dans le panneau, article au panier')
+
+  await p.goto(`${URL_B}/produit/?ref=BLAZER-BIJOU`)
+  await p.waitForSelector('[data-precommande]:not([hidden])')
+  assert.match(await p.textContent('[data-precommande]'), /expédition à partir du/)
+  assert.match(await p.textContent('[data-composition]'), /polyester/)
+  etape('fiche en précommande : date d’expédition et composition affichées')
+
+  await p.click('[data-open-cart]'); await p.waitForSelector('[data-cart].is-on')
+  await p.click('[data-checkout]')
+  await p.check('[data-checkout-form] input[value="relais"]')
+  assert.ok(await p.$eval('[data-ligne]', (el) => el.hidden), 'pas d’adresse de rue en point relais')
+  assert.match(await p.textContent('[data-cart-livraison]'), /point relais|Offerte/)
+  await p.selectOption('[data-checkout-form] [name="pays"]', 'BE')
+  await p.fill('[data-checkout-form] [name="email"]', 'relais@exemple.fr')
+  await p.fill('[data-checkout-form] [name="nom"]', 'Lou Dumont')
+  await p.fill('[data-checkout-form] [name="code_postal"]', '1000')
+  await p.fill('[data-checkout-form] [name="ville"]', 'Bruxelles')
+  await p.click('[data-checkout]')
+  await p.waitForURL(/paiement-test/)
+  await p.click('[data-annuler]'); await p.waitForURL(`${URL_B}/`)
+  etape('commande en point relais en Belgique créée, puis annulée (stock rendu)')
+
+  for (const [u, t] of [['la-boutique', 'Notre boutique'], ['livraison', 'Livraison et retrait'], ['retours', 'Retours et échanges'], ['faq', 'Questions fréquentes'], ['mentions-legales', 'Mentions légales et conditions de vente'], ['contact', 'Nous contacter']]) {
+    await p.goto(`${URL_B}/${u}/`); await p.waitForSelector('main h1')
+    assert.equal(await p.textContent('main h1'), t)
+  }
+  await p.waitForSelector('[data-contact] button[type="submit"]:not([disabled])')
+  await p.fill('[data-contact] [name="email"]', 'question@exemple.fr')
+  await p.fill('[data-contact] [name="message"]', 'Bonjour, le blazer taille-t-il grand ?')
+  await p.click('[data-contact] button[type="submit"]')
+  await p.waitForFunction(() => /bien arrivé/.test(document.querySelector('[data-contact-etat]').textContent))
+  etape('pages boutique, livraison, retours, FAQ, mentions ; message de contact enregistré')
+  await p.evaluate(() => localStorage.clear())
 }
 
 // Page produit inconnue : état soigné

@@ -156,6 +156,7 @@
               <label class="f"><span>Titre de la newsletter</span><input name="n_titre" placeholder="Les nouvelles pièces, en premier"></label>
               <label class="f"><span>Texte de la newsletter</span><input name="n_texte" placeholder="Recevez un e-mail quand de nouvelles pièces arrivent."></label>
             </div>
+            <div class="f"><span>Messages reçus par le formulaire de contact <small data-messages-n></small></span><ul class="inscrits" data-messages></ul></div>
             <div class="f"><span>Inscrites à la newsletter <small data-inscrits-n></small></span>
               <ul class="inscrits" data-inscrits></ul>
               <p><a class="lnk" href="/api/admin/newsletter?format=csv" download data-inscrits-csv hidden>Télécharger la liste (CSV)</a></p>
@@ -168,6 +169,7 @@
               <label class="f"><span>Offerte à partir de</span><span class="euro"><input name="offerte" inputmode="decimal"><b>€</b></span></label>
             </div>
             <label class="f"><span>Adresse de retrait en boutique <small>(vide = pas de retrait)</small></span><input name="retrait"></label>
+            <label class="f"><span>Prix en point relais <small>(vide = pas de point relais ; offert au même seuil)</small></span><span class="euro"><input name="relais" inputmode="decimal"><b>€</b></span></label>
           </fieldset>
           <fieldset class="carte">
             <legend>Paiement</legend>
@@ -233,7 +235,8 @@
           </div>
           <datalist id="types"><option>T-shirt</option><option>Chemise</option><option>Pull</option><option>Gilet</option><option>Cardigan</option><option>Sweat</option><option>Veste</option><option>Manteau</option><option>Robe</option><option>Jupe</option><option>Pantalon</option><option>Polo</option></datalist>
           <label class="f"><span>Description</span><textarea name="description" rows="3" placeholder="Coupe, détails, comment la porter…"></textarea></label>
-          <label class="f"><span>Composition et entretien <small>(facultatif, affiché sur la fiche s’il est rempli)</small></span><textarea name="composition" rows="2" placeholder="95 % polyester, 5 % élasthane. Lavage à 30 °C."></textarea></label>
+          <label class="f"><span>Composition, mesures et entretien <small>(facultatif, affiché sur la fiche s’il est rempli)</small></span><textarea name="composition" rows="3" placeholder="100 % coton. Longueur 62 cm en S/M. La mannequin mesure 1,65 m et porte du S/M."></textarea></label>
+          <label class="f"><span>Précommande : date d’expédition <small>(vide = disponible tout de suite)</small></span><input name="expedition_prevue" type="date"></label>
           <div class="f"><span>Collections</span><div class="puces" data-fiche-collections></div></div>
         </section>
 

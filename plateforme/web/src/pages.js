@@ -27,7 +27,7 @@ const ETATS = {
 function recap (cmd) {
   $('[data-lignes]').innerHTML = cmd.lignes.map((l) => `<li><span>${esc(l.nom)}<small>${esc(l.couleur)}, taille ${esc(l.taille)}, quantité ${l.quantite}</small></span><b>${euros(l.prix_centimes * l.quantite)}</b></li>`).join('')
   $('[data-totaux]').innerHTML = `<dt>Sous-total</dt><dd>${euros(cmd.sous_total_centimes)}</dd>
-    <dt>${cmd.livraison_mode === 'retrait' ? 'Retrait en boutique' : 'Livraison'}</dt><dd>${cmd.livraison_centimes ? euros(cmd.livraison_centimes) : 'offerte'}</dd>
+    <dt>${cmd.livraison_mode === 'retrait' ? 'Retrait en boutique' : cmd.livraison_mode === 'relais' ? 'Point relais' : 'Livraison'}</dt><dd>${cmd.livraison_centimes ? euros(cmd.livraison_centimes) : 'offerte'}</dd>
     <dt class="pg-total">Total</dt><dd class="pg-total">${euros(cmd.total_centimes)}</dd>`
 }
 
