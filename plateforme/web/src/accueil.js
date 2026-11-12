@@ -2,7 +2,7 @@
    rayons, meilleures ventes (réelles), présentation de la boutique, newsletter. */
 import {
   $, $$, esc, euros, reduce, B, C, PIECES, NOMS_CAT, RAYONS, COLLECTIONS, NOUVEAUTES,
-  prix, remise, epuise, prixHtml, carte, lienProduit, lienRayon, ajouter, avantOuvrirPanier, piegerFocus, FETES, PETITS
+  prix, remise, epuise, prixHtml, carte, lienProduit, lienRayon, ajouter, avantOuvrirPanier, piegerFocus, FETES, PETITS, reperes, reveler, EDITO
 } from './coquille.js'
 import { IMAGES, PETITS_PRIX, JOURS_RETOUR, faq } from './textes.js'
 import { api } from './commun.js'
@@ -44,7 +44,7 @@ $('[data-bloc-selection]').hidden = !selection.length
 /* ---------- Tenues de fêtes : photo éditoriale + trois pièces ---------- */
 if (FETES) {
   $('[data-bloc-fetes]').hidden = false
-  $('[data-fetes-img]').innerHTML = `<img src="${IMAGES.fetes}" alt="Robe longue à sequins et veste en fausse fourrure" loading="lazy" width="1120" height="1400">`
+  $('[data-fetes-img]').innerHTML = `<img src="${IMAGES.fetes}" alt="Robe longue à sequins et veste en fausse fourrure" loading="lazy" width="1120" height="1400">${reperes('fetes')}${EDITO ? '<figcaption class="legende">Robe longue à sequins, veste courte fausse fourrure</figcaption>' : ''}`
   $('[data-fetes-titre]').textContent = FETES.nom
   $('[data-fetes-texte]').textContent = FETES.description || ''
   $('[data-fetes]').innerHTML = FETES.pieces.filter((p) => !epuise(p)).sort((a, b) => b.mis_en_avant - a.mis_en_avant).slice(0, 3).map(carte).join('')
@@ -309,3 +309,5 @@ qv.addEventListener('touchend', (e) => {
   const dx = e.changedTouches[0].clientX - sx; sx = null
   if (Math.abs(dx) > 60 && e.target.closest('.qv__stage')) pas(dx < 0 ? 1 : -1)
 })
+
+reveler()

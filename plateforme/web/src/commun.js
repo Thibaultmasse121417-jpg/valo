@@ -51,6 +51,7 @@ export function appliquerTheme (t = {}) {
   set('--accent', t.accent); set('--bandeau', t.bandeau)
   if (t.fond && t.texte) set('--line', melange(t.fond, t.texte, 0.12))
   if (t.fond && t.accent) set('--sable', melange(t.fond, t.accent, 0.2))
+  if (t.accent && t.texte) set('--accent-texte', melange(t.accent, t.texte, 0.42)) // version lisible de l'accent pour les petits textes
   set('--titres', POLICES[t.police_titres]); set('--font', POLICES[t.police_texte])
   s.setProperty('--titres-style', t.titres_italiques ? 'italic' : 'normal')
   const meta = document.querySelector('meta[name="theme-color"]') || Object.assign(document.head.appendChild(document.createElement('meta')), { name: 'theme-color' })

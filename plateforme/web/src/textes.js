@@ -32,3 +32,40 @@ export function faq (B) {
     ['Comment choisir ma taille ?', 'Chaque fiche indique la composition, les mesures de la pièce et la taille portée par la mannequin. Le guide des tailles donne les équivalences. Un doute ? Écrivez-nous, on vous répond avec plaisir.']
   ]
 }
+
+/* Photographies portées : chaque pièce phare a sa photo en situation (cadrage indiqué). */
+export const PORTE = {
+  'BLOUSE-LAVA': { img: 'vetements', pos: '50% 22%' },
+  'PANT-SATIN': { img: 'vetements', pos: '50% 80%' },
+  'ROBE-SEQ': { img: 'fetes', pos: '45% 60%' },
+  'VESTE-FOUR': { img: 'fetes', pos: '35% 25%' },
+  'ENS-MAILLE': { img: 'essentiels', pos: '62% 50%' },
+  'SAC-VELOURS': { img: 'accessoires', pos: '45% 35%' },
+  'COLL-PLAST': { img: 'accessoires', pos: '22% 70%' },
+  'ESCARP-STRASS': { img: 'chaussures', pos: '55% 50%' }
+}
+
+/* Repères « achetables » posés sur les photos éditoriales (position en % de l'image). */
+export const REPERES = {
+  fetes: [{ ref: 'VESTE-FOUR', x: 36, y: 46 }, { ref: 'ROBE-SEQ', x: 47, y: 68 }]
+}
+
+/* Tenues composées en boutique : « Complétez la tenue » sur la fiche. */
+export const TENUES = {
+  'ROBE-SEQ': ['VESTE-FOUR', 'ESCARP-STRASS', 'POCH-PERLE'],
+  'VESTE-FOUR': ['ROBE-SEQ', 'ESCARP-STRASS', 'SAC-VELOURS'],
+  'BLOUSE-LAVA': ['PANT-SATIN', 'CREOLES-OR', 'SAC-VELOURS'],
+  'PANT-SATIN': ['BLOUSE-LAVA', 'ESCARP-STRASS', 'CREOLES-OR'],
+  'BLAZER-BIJOU': ['SHORT-TWEED', 'TOP-VELOURS', 'ESCARP-STRASS'],
+  'SHORT-TWEED': ['BLAZER-BIJOU', 'TOP-VELOURS', 'BOTT-DAIM'],
+  'TOP-VELOURS': ['SHORT-TWEED', 'BLAZER-BIJOU', 'COLL-PLAST'],
+  'ENS-MAILLE': ['SAC-VELOURS', 'CREOLES-OR', 'BOTT-DAIM'],
+  'CHEM-DENT': ['JUPE-PLIS', 'COLL-PLAST', 'ESCARP-STRASS'],
+  'JUPE-PLIS': ['CHEM-DENT', 'PULL-LUREX', 'BOTT-DAIM'],
+  'MANT-LAINE': ['ROBE-PULL', 'BOTT-DAIM', 'SAC-VELOURS'],
+  'ROBE-PULL': ['MANT-LAINE', 'BOTT-DAIM', 'CREOLES-OR'],
+  'COMBI-FLUIDE': ['ESCARP-STRASS', 'POCH-PERLE', 'CREOLES-OR'],
+  'TEE-COEUR': ['PANT-SATIN', 'VESTE-FOUR', 'CREOLES-OR'],
+  'SWEAT-PERLE': ['JUPE-PLIS', 'SAC-VELOURS', 'BOTT-DAIM'],
+  'PULL-LUREX': ['JUPE-PLIS', 'BOTT-DAIM', 'CREOLES-OR']
+}

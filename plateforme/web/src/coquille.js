@@ -14,13 +14,17 @@ import '@fontsource/dm-serif-display/400.css'
 import '@fontsource/dm-serif-display/400-italic.css'
 import './style.css'
 import { $, $$, esc, euros, api, appliquerTheme } from './commun.js'
-import { IMAGES, PETITS_PRIX } from './textes.js'
+import { IMAGES, PETITS_PRIX, PORTE, REPERES } from './textes.js'
 
 export { $, $$, esc, euros }
 export const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
 
 export const [B, CAT] = await Promise.all([api('/api/boutique'), api('/api/catalogue')])
 export const PIECES = CAT.produits
+// Photos portées, repères et tenues : contenu éditorial propre à la boutique de démonstration
+export const EDITO = B.nom === 'Ambre & Strass'
+export const porteDe = (p) => (EDITO && PORTE[p.reference]) || null
+const survol = matchMedia('(hover: hover) and (pointer: fine)').matches
 export const C = B.contenus
 export const NOMS_CAT = Object.fromEntries(B.categories.map((c) => [c.slug, c.nom]))
 
@@ -60,11 +64,12 @@ export function carte (p) {
   const tailles = taillesDe(p)
   const unique = tailles.length === 1 && /^(tu|taille unique|unique)$/i.test(tailles[0].t)
   const off = epuise(p)
+  const porte = porteDe(p)
   return `<li class="carte">
     <a class="carte__lien" href="${lienProduit(p)}" data-ref="${esc(p.reference)}">
       <span class="carte__img carte__img--${p.presentation}">
         <img src="${esc(c0.face)}" alt="${esc(p.nom)}" width="660" height="876" loading="lazy">
-        ${c0.dos ? `<img class="carte__dos" src="${esc(c0.dos)}" alt="" width="660" height="876" loading="lazy">` : ''}
+        ${!survol ? '' : porte ? `<img class="carte__dos carte__porte" src="${IMAGES[porte.img]}" alt="" width="560" height="700" loading="lazy" style="object-position:${porte.pos}">` : c0.dos ? `<img class="carte__dos" src="${esc(c0.dos)}" alt="" width="660" height="876" loading="lazy">` : ''}
         <span class="etiquettes">${off ? '<span class="etiquette etiquette--off">Épuisé</span>' : `${p.expedition_prevue ? '<span class="etiquette etiquette--pre">Précommande</span>' : p.nouveau ? '<span class="etiquette">Nouveau</span>' : ''}${remise(p) ? `<span class="etiquette etiquette--promo">−${remise(p)} %</span>` : ''}`}</span>
       </span>
       <span class="carte__txt">
@@ -78,6 +83,34 @@ export function carte (p) {
   </li>`
 }
 
+/* Repères posés sur une photo éditoriale : un point discret, la pièce au survol ou au toucher. */
+export function reperes (cle) {
+  return (EDITO ? REPERES[cle] || [] : []).map(({ ref, x, y }) => {
+    const p = PIECES.find((q) => q.reference === ref); if (!p) return ''
+    return `<span class="repere" style="--x:${x}%;--y:${y}%">
+      <button type="button" class="repere__point" aria-label="Voir la pièce : ${esc(p.nom)}" aria-expanded="false"><span></span></button>
+      <a class="repere__carte" href="${lienProduit(p)}" tabindex="-1"><img src="${esc(p.couleurs[0].face)}" alt="" width="66" height="88" loading="lazy"><span><b>${esc(p.nom)}</b><span class="carte__prix">${prixHtml(p)}</span></span></a>
+    </span>`
+  }).join('')
+}
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('.repere__point')
+  for (const r of document.querySelectorAll('.repere.is-ouvert')) if (!b || r !== b.parentElement) { r.classList.remove('is-ouvert'); r.querySelector('.repere__point').setAttribute('aria-expanded', 'false'); r.querySelector('.repere__carte').tabIndex = -1 }
+  if (!b) return
+  const r = b.parentElement; const o = !r.classList.contains('is-ouvert')
+  r.classList.toggle('is-ouvert', o); b.setAttribute('aria-expanded', String(o)); r.querySelector('.repere__carte').tabIndex = o ? 0 : -1
+})
+
+/* Révélation douce des grandes photos éditoriales, une seule fois (désactivée si l'on réduit les animations). */
+export function reveler (racine = document) {
+  const els = [...racine.querySelectorAll('[data-revele]')]
+  if (reduce || !('IntersectionObserver' in window)) return
+  const io = new IntersectionObserver((entrees) => {
+    for (const e of entrees) if (e.isIntersecting) { e.target.classList.add('is-vu'); io.unobserve(e.target) }
+  }, { rootMargin: '0px 0px -12% 0px' })
+  for (const el of els) { el.classList.add('revele'); io.observe(el) }
+}
+
 /* ---------- Identité ---------- */
 appliquerTheme(B.theme)
 const ICONES = {
@@ -87,7 +120,7 @@ const ICONES = {
   croix: '<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.4"/></svg>'
 }
 export { ICONES }
-const logoHtml = B.logo ? `<img src="${esc(B.logo)}" alt="${esc(B.nom)}">` : esc(B.nom)
+const logoHtml = B.logo ? `<img src="${esc(B.logo)}" alt="${esc(B.nom)}">` : esc(B.nom).replace(/ &amp; /, ' <em class="logo__et">&amp;</em> ')
 
 // Paiement : on ne dit que ce qui est vrai.
 export const PAIEMENT = {

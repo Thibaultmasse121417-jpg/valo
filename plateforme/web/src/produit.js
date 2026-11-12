@@ -1,7 +1,7 @@
 /* Fiche produit : galerie (face, dos, détails), zoom, couleurs, tailles, guide des tailles,
    disponibilité réelle, quantité, ajout au panier, description, composition, suggestions. */
-import { $, $$, esc, euros, B, C, PIECES, NOMS_CAT, RAYONS, remise, prixHtml, carte, lienRayon, ajouter, dansPanier, piegerFocus, reduce, dateFr, prix } from './coquille.js'
-import { JOURS_RETOUR, tarifs } from './textes.js'
+import { $, $$, esc, euros, B, C, PIECES, NOMS_CAT, RAYONS, remise, prixHtml, carte, lienRayon, ajouter, dansPanier, piegerFocus, reduce, dateFr, prix, epuise, porteDe, EDITO } from './coquille.js'
+import { JOURS_RETOUR, tarifs, IMAGES, TENUES } from './textes.js'
 
 const ref = new URLSearchParams(location.search).get('ref') || ''
 const p = PIECES.find((x) => x.reference === ref)
@@ -56,13 +56,16 @@ function monter (p) {
   $('[data-guide-ouvrir]').hidden = !guide || p.presentation === 'objet' && !/\d/.test(p.tailles.join(''))
 
   function vues (col) {
-    return [{ src: col.face, nom: 'Devant' }, ...(col.dos ? [{ src: col.dos, nom: 'Dos' }] : []), ...(col.details || []).map((src, i) => ({ src, nom: `Détail ${i + 1}` }))]
+    const pt = porteDe(p)
+    const porte = pt && sel.c === 0 ? [{ src: IMAGES[pt.img], nom: 'Portée', porte: pt.pos }] : []
+    return [{ src: col.face, nom: 'Devant' }, ...porte, ...(col.dos ? [{ src: col.dos, nom: 'Dos' }] : []), ...(col.details || []).map((src, i) => ({ src, nom: `Détail ${i + 1}` }))]
   }
   function peindreGalerie () {
     const col = p.couleurs[sel.c]; const v = vues(col)
     const g = $('[data-galerie]')
     g.classList.toggle('galerie--objet', p.presentation === 'objet')
-    g.innerHTML = v.map((x, i) => `<figure class="galerie__vue" data-vue="${i}" role="button" tabindex="0" aria-label="Agrandir la photo : ${esc(x.nom)}">
+    g.classList.toggle('galerie--paire', v.length % 2 === 0) // nombre pair : deux colonnes égales, sans case vide
+    g.innerHTML = v.map((x, i) => `<figure class="galerie__vue${x.porte ? ' galerie__vue--porte' : ''}" data-vue="${i}"${x.porte ? ` style="--pos:${x.porte}"` : ''} role="button" tabindex="0" aria-label="Agrandir la photo : ${esc(x.nom)}">
       <img src="${esc(x.src)}" alt="${esc(p.nom)}, ${esc(col.nom)}, ${esc(x.nom.toLowerCase())}" width="660" height="876" ${i ? 'loading="lazy"' : 'fetchpriority="high"'}>
       ${v.length > 1 ? `<figcaption>${esc(x.nom)}</figcaption>` : ''}</figure>`).join('')
     g.scrollLeft = 0
@@ -171,8 +174,13 @@ function monter (p) {
     d.addEventListener('click', (e) => { if (e.target === d) d.close() })
   }
 
+  /* Complétez la tenue : les pièces que la boutique associe à celle-ci */
+  const tenue = ((EDITO && TENUES[p.reference]) || []).map((r) => PIECES.find((x) => x.reference === r)).filter((x) => x && !epuise(x))
+  $('[data-tenue]').innerHTML = tenue.map(carte).join('')
+  $('[data-bloc-tenue]').hidden = !tenue.length
+
   /* Suggestions : même rayon, puis même collection, puis le reste */
-  const autres = PIECES.filter((x) => x !== p)
+  const autres = PIECES.filter((x) => x !== p && !tenue.includes(x))
   const score = (x) => (x.categorie === p.categorie ? 4 : 0) + (x.collections.some((c) => p.collections.includes(c)) ? 2 : 0) + (x.presentation === p.presentation ? 1 : 0)
   const sugg = autres.map((x, i) => [x, score(x), i]).sort((a, b) => b[1] - a[1] || a[2] - b[2]).slice(0, 4).map(([x]) => x)
   $('[data-suggestions]').innerHTML = sugg.map(carte).join('')

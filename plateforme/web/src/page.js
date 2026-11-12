@@ -1,6 +1,6 @@
 /* Pages de service : la boutique, livraison, retours, contact, questions fréquentes, mentions légales.
    Tarifs, adresse et horaires viennent des réglages de la boutique : rien n'est écrit en double. */
-import { $, esc, euros, B, C, PAIEMENT } from './coquille.js'
+import { $, esc, euros, B, C, PAIEMENT, reveler } from './coquille.js'
 import { api } from './commun.js'
 import { IMAGES, JOURS_RETOUR, tarifs, faq } from './textes.js'
 
@@ -20,14 +20,14 @@ const PAGES = {
     titre: 'Notre boutique',
     html: `${tete('Notre boutique', B.slogan)}
       <div class="wrap page-split">
-        <figure>${B.presentation_image ? `<img src="${esc(B.presentation_image)}" alt="L’intérieur de la boutique ${esc(B.nom)}" width="1120" height="1400">` : `<img src="${IMAGES.lookbook}" alt="" width="1400" height="788">`}</figure>
+        <figure data-revele>${B.presentation_image ? `<img src="${esc(B.presentation_image)}" alt="L’intérieur de la boutique ${esc(B.nom)}" width="1120" height="1400">` : `<img src="${IMAGES.lookbook}" alt="" width="1400" height="788">`}</figure>
         <div class="maison__txt">
           <h2>${esc(pr.titre || B.nom)}</h2>
           <div class="maison__p">${paras(pr.texte)}<p>En boutique, on prend le temps : essayer, comparer deux tailles, demander conseil pour une tenue de fête ou un cadeau. Les commandes passées en ligne peuvent y être retirées gratuitement.</p></div>
           <dl class="maison__infos">${coordonnees()}</dl>
         </div>
       </div>
-      <figure class="wrap bande-photo"><img src="${IMAGES.lookbook}" alt="Deux clientes choisissent un pull devant le portant de la boutique" loading="lazy" width="1400" height="788"></figure>`
+      <figure class="wrap bande-photo" data-revele><img src="${IMAGES.lookbook}" alt="Deux clientes choisissent un pull devant le portant de la boutique" loading="lazy" width="1400" height="788"></figure>`
   }),
 
   livraison: () => ({
@@ -97,6 +97,7 @@ const pg = (PAGES[cle] || PAGES.faq)()
 document.title = `${pg.titre}, ${B.nom}`
 $('meta[name=description]').content = `${pg.titre} : ${B.nom}, ${B.slogan || ''}`.slice(0, 160)
 $('[data-contenu]').innerHTML = pg.html + '<div class="section section--fin"></div>'
+reveler()
 
 // Formulaire de contact : message enregistré, lisible dans l'administration
 const f = $('[data-contact]')
