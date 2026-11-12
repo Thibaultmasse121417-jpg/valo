@@ -99,6 +99,7 @@ for (const [nom, options] of [['ordinateur', { viewport: { width: 1440, height: 
 
   // Newsletter
   await p.goto(`${URL_B}/#newsletter`)
+  await p.waitForSelector('[data-lettre] button[type="submit"]:not([disabled])')
   await p.fill('[data-lettre] [name="email"]', `test-${Date.now()}@exemple.fr`)
   await toucher('[data-lettre] button[type="submit"]')
   await p.waitForFunction(() => /Cochez/.test(document.querySelector('[data-lettre-etat]').textContent))

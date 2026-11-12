@@ -79,6 +79,7 @@ $('[data-lettre-titre]').textContent = C.newsletter.titre || 'Les nouvelles piè
 $('[data-lettre-texte]').textContent = C.newsletter.texte || 'Recevez un e-mail quand de nouvelles pièces arrivent en boutique.'
 $('[data-lettre-consentement]').textContent = `J’accepte de recevoir les e-mails de ${B.nom}. Je peux me désinscrire à tout moment.`
 const lettre = $('[data-lettre]'); const etat = $('[data-lettre-etat]')
+$('button[type=submit]', lettre).disabled = false // prêt : le formulaire n'est jamais envoyé sans le script
 lettre.addEventListener('submit', async (e) => {
   e.preventDefault()
   etat.classList.remove('is-err')
