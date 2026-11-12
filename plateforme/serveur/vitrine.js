@@ -18,21 +18,24 @@ export const estCategorie = (s) => CATEGORIES.some((c) => c.slug === s)
 export const surCintre = (s) => (CATEGORIES.find((c) => c.slug === s)?.presentation ?? 'cintre') === 'cintre'
 
 export const POLICES = {
-  titres: ['cormorant', 'playfair', 'dm-serif', 'inter-tight'],
-  texte: ['inter-tight', 'dm-sans']
+  titres: ['bodoni', 'cormorant', 'playfair', 'dm-serif', 'inter-tight', 'jost'],
+  texte: ['jost', 'inter-tight', 'dm-sans']
 }
 
 const THEME_DEFAUT = {
-  fond: '#f4efe9', surface: '#fbf8f4', texte: '#2f2724', attenue: '#7b6e68', accent: '#a9825a', bandeau: '#2f2724',
-  police_titres: 'cormorant', police_texte: 'inter-tight', titres_italiques: true
+  fond: '#f8f4ee', surface: '#fffcf7', texte: '#171412', attenue: '#6d645b', accent: '#b39770', bandeau: '#171412',
+  police_titres: 'bodoni', police_texte: 'jost', titres_italiques: false
 }
 const CONTENUS_DEFAUT = {
-  annonces: ['Nouvelle collection chaque semaine', 'Paiement sécurisé par carte'],
+  annonces: ['Nouvelle collection chaque semaine'],
   banniere: { surtitre: 'Nouvelle collection', titre: 'Bienvenue dans la boutique', texte: '', bouton: 'Découvrir la collection' },
   portant: { titre: 'Sur le portant', texte: 'Passez sur une pièce pour la faire tourner, cliquez pour la découvrir.' },
   presentation: { titre: 'La boutique', texte: '', adresse: '', horaires: [], telephone: '', email: '' },
   reseaux: { instagram: '', facebook: '', tiktok: '' },
-  pied: ''
+  pied: '',
+  guide_tailles: '',
+  newsletter: { titre: '', texte: '' },
+  bandeau_livraison: ''
 }
 
 const HEX = /^#[0-9a-fA-F]{6}$/
@@ -52,7 +55,8 @@ export function lireContenus (b) {
     banniere: { ...CONTENUS_DEFAUT.banniere, ...(c.banniere || {}) },
     portant: { ...CONTENUS_DEFAUT.portant, ...(c.portant || {}) },
     presentation: { ...CONTENUS_DEFAUT.presentation, ...(c.presentation || {}) },
-    reseaux: { ...CONTENUS_DEFAUT.reseaux, ...(c.reseaux || {}) }
+    reseaux: { ...CONTENUS_DEFAUT.reseaux, ...(c.reseaux || {}) },
+    newsletter: { ...CONTENUS_DEFAUT.newsletter, ...(c.newsletter || {}) }
   }
 }
 
@@ -77,6 +81,10 @@ export function validerContenus (d = {}) {
       telephone: txt(p.telephone, 30), email: /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(txt(p.email, 120)) ? txt(p.email, 120) : ''
     },
     reseaux: { instagram: url(r.instagram), facebook: url(r.facebook), tiktok: url(r.tiktok) },
-    pied: txt(d.pied, 400)
+    pied: txt(d.pied, 400),
+    // Guide des tailles : une ligne par taille, colonnes séparées par « | » (ex. « S | 36 | 84–88 »)
+    guide_tailles: txt(d.guide_tailles, 2000),
+    newsletter: { titre: txt(d.newsletter?.titre, 120), texte: txt(d.newsletter?.texte, 300) },
+    bandeau_livraison: txt(d.bandeau_livraison, 140)
   }
 }

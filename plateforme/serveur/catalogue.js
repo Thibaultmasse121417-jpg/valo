@@ -29,7 +29,7 @@ export async function lireProduits (c, { public: pub = false, id = null } = {}) 
     const vars = variantes.rows.filter((x) => x.produit_id === p.id)
     const base = {
       id: p.id, reference: p.reference, nom: p.nom, type: p.type, description: p.description,
-      prix_centimes: p.prix_centimes, prix_promo_centimes: p.prix_promo_centimes, tailles: p.tailles, nouveau: p.nouveau,
+      prix_centimes: p.prix_centimes, prix_promo_centimes: p.prix_promo_centimes, tailles: p.tailles, nouveau: p.nouveau, composition: p.composition,
       categorie: p.categorie, presentation: surCintre(p.categorie) ? 'cintre' : 'objet', mis_en_avant: p.mis_en_avant,
       ventes: ventes.rows.find((v) => v.produit_id === p.id)?.ventes || 0, created_at: p.created_at,
       collections: liens.rows.filter((l) => l.produit_id === p.id).map((l) => l.collection_id)
@@ -43,6 +43,7 @@ export async function lireProduits (c, { public: pub = false, id = null } = {}) 
           id: col.id, nom: col.nom, hex: col.hex,
           face: urlPhoto(pretes(col.id, 'face')[0] || {}),
           dos: urlPhoto(pretes(col.id, 'dos')[0] || {}) || undefined,
+          details: pretes(col.id, 'detail').map(urlPhoto).filter(Boolean),
           variantes: p.tailles.map((t) => {
             const v = vars.find((x) => x.couleur_id === col.id && x.taille === t)
             return v ? { id: v.id, taille: t, disponible: v.stock > 0, stock: Math.min(v.stock, 10) } : null
@@ -68,16 +69,16 @@ export async function lireProduits (c, { public: pub = false, id = null } = {}) 
                collections[], couleurs: [{ id?, cle, nom, hex }], stocks: [{ couleur (id ou cle), taille, stock, sku? }] } */
 export async function enregistrerProduit (c, boutiqueId, id, d) {
   const champs = [d.reference, d.nom, d.type || '', d.description || '', d.prix_centimes, d.tailles, d.visible !== false, !!d.nouveau,
-    d.categorie || 'pulls-sweats', d.prix_promo_centimes ?? null, !!d.mis_en_avant]
+    d.categorie || 'pulls-sweats', d.prix_promo_centimes ?? null, !!d.mis_en_avant, String(d.composition || '').trim().slice(0, 300)]
   let pid = id
   if (pid) {
     const r = await c.query(`update produits set reference = $1, nom = $2, type = $3, description = $4, prix_centimes = $5,
-      tailles = $6, visible = $7, nouveau = $8, categorie = $9, prix_promo_centimes = $10, mis_en_avant = $11, updated_at = now() where id = $12`, [...champs, pid])
+      tailles = $6, visible = $7, nouveau = $8, categorie = $9, prix_promo_centimes = $10, mis_en_avant = $11, composition = $12, updated_at = now() where id = $13`, [...champs, pid])
     if (!r.rowCount) return null
   } else {
     const { rows: [o] } = await c.query('select coalesce(min(ordre), 1) - 1 as o from produits')
     const { rows: [p] } = await c.query(`insert into produits (boutique_id, reference, nom, type, description, prix_centimes, tailles, visible, nouveau,
-      categorie, prix_promo_centimes, mis_en_avant, ordre) values ($12, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $13) returning id`, [...champs, boutiqueId, o.o])
+      categorie, prix_promo_centimes, mis_en_avant, composition, ordre) values ($13, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $14) returning id`, [...champs, boutiqueId, o.o])
     pid = p.id
   }
   // Collections

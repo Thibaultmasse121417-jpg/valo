@@ -344,6 +344,18 @@ for (const [route, colonne, largeur] of [['banniere', 'banniere_chemin', 2400], 
   })
 }
 admin.get('/categories', (c) => ok(c, { categories: CATEGORIES }))
+admin.get('/newsletter', async (c) => {
+  const rows = await db(c, async (x) => (await x.query('select email, created_at from newsletter order by created_at desc')).rows)
+  if (c.req.query('format') === 'csv') {
+    const csv = 'email;inscription\n' + rows.map((r) => `${r.email};${new Date(r.created_at).toISOString().slice(0, 10)}`).join('\n')
+    return c.body(csv, 200, { 'content-type': 'text/csv; charset=utf-8', 'content-disposition': 'attachment; filename="newsletter.csv"' })
+  }
+  return ok(c, { inscrits: rows })
+})
+admin.delete('/newsletter/:email', async (c) => {
+  await db(c, (x) => x.query('delete from newsletter where email = $1', [decodeURIComponent(c.req.param('email')).toLowerCase()]))
+  return ok(c)
+})
 admin.post('/boutique/logo', async (c) => {
   const b = c.get('boutique'); const corps = await c.req.parseBody()
   const f = corps.logo

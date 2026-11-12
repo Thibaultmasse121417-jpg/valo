@@ -13,9 +13,16 @@ const lancer = (args, env = {}) => new Promise((ok, ko) => {
 
 export async function preparerDemo () {
   if (process.env.DEMO_AMBRE !== '1') return
-  const { rowCount } = await requete("select 1 from boutiques where slug = 'ambre'")
-  if (rowCount) return
   const mdp = process.env.DEMO_MDP || 'motdepasse-ambre'
+  const { rows: [b] } = await requete("select theme from boutiques where slug = 'ambre'")
+  if (b) {
+    // Boutique déjà créée : on lui applique la nouvelle identité si elle a encore l'ancienne.
+    if (b.theme?.police_titres !== 'bodoni') {
+      console.log('[démo] mise à jour de l’identité d’Ambre & Strass…')
+      await lancer([resolve(RACINE, 'tests/ambre-identite.js')], { HOTE: 'ambre.localhost', PORT: String(config.port), DEMO_MDP: mdp })
+    }
+    return
+  }
   const domaines = ['ambre.localhost', process.env.RENDER_EXTERNAL_HOSTNAME].filter(Boolean).flatMap((d) => ['--domaine', d])
   console.log('[démo] création de la boutique Ambre & Strass…')
   await lancer([resolve(RACINE, 'serveur/outils/creer-boutique.js'), '--slug', 'ambre', '--nom', 'Ambre & Strass', '--email', 'gerante@ambre-strass.fr', '--mdp', mdp, ...domaines])

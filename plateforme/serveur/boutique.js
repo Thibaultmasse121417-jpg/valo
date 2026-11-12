@@ -3,6 +3,7 @@ import { requete } from './db.js'
 import { config } from './config.js'
 import { urlPublique } from './stockage.js'
 import { CATEGORIES, lireTheme, lireContenus } from './vitrine.js'
+import { modePaiement } from './paiement.js'
 
 const cache = new Map()
 const DUREE = 30_000
@@ -37,5 +38,6 @@ export const boutiquePublique = (b) => ({
   theme: lireTheme(b), contenus: lireContenus(b), categories: CATEGORIES,
   banniere: urlPublique(b.banniere_chemin), presentation_image: urlPublique(b.presentation_chemin),
   livraison_centimes: b.livraison_centimes, livraison_offerte_centimes: b.livraison_offerte_centimes,
-  retrait: b.retrait_adresse ? { adresse: b.retrait_adresse } : null
+  retrait: b.retrait_adresse ? { adresse: b.retrait_adresse } : null,
+  paiement: modePaiement(b) // 'stripe' (réel), 'test' (simulé, aucun débit) ou null (indisponible)
 })

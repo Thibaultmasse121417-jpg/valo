@@ -1,5 +1,7 @@
 /* Pages simples : confirmation de commande et paiement de test. */
 import '@fontsource-variable/inter-tight'
+import '@fontsource-variable/bodoni-moda'
+import '@fontsource-variable/jost'
 import './pages.css'
 import { $, esc, euros, api, appliquerTheme } from './commun.js'
 
@@ -23,7 +25,7 @@ const ETATS = {
 }
 
 function recap (cmd) {
-  $('[data-lignes]').innerHTML = cmd.lignes.map((l) => `<li><span>${esc(l.nom)}<small>${esc(l.couleur)} · ${esc(l.taille)} · × ${l.quantite}</small></span><b>${euros(l.prix_centimes * l.quantite)}</b></li>`).join('')
+  $('[data-lignes]').innerHTML = cmd.lignes.map((l) => `<li><span>${esc(l.nom)}<small>${esc(l.couleur)}, taille ${esc(l.taille)}, quantité ${l.quantite}</small></span><b>${euros(l.prix_centimes * l.quantite)}</b></li>`).join('')
   $('[data-totaux]').innerHTML = `<dt>Sous-total</dt><dd>${euros(cmd.sous_total_centimes)}</dd>
     <dt>${cmd.livraison_mode === 'retrait' ? 'Retrait en boutique' : 'Livraison'}</dt><dd>${cmd.livraison_centimes ? euros(cmd.livraison_centimes) : 'offerte'}</dd>
     <dt class="pg-total">Total</dt><dd class="pg-total">${euros(cmd.total_centimes)}</dd>`
@@ -33,8 +35,8 @@ if (page === 'commande') {
   try {
     const cmd = await api(`/api/commandes/${encodeURIComponent(jeton)}`)
     const [k, t, p] = ETATS[cmd.statut] || ETATS.en_attente_paiement
-    document.title = `${t} · ${B?.nom || ''}`
-    $('[data-etat]').textContent = `${k} · commande n° ${cmd.numero}`
+    document.title = `${t}, ${B?.nom || ''}`
+    $('[data-etat]').textContent = `${k}, commande n° ${cmd.numero}`
     $('[data-titre]').textContent = t
     $('[data-texte]').textContent = p
     recap(cmd)
@@ -49,9 +51,9 @@ if (page === 'paiement') {
   try {
     const cmd = await api(`/api/commandes/${encodeURIComponent(jeton)}`)
     if (cmd.statut !== 'en_attente_paiement') location.replace(`/commande/?n=${encodeURIComponent(jeton)}`)
-    $('[data-titre]').textContent = `Commande n° ${cmd.numero} · ${euros(cmd.total_centimes)}`
+    $('[data-titre]').textContent = `Commande n° ${cmd.numero}`
     recap(cmd)
-    $('[data-payer]').textContent = `Payer ${euros(cmd.total_centimes)}`
+    $('[data-payer]').textContent = `Simuler le paiement de ${euros(cmd.total_centimes)}`
   } catch (e) { $('[data-err]').textContent = e.message }
   const agir = async (action) => {
     $('[data-payer]').disabled = true; $('[data-annuler]').disabled = true

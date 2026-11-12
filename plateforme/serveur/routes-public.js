@@ -83,3 +83,14 @@ publique.post('/paiement-test/:jeton', async (c) => {
   else await annulerCommande(b.id, cmd.id)
   return c.json({ ok: true })
 })
+
+// Newsletter : inscription réelle, gardée par boutique (consultable et exportable dans l'administration).
+publique.post('/newsletter', async (c) => {
+  const b = c.get('boutique')
+  const { email = '', consentement } = await c.req.json().catch(() => ({}))
+  const e = String(email).trim().toLowerCase()
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e) || e.length > 200) return c.json({ erreur: 'Adresse e-mail invalide.' }, 400)
+  if (consentement !== true) return c.json({ erreur: 'Cochez la case pour accepter de recevoir nos e-mails.' }, 400)
+  await avecBoutique(b.id, (db) => db.query('insert into newsletter (boutique_id, email) values ($1, $2) on conflict do nothing', [b.id, e]))
+  return c.json({ ok: true })
+})

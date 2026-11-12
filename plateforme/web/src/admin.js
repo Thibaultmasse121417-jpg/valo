@@ -126,7 +126,7 @@ async function ouvrirFiche (id, estNouveau = false) {
   E = depuisProduit(P)
   form.nom.value = estNouveau ? '' : P.nom; form.reference.value = P.reference
   form.prix.value = P.prix_centimes ? String(P.prix_centimes / 100).replace('.', ',') : ''
-  form.type.value = P.type; form.description.value = P.description
+  form.type.value = P.type; form.description.value = P.description; form.composition.value = P.composition || ''
   form.nouveau.checked = P.nouveau; form.visible.checked = P.visible; form.mis_en_avant.checked = P.mis_en_avant
   form.categorie.value = P.categorie
   form.promo.value = P.prix_promo_centimes != null ? String(P.prix_promo_centimes / 100).replace('.', ',') : ''
@@ -330,7 +330,7 @@ form.addEventListener('submit', async (e) => {
   const prix = Math.round(Number(form.prix.value.replace(/\s/g, '').replace(',', '.')) * 100)
   const corps = {
     reference: form.reference.value.trim().toUpperCase(), nom: form.nom.value.trim(), type: form.type.value.trim(),
-    description: form.description.value.trim(), prix_centimes: Number.isFinite(prix) ? prix : -1,
+    description: form.description.value.trim(), composition: form.composition.value.trim(), prix_centimes: Number.isFinite(prix) ? prix : -1,
     tailles: E.tailles, visible: form.visible.checked, nouveau: form.nouveau.checked, collections: [...E.collections],
     categorie: form.categorie.value, mis_en_avant: form.mis_en_avant.checked,
     prix_promo_centimes: form.promo.value.trim() ? Math.round(Number(form.promo.value.replace(/\s/g, '').replace(',', '.')) * 100) : null,
@@ -557,6 +557,12 @@ async function chargerBoutique () {
   fb.m_telephone.value = m.telephone; fb.m_email.value = m.email
   fb.r_instagram.value = c.reseaux.instagram; fb.r_facebook.value = c.reseaux.facebook; fb.r_tiktok.value = c.reseaux.tiktok
   fb.pied.value = c.pied
+  fb.guide_tailles.value = c.guide_tailles || ''; fb.n_titre.value = c.newsletter?.titre || ''; fb.n_texte.value = c.newsletter?.texte || ''
+  appel('/api/admin/newsletter').then(({ inscrits }) => {
+    $('[data-inscrits-n]').textContent = `(${inscrits.length})`
+    $('[data-inscrits-csv]').hidden = !inscrits.length
+    $('[data-inscrits]').innerHTML = inscrits.slice(0, 50).map((x) => `<li><span>${esc(x.email)}</span><small>${new Date(x.created_at).toLocaleDateString('fr-FR')}</small></li>`).join('') || '<li class="sub">Personne pour le moment.</li>'
+  }).catch(() => {})
   fb.livraison.value = String(b.livraison_centimes / 100).replace('.', ','); fb.offerte.value = String(b.livraison_offerte_centimes / 100).replace('.', ',')
   fb.retrait.value = b.retrait_adresse
   fb.paiement.value = b.paiement_mode
@@ -586,7 +592,9 @@ fb.addEventListener('submit', async (e) => {
           portant: { titre: fb.p_titre.value, texte: fb.p_texte.value },
           presentation: { titre: fb.m_titre.value, texte: fb.m_texte.value, adresse: fb.m_adresse.value, horaires: lignes(fb.m_horaires.value), telephone: fb.m_telephone.value, email: fb.m_email.value },
           reseaux: { instagram: fb.r_instagram.value, facebook: fb.r_facebook.value, tiktok: fb.r_tiktok.value },
-          pied: fb.pied.value
+          pied: fb.pied.value,
+          guide_tailles: fb.guide_tailles.value,
+          newsletter: { titre: fb.n_titre.value, texte: fb.n_texte.value }
         },
         livraison_centimes: euroVersCentimes(fb.livraison.value), livraison_offerte_centimes: euroVersCentimes(fb.offerte.value),
         retrait_adresse: fb.retrait.value, paiement_mode: fb.paiement.value

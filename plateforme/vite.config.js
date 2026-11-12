@@ -12,7 +12,7 @@ export default defineConfig({
     target: 'es2022',
     assetsInlineLimit: 0,
     rollupOptions: {
-      input: { boutique: r('index.html'), admin: r('admin/index.html'), commande: r('commande/index.html'), paiement: r('paiement-test/index.html') }
+      input: { boutique: r('index.html'), catalogue: r('boutique/index.html'), produit: r('produit/index.html'), admin: r('admin/index.html'), commande: r('commande/index.html'), paiement: r('paiement-test/index.html') }
     }
   }
 })

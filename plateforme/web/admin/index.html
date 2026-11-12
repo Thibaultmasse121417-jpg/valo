@@ -103,9 +103,9 @@
             </div>
             <div class="row3">
               <label class="f"><span>Police des titres</span><select name="t_police_titres">
-                <option value="cormorant">Cormorant (élégante)</option><option value="playfair">Playfair (classique)</option><option value="dm-serif">DM Serif (affirmée)</option><option value="inter-tight">Inter Tight (moderne)</option>
+                <option value="bodoni">Bodoni (haute couture)</option><option value="cormorant">Cormorant (élégante)</option><option value="playfair">Playfair (classique)</option><option value="dm-serif">DM Serif (affirmée)</option><option value="inter-tight">Inter Tight (moderne)</option><option value="jost">Jost (géométrique)</option>
               </select></label>
-              <label class="f"><span>Police du texte</span><select name="t_police_texte"><option value="inter-tight">Inter Tight</option><option value="dm-sans">DM Sans</option></select></label>
+              <label class="f"><span>Police du texte</span><select name="t_police_texte"><option value="jost">Jost</option><option value="inter-tight">Inter Tight</option><option value="dm-sans">DM Sans</option></select></label>
               <label class="interrupteur interrupteur--f"><input type="checkbox" name="t_titres_italiques"> <span>Titres en italique</span></label>
             </div>
           </fieldset>
@@ -147,6 +147,19 @@
               <label class="f"><span>TikTok</span><input name="r_tiktok" placeholder="https://tiktok.com/@…"></label>
             </div>
             <label class="f"><span>Texte du pied de page</span><input name="pied"></label>
+          </fieldset>
+          <fieldset class="carte">
+            <legend>Fiches produits et newsletter</legend>
+            <label class="f"><span>Guide des tailles <small>(une ligne par taille, colonnes séparées par « | » ; la première ligne donne les titres ; une ligne sans « | » devient une note. Vide = pas de guide)</small></span>
+              <textarea name="guide_tailles" rows="6" placeholder="Taille | Équivalence | Poitrine&#10;S | 36 | 84–88 cm&#10;M | 38 | 88–92 cm"></textarea></label>
+            <div class="row2">
+              <label class="f"><span>Titre de la newsletter</span><input name="n_titre" placeholder="Les nouvelles pièces, en premier"></label>
+              <label class="f"><span>Texte de la newsletter</span><input name="n_texte" placeholder="Recevez un e-mail quand de nouvelles pièces arrivent."></label>
+            </div>
+            <div class="f"><span>Inscrites à la newsletter <small data-inscrits-n></small></span>
+              <ul class="inscrits" data-inscrits></ul>
+              <p><a class="lnk" href="/api/admin/newsletter?format=csv" download data-inscrits-csv hidden>Télécharger la liste (CSV)</a></p>
+            </div>
           </fieldset>
           <fieldset class="carte">
             <legend>Livraison</legend>
@@ -216,10 +229,11 @@
           </div>
           <div class="interrupteurs">
             <label class="interrupteur"><input type="checkbox" name="nouveau"> <span>Étiquette « Nouveau »</span></label>
-            <label class="interrupteur"><input type="checkbox" name="mis_en_avant"> <span>Mettre en avant (« Vos coups de cœur »)</span></label>
+            <label class="interrupteur"><input type="checkbox" name="mis_en_avant"> <span>Mettre en avant (« Notre sélection » sur l’accueil)</span></label>
           </div>
           <datalist id="types"><option>T-shirt</option><option>Chemise</option><option>Pull</option><option>Gilet</option><option>Cardigan</option><option>Sweat</option><option>Veste</option><option>Manteau</option><option>Robe</option><option>Jupe</option><option>Pantalon</option><option>Polo</option></datalist>
-          <label class="f"><span>Description</span><textarea name="description" rows="3" placeholder="Matière, coupe, entretien…"></textarea></label>
+          <label class="f"><span>Description</span><textarea name="description" rows="3" placeholder="Coupe, détails, comment la porter…"></textarea></label>
+          <label class="f"><span>Composition et entretien <small>(facultatif, affiché sur la fiche s’il est rempli)</small></span><textarea name="composition" rows="2" placeholder="95 % polyester, 5 % élasthane. Lavage à 30 °C."></textarea></label>
           <div class="f"><span>Collections</span><div class="puces" data-fiche-collections></div></div>
         </section>
 

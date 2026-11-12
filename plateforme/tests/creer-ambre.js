@@ -10,6 +10,7 @@ import http from 'node:http'
 import { readFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { dirname, resolve } from 'node:path'
+import { appliquerIdentite } from './ambre-identite.js'
 
 const ICI = dirname(fileURLToPath(import.meta.url))
 const PHOTOS = resolve(ICI, 'donnees-ambre')
@@ -75,26 +76,7 @@ console.log('Connectée à l’administration d’Ambre & Strass.')
 
 const SEULEMENT_VENTES = process.argv.includes('--ventes')
 if (!SEULEMENT_VENTES) {
-await appel('PUT', '/api/admin/boutique', {
-  nom: 'Ambre & Strass', slogan: 'Concept store mode femme',
-  theme: { fond: '#f4ede6', surface: '#fbf7f2', texte: '#33261f', attenue: '#80695b', accent: '#a46a3c', bandeau: '#2b1f19', police_titres: 'cormorant', police_texte: 'inter-tight', titres_italiques: true },
-  contenus: {
-    annonces: ['Nouvelle collection chaque semaine', 'Livraison offerte dès 80 €', 'Retrait gratuit en boutique'],
-    banniere: { surtitre: 'Collection fêtes', titre: 'Briller, sans en faire trop.', texte: 'Sequins, velours et mailles douces : la nouvelle collection est arrivée sur le portant.', bouton: 'Découvrir le portant' },
-    portant: { titre: 'La collection sur le portant', texte: 'Passez sur un vêtement pour le faire tourner, cliquez pour le découvrir.' },
-    presentation: {
-      titre: 'Une boutique pour celles qui aiment les détails.',
-      texte: 'Ambre & Strass sélectionne chaque semaine des pièces qui brillent juste ce qu’il faut : un col en strass, une maille dorée, un velours profond.\nDes collections courtes, renouvelées souvent, à des prix doux. Et une boutique où l’on prend le temps d’essayer.',
-      adresse: 'Rue de la Clef, Lille', horaires: ['Mardi au samedi : 10 h – 19 h', 'Dimanche et lundi : fermé'], telephone: '', email: ''
-    },
-    reseaux: { instagram: '', facebook: '', tiktok: '' },
-    pied: 'Concept store mode femme. Nouvelles pièces chaque semaine.'
-  },
-  livraison_centimes: 590, livraison_offerte_centimes: 8000, retrait_adresse: 'Rue de la Clef, Lille · du mardi au samedi, 10 h – 19 h', paiement_mode: 'test'
-})
-for (const [route, f] of [['banniere', 'banniere.jpg'], ['presentation', 'boutique.jpg']]) {
-  const fd = new FormData(); fd.append('image', await fichier(f), f); await appel('POST', `/api/admin/boutique/${route}`, fd)
-}
+await appliquerIdentite(appel)
 console.log('Identité, textes et images de la page d’accueil enregistrés.')
 
 const idsCol = {}
