@@ -149,6 +149,7 @@ for (const [nom, options] of [['ordinateur', { viewport: { width: 1440, height: 
   await p.fill('[data-checkout-form] [name="ville"]', 'Bruxelles')
   await p.click('[data-checkout]')
   await p.waitForURL(/paiement-test/)
+  await p.waitForSelector('[data-annuler]:not([disabled])')
   await p.click('[data-annuler]'); await p.waitForURL(`${URL_B}/`)
   etape('commande en point relais en Belgique créée, puis annulée (stock rendu)')
 

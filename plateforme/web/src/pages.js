@@ -64,4 +64,5 @@ if (page === 'paiement') {
   }
   $('[data-payer]').addEventListener('click', () => agir('payer'))
   $('[data-annuler]').addEventListener('click', () => agir('annuler'))
+  $('[data-payer]').disabled = false; $('[data-annuler]').disabled = false // prêts : jamais de clic perdu avant le chargement
 }
