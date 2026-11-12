@@ -14,12 +14,12 @@ const lancer = (args, env = {}) => new Promise((ok, ko) => {
 export async function preparerDemo () {
   if (process.env.DEMO_AMBRE !== '1') return
   const mdp = process.env.DEMO_MDP || 'motdepasse-ambre'
-  const { rows: [b] } = await requete("select id, theme, relais_centimes from boutiques where slug = 'ambre'")
+  const { rows: [b] } = await requete("select id, theme, relais_centimes, livraison_centimes from boutiques where slug = 'ambre'")
   if (b) {
     // Boutique déjà créée : on lui applique la nouvelle identité si elle a encore l'ancienne.
     // Boutique déjà créée : nouvelle identité ou catalogue incomplet (nouveaux rayons) → mise à jour par l'API
     const nb = await avecBoutique(b.id, async (c) => (await c.query('select count(*)::int n from produits')).rows[0].n)
-    if (b.theme?.police_titres !== 'bodoni' || b.relais_centimes == null || nb < 50) {
+    if (b.theme?.police_titres !== 'bodoni' || b.relais_centimes == null || nb < 50 || b.livraison_centimes !== 800) {
       console.log('[démo] mise à jour de l’identité d’Ambre & Strass…')
       await lancer([resolve(RACINE, 'tests/ambre-identite.js')], { HOTE: 'ambre.localhost', PORT: String(config.port), DEMO_MDP: mdp })
     }
