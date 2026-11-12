@@ -854,3 +854,46 @@ a.chip { text-decoration: none; display: inline-flex; align-items: center; }
   .grille--3::-webkit-scrollbar { display: none; }
   .grille--3 > li { flex: 0 0 64vw; scroll-snap-align: start; }
 }
+
+/* ======================================================================
+   Finition de la démonstration commerciale
+   ====================================================================== */
+
+/* Bandeau « proposition de refonte » : discret, présent sur toutes les pages */
+.proposition { background: var(--c-photo); color: var(--c-texte); font-size: var(--t-mini); text-align: center; padding: 7px var(--g); border-bottom: 1px solid var(--c-filet); line-height: 1.45; }
+.proposition a { color: var(--accent-texte); text-underline-offset: 3px; white-space: nowrap; }
+
+/* Méga-menu par rubriques */
+.mega__bloc + .mega__bloc:not(.mega__bloc--seul) { margin-top: 18px; }
+.mega__tout { margin-top: 10px; padding-top: 12px !important; border-top: 1px solid var(--c-filet); font-weight: 500; }
+.tiroir__rubrique { font-size: var(--t-mini); color: var(--c-texte-doux); padding: 14px var(--g) 2px calc(var(--g) + 4px); }
+
+/* En-tête de rayon avec photographie */
+.cat-visuel { display: none; margin: 0; overflow: hidden; background: var(--c-photo); }
+.cat-visuel img { width: 100%; height: 100%; object-fit: cover; }
+@media (min-width: 961px) {
+  .cat-tete--visuel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); grid-template-rows: auto auto 1fr; column-gap: clamp(32px, 5vw, 80px); align-items: start; }
+  .cat-tete--visuel .cat-visuel { display: block; grid-column: 2; grid-row: 1 / 4; aspect-ratio: 16 / 10; }
+  .cat-tete--visuel h1 { margin-top: clamp(24px, 4vw, 64px); }
+}
+@media (max-width: 960px) {
+  .cat-tete--visuel .cat-visuel { display: block; aspect-ratio: 16 / 9; margin: 22px -16px 0; }
+}
+
+/* Page « La proposition » */
+.propo__tete h1 { max-width: 16ch; }
+.propo__cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px !important; }
+.propo__liste { list-style: none; padding: 0 !important; margin: 0 !important; border-top: 1px solid var(--c-filet); gap: 0 !important; }
+.propo__liste li { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: 6px 32px; padding: 18px 0; border-bottom: 1px solid var(--c-filet); }
+.propo__liste b { font-weight: 500; color: var(--c-texte); }
+.propo__liste span { color: color-mix(in srgb, var(--c-texte) 82%, var(--c-fond)); }
+.propo__liens { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 720px) { .propo__liste li { grid-template-columns: minmax(0, 1fr); } }
+
+.proposition__court { display: none; }
+@media (max-width: 720px) {
+  .proposition { padding: 6px 16px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .proposition__long { display: none; }
+  .proposition__court { display: inline; }
+  .info p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}

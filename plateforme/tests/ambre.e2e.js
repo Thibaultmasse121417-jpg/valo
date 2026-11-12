@@ -108,7 +108,7 @@ await c.click('[data-tiroir-liens] [data-filtre="sacs"]')
 await c.waitForURL(/cat=sacs/)
 await c.waitForFunction(() => document.querySelector('[data-cat-titre]').textContent === 'Sacs')
 const sacs = await c.$$eval('[data-grid] .card__name', (n) => n.map((x) => x.textContent))
-assert.ok(sacs.includes(`Sac test ${suffixe}`) && sacs.every((n) => /sac|pochette/i.test(n)), `rayon Sacs filtré (${sacs.join(', ')})`)
+assert.ok(sacs.includes(`Sac test ${suffixe}`) && sacs.every((n) => /sac|pochette|cabas/i.test(n)), `rayon Sacs filtré (${sacs.join(', ')})`)
 await cap(c, '5-rayon-sacs')
 etape(`rayon Sacs depuis le menu : ${sacs.length} produits, le sac soldé y figure`)
 

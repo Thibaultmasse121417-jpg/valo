@@ -16,7 +16,7 @@ export const IDENTITE = {
   nom: 'Ambre & Strass', slogan: 'Concept store mode femme à Amiens',
   theme: { fond: '#f8f4ee', surface: '#fffcf7', texte: '#171412', attenue: '#6d645b', accent: '#b39770', bandeau: '#171412', police_titres: 'bodoni', police_texte: 'jost', titres_italiques: false },
   contenus: {
-    annonces: ['La boutique vous accueille du mardi au samedi, de 10 h à 19 h, à Amiens', 'Livraison offerte dès 60 €, en point relais ou à domicile', 'Retrait gratuit en boutique'],
+    annonces: ['Ouvert du mardi au samedi, 10 h – 19 h, à Amiens', 'Livraison offerte dès 60 €', 'Retrait gratuit en boutique'],
     banniere: { surtitre: 'Collection fêtes', titre: 'Briller, sans en faire trop.', texte: 'Sequins, velours, strass et mailles douces : la nouvelle collection est arrivée en boutique et en ligne.', bouton: 'Découvrir la collection' },
     portant: { titre: 'Arrivée cette semaine', texte: '' },
     presentation: {
@@ -73,7 +73,9 @@ const FICHES = {
 const PRECOMMANDES = ['BLAZER-BIJOU', 'SHORT-TWEED']
 const RETOUR_EN_STOCK = ['ROBE-PULL', 'TEE-COEUR', 'JUPE-PLIS', 'SAC-VELOURS']
 
-export async function appliquerIdentite (appel) {
+import { completerCatalogue } from './ambre-catalogue.js'
+
+export async function appliquerIdentite (appel, { catalogue = true } = {}) {
   await appel('PUT', '/api/admin/boutique', IDENTITE)
   for (const [route, f] of [['banniere', 'banniere-v2.jpg'], ['presentation', 'boutique-v2.jpg']]) {
     const fd = new FormData(); fd.append('image', new Blob([await readFile(resolve(PHOTOS, f))], { type: 'image/jpeg' }), f)
@@ -86,6 +88,8 @@ export async function appliquerIdentite (appel) {
   if (soirees) await appel('PUT', `/api/admin/collections/${soirees.id}`, { nom: 'Tenues de fêtes', description: 'Sequins, velours et strass : de quoi briller du réveillon au nouvel an.', ordre: 0 })
   let retour = collections.find((c) => /retour en stock/i.test(c.nom))
   if (!retour) retour = json(await appel('POST', '/api/admin/collections', { nom: 'De retour en stock', description: 'Vous les avez adorées : elles sont revenues en boutique.' }))
+  // Catalogue complet : rayons et pièces ajoutés à la démonstration
+  if (catalogue) await completerCatalogue(appel)
   // Fiches : composition, mesures, précommandes
   const { produits } = json(await appel('GET', '/api/admin/produits'))
   const dans15j = new Date(Date.now() + 15 * 864e5).toISOString().slice(0, 10)

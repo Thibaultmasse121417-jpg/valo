@@ -1,17 +1,18 @@
 /* Catalogue : rayons, collections, nouveautés, promotions, recherche ; filtre par taille ; tri.
    L'état est dans l'adresse (?cat=…&taille=…&tri=…&q=…) : on peut partager ou revenir en arrière. */
-import { $, $$, esc, euros, B, PIECES, RAYONS, COLLECTIONS, NOUVEAUTES, PROMOS, PETITS, FETES, prix, epuise, parDate, carte, chercher } from './coquille.js'
-import { PETITS_PRIX } from './textes.js'
+import { $, $$, esc, euros, B, PIECES, RAYONS, COLLECTIONS, NOUVEAUTES, PROMOS, PETITS, FETES, RUBRIQUES, EDITO, prix, epuise, parDate, carte, chercher } from './coquille.js'
+import { PETITS_PRIX, IMAGES } from './textes.js'
 
 const ORDRE_TAILLES = ['TU', 'XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '34', '35', '36', '37', '38', '39', '40', '41', '42', '44', '46', '48']
 const rang = (t) => { const i = ORDRE_TAILLES.indexOf(String(t).toUpperCase()); return i < 0 ? 999 : i }
 
 const FILTRES = [
-  { id: 'tout', nom: 'Tout', titre: 'Toute la boutique', l: () => PIECES },
-  ...(NOUVEAUTES.length ? [{ id: 'nouveautes', nom: 'Nouveautés', titre: 'Nouveautés', l: () => NOUVEAUTES }] : []),
-  ...(RAYONS.some((c) => c.groupe === 'vetements') ? [{ id: 'vetements', nom: 'Vêtements', titre: 'Vêtements', l: () => PIECES.filter((p) => RAYONS.find((c) => c.slug === p.categorie)?.groupe === 'vetements'), cache: true }] : []),
-  ...(RAYONS.some((c) => c.groupe === 'accessoires') ? [{ id: 'accessoires', nom: 'Accessoires', titre: 'Accessoires', l: () => PIECES.filter((p) => RAYONS.find((c) => c.slug === p.categorie)?.groupe === 'accessoires'), cache: true }] : []),
-  ...RAYONS.map((c) => ({ id: c.slug, nom: c.nom, titre: c.nom, l: () => c.pieces })),
+  { id: 'tout', nom: 'Tout', titre: 'Tous nos produits', sous: 'Toutes les pièces de la boutique, des dernières arrivées aux essentiels.', l: () => PIECES },
+  ...(NOUVEAUTES.length ? [{ id: 'nouveautes', nom: 'Nouveautés', titre: 'Nouveautés', sous: 'Les dernières pièces arrivées en boutique, mises en ligne chaque semaine.', l: () => NOUVEAUTES }] : []),
+  ...(RAYONS.some((c) => c.groupe === 'vetements') ? [{ id: 'vetements', nom: 'Vêtements', titre: 'Vêtements', sous: 'Blouses, gilets, pulls, vestes, pantalons et robes : la sélection de la semaine.', l: () => PIECES.filter((p) => RAYONS.find((c) => c.slug === p.categorie)?.groupe === 'vetements'), cache: true }] : []),
+  ...(RAYONS.some((c) => c.groupe === 'accessoires') ? [{ id: 'accessoires', nom: 'Accessoires', titre: 'Accessoires', sous: 'Sacs, bijoux, écharpes et foulards : la touche qui change une tenue.', l: () => PIECES.filter((p) => RAYONS.find((c) => c.slug === p.categorie)?.groupe === 'accessoires'), cache: true }] : []),
+  ...RUBRIQUES.filter((r) => r.rayons.length > 1).map((r) => ({ id: r.id, nom: r.nom, titre: r.nom, l: () => r.rayons.flatMap((c) => c.pieces), cache: true })),
+  ...RAYONS.map((c) => ({ id: c.slug, nom: c.nom, titre: c.nom, sous: c.slug === 'chaussures' ? 'Escarpins, bottines, mocassins et baskets pour finir la tenue.' : '', l: () => c.pieces })),
   ...(PETITS.length ? [{ id: 'petits-prix', nom: `Moins de ${euros(PETITS_PRIX)}`, titre: `Moins de ${euros(PETITS_PRIX)}`, sous: 'Les petits prix de la boutique, pour se faire plaisir sans trop compter.', l: () => PETITS }] : []),
   ...(PROMOS.length ? [{ id: 'promotions', nom: 'Promotions', titre: 'Promotions', l: () => PROMOS }] : []),
   ...COLLECTIONS.map((c) => ({ id: c.id, nom: c.nom, titre: c.nom, sous: c.description, l: () => c.pieces }))
@@ -53,16 +54,21 @@ function peindre () {
   document.title = `${etat.q ? `Recherche ${titre}` : f.titre}, ${B.nom}`
   $('[data-cat-sous]').textContent = !etat.q && f.sous ? f.sous : ''
   $('[data-cat-sous]').hidden = etat.q || !f.sous
+  // Photo d'en-tête des grands rayons (photographies éditoriales de la démonstration)
+  const VISUELS = { tout: 'lookbook', nouveautes: 'lookbook', vetements: 'vetements', 'r-hauts': 'vetements', accessoires: 'accessoires', chaussures: 'chaussures', 'petits-prix': 'essentiels', ...(FETES ? { [FETES.id]: 'fetes' } : {}) }
+  const vis = EDITO && !etat.q && VISUELS[etat.cat]
+  $('[data-cat-visuel]').hidden = !vis
+  $('.cat-tete').classList.toggle('cat-tete--visuel', !!vis)
+  if (vis) $('[data-cat-visuel]').innerHTML = `<img src="${IMAGES[vis]}" alt="" width="1400" height="1000">`
   $('[data-grid]').innerHTML = l.map(carte).join('')
   $('[data-cat-compte]').textContent = `${l.length} pièce${l.length > 1 ? 's' : ''}${etat.taille ? ` disponible${l.length > 1 ? 's' : ''} en ${etat.taille}` : ''}`
   const vide = !l.length
   $('[data-grille-vide]').hidden = !vide
   $('[data-grid]').hidden = vide
   if (vide) {
-    $('[data-vide-titre]').textContent = !PIECES.length ? 'La collection arrive bientôt' : etat.q ? 'Aucun résultat' : 'Rien pour le moment'
-    $('[data-vide-texte]').textContent = !PIECES.length ? 'La boutique prépare ses premières pièces. Revenez très vite.'
-      : etat.q ? 'Essayez un autre mot, une couleur ou un type de vêtement.'
-        : etat.taille ? `Aucune pièce n’est disponible en ${etat.taille} dans ce rayon pour l’instant.` : 'Ce rayon se remplit bientôt.'
+    $('[data-vide-titre]').textContent = etat.q ? 'Aucun résultat' : 'Aucune pièce ne correspond'
+    $('[data-vide-texte]').textContent = etat.q ? 'Essayez un autre mot, une couleur ou un type de vêtement.'
+        : etat.taille ? `Aucune pièce de ce rayon n’est disponible en ${etat.taille}. Essayez une autre taille ou tout le rayon.` : 'Essayez un autre rayon ou retirez un filtre.'
   }
   const filtre = etat.cat !== 'tout' || etat.taille || etat.q || etat.dispo
   for (const b of $$('[data-reinit]')) b.hidden = !filtre || !PIECES.length

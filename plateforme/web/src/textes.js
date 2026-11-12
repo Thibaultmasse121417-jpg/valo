@@ -69,3 +69,11 @@ export const TENUES = {
   'SWEAT-PERLE': ['JUPE-PLIS', 'SAC-VELOURS', 'BOTT-DAIM'],
   'PULL-LUREX': ['JUPE-PLIS', 'BOTT-DAIM', 'CREOLES-OR']
 }
+
+/* Cadre de la démonstration : maquette commerciale non officielle, adressée à la boutique de référence. */
+export const PROPOSITION = {
+  client: 'Comyx Prestige',
+  studio: 'Estalia Studio',
+  bandeau: 'Proposition de refonte non officielle pour Comyx Prestige : boutique fictive, commandes et paiements simulés.',
+  court: 'Maquette non officielle pour Comyx Prestige'
+}

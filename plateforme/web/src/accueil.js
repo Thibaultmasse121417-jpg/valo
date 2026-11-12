@@ -21,9 +21,6 @@ $('[data-ban-bouton]').textContent = C.banniere.bouton || 'Découvrir la collect
 if (B.banniere) $('[data-ban-img]').innerHTML = `<img src="${esc(B.banniere)}" alt="" fetchpriority="high" width="2000" height="1120">`
 else { $('[data-ban-img]').remove(); $('[data-banniere]').classList.add('heros--uni') }
 
-const vide = !PIECES.length
-$('[data-accueil-vide]').hidden = !vide
-if (vide) { $('[data-ban-bouton]').href = '#newsletter'; $('[data-ban-bouton]').textContent = 'Être prévenue de l’arrivée'; $('.heros__cta .lien').hidden = true }
 
 /* ---------- Nouvelle collection : les vêtements sur cintre, dans l'ordre choisi par la boutique ---------- */
 const SUR_PORTANT = PIECES.filter((p) => p.presentation === 'cintre').slice(0, MAX_PORTANT)

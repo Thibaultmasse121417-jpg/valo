@@ -14,7 +14,7 @@ import '@fontsource/dm-serif-display/400.css'
 import '@fontsource/dm-serif-display/400-italic.css'
 import './style.css'
 import { $, $$, esc, euros, api, appliquerTheme } from './commun.js'
-import { IMAGES, PETITS_PRIX, PORTE, REPERES } from './textes.js'
+import { IMAGES, PETITS_PRIX, PORTE, REPERES, PROPOSITION } from './textes.js'
 
 export { $, $$, esc, euros }
 export const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -50,6 +50,11 @@ export const RAYONS = B.categories.map((c) => ({ ...c, pieces: PIECES.filter((p)
 export const COLLECTIONS = CAT.collections.map((c) => ({ ...c, pieces: PIECES.filter((p) => p.collections.includes(c.id)) })).filter((c) => c.pieces.length)
 export const FETES = COLLECTIONS.find((c) => /f[êe]te|soir|c[ée]r[ée]monie/i.test(c.nom))
 export const PETITS = PIECES.filter((p) => prix(p) <= PETITS_PRIX)
+export const RETOUR = COLLECTIONS.find((c) => /retour en stock|back in stock/i.test(c.nom))
+// Rubriques (Hauts, Bas…) qui regroupent plusieurs rayons, comme dans le menu de la boutique d'origine
+export const slugRubrique = (r) => 'r-' + sansAccents(r).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+export const RUBRIQUES = [...new Set(RAYONS.map((c) => c.rubrique).filter(Boolean))]
+  .map((nom) => ({ nom, id: slugRubrique(nom), rayons: RAYONS.filter((c) => c.rubrique === nom) }))
 export const dateFr = (iso) => new Date(iso + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })
 
 // Tailles disponibles d'une pièce (toutes couleurs confondues), dans l'ordre de la fiche.
@@ -143,15 +148,21 @@ const nb = (l) => l.reduce((s, c) => s + c.pieces.length, 0)
 const visuel = (href, img, titre, sous) => `<a class="mega__visuel" href="${href}"><span class="mega__photo"><img src="${img}" alt="" loading="lazy" width="560" height="700"></span><span class="mega__legende">${esc(titre)}</span><span class="mega__sous">${esc(sous)}</span></a>`
 const selections = [
   NOUVEAUTES.length && [lienRayon('nouveautes'), 'Nouveautés'],
+  RETOUR && [lienRayon(RETOUR.id), 'Retour en stock'],
   FETES && [lienRayon(FETES.id), FETES.nom],
   PETITS.length && [lienRayon('petits-prix'), `Moins de ${euros(PETITS_PRIX)}`],
   PROMOS.length && [lienRayon('promotions'), 'Promotions']
 ].filter(Boolean)
+const rubriquesVet = RUBRIQUES.filter((r) => r.rayons.some((c) => c.groupe === 'vetements'))
+// Rubrique à plusieurs rayons : un titre et « Tout voir » ; rubrique à un seul rayon : un lien direct
+const colRubrique = (r) => r.rayons.length > 1
+  ? `<p class="mega__t">${esc(r.nom)}</p><a href="${lienRayon(r.id)}">Tout voir<span>${nb(r.rayons)}</span></a>${r.rayons.map(lienSous).join('')}`
+  : r.rayons.map(lienSous).join('')
 const megaVet = vet.length ? `<div class="mega" data-sous-liste="vetements" hidden><div class="mega__in">
-  <div class="mega__col"><p class="mega__t">Vêtements</p><a href="${lienRayon('vetements')}">Tous les vêtements<span>${nb(vet)}</span></a>${vet.map(lienSous).join('')}</div>
+  <div class="mega__col">${rubriquesVet[0] ? colRubrique(rubriquesVet[0]) : ''}<a class="mega__tout" href="${lienRayon('vetements')}">Tous nos vêtements<span>${nb(vet)}</span></a></div>
+  <div class="mega__col"><p class="mega__t">Et aussi</p>${rubriquesVet.slice(1).map((r) => `<div class="mega__bloc${r.rayons.length > 1 ? '' : ' mega__bloc--seul'}">${colRubrique(r)}</div>`).join('')}</div>
   <div class="mega__col"><p class="mega__t">Nos sélections</p>${selections.map(([h, n]) => `<a href="${h}">${esc(n)}</a>`).join('')}</div>
-  ${visuel(lienRayon('nouveautes'), IMAGES.vetements, 'La nouvelle collection', 'Satin, maille et velours')}
-  ${FETES ? visuel(lienRayon(FETES.id), IMAGES.fetes, FETES.nom, FETES.description || 'Pour les soirs de fête') : ''}
+  ${FETES ? visuel(lienRayon(FETES.id), IMAGES.fetes, FETES.nom, FETES.description || 'Pour les soirs de fête') : visuel(lienRayon('nouveautes'), IMAGES.vetements, 'La nouvelle collection', 'Satin, maille et velours')}
 </div></div>` : ''
 const megaAcc = accSans.length ? `<div class="mega" data-sous-liste="accessoires" hidden><div class="mega__in">
   <div class="mega__col"><p class="mega__t">Accessoires</p><a href="${lienRayon('accessoires')}">Tous les accessoires<span>${nb(acc)}</span></a>${accSans.map(lienSous).join('')}${chaussures ? lienSous(chaussures) : ''}</div>
@@ -163,6 +174,7 @@ const courant = (cat) => page === 'catalogue' && new URLSearchParams(location.se
 
 $('[data-haut]').outerHTML = `
   <a class="skip" href="#contenu">Aller au contenu</a>
+  ${EDITO ? `<div class="proposition" role="note"><p><span class="proposition__long">${esc(PROPOSITION.bandeau)}</span><span class="proposition__court">${esc(PROPOSITION.court)}</span> <a href="/proposition/">Découvrir la proposition</a></p></div>` : ''}
   <div class="info" role="region" aria-label="Informations"><p data-annonce>${esc(annonces[0])}</p></div>
   <header class="haut" data-haut-barre>
     <div class="haut__in">
@@ -174,6 +186,8 @@ $('[data-haut]').outerHTML = `
           ${FETES ? `<a href="${lienRayon(FETES.id)}"${courant(FETES.id)}>${esc(FETES.nom)}</a>` : ''}
           ${accSans.length ? `<div class="nav__groupe"><button type="button" class="nav__btn" aria-expanded="false" data-sous="accessoires">Accessoires</button>${megaAcc}</div>` : ''}
           ${chaussures ? `<a href="${lienRayon('chaussures')}"${courant('chaussures')}>Chaussures</a>` : ''}
+          ${RETOUR ? `<a href="${lienRayon(RETOUR.id)}"${courant(RETOUR.id)}>Retour en stock</a>` : ''}
+          <a href="${lienRayon('tout')}"${courant('tout')}>Tous nos produits</a>
           ${PROMOS.length ? `<a class="nav__promo" href="${lienRayon('promotions')}"${courant('promotions')} data-lien-promos>Promotions</a>` : ''}
         </nav>
       </div>
@@ -190,13 +204,15 @@ $('[data-haut]').outerHTML = `
       <div class="tiroir__haut"><a class="logo" href="/">${logoHtml}</a><button class="fermer" type="button" data-tiroir-fermer>Fermer ${ICONES.croix}</button></div>
       <nav class="tiroir__liens" data-tiroir-liens aria-label="Rayons">
         <a href="${lienRayon('nouveautes')}">Nouveautés</a>
-        ${vet.length ? `<details open><summary>Vêtements</summary><a href="${lienRayon('vetements')}">Tous les vêtements</a>${vet.map(lienSous).join('')}</details>` : ''}
+        ${vet.length ? `<details open><summary>Vêtements</summary><a href="${lienRayon('vetements')}">Tous nos vêtements<span>${nb(vet)}</span></a>${rubriquesVet.map((r) => `<p class="tiroir__rubrique">${esc(r.nom)}</p>${r.rayons.map(lienSous).join('')}`).join('')}</details>` : ''}
         ${FETES ? `<a href="${lienRayon(FETES.id)}">${esc(FETES.nom)}</a>` : ''}
         ${acc.length ? `<details><summary>Accessoires</summary><a href="${lienRayon('accessoires')}">Tous les accessoires</a>${acc.map(lienSous).join('')}</details>` : ''}
         ${PETITS.length ? `<a href="${lienRayon('petits-prix')}">Moins de ${euros(PETITS_PRIX)}</a>` : ''}
         ${PROMOS.length ? `<a href="${lienRayon('promotions')}" data-filtre="promotions">Promotions</a>` : ''}
+        ${RETOUR ? `<a href="${lienRayon(RETOUR.id)}">Retour en stock</a>` : ''}
+        <a href="${lienRayon('tout')}">Tous nos produits</a>
         <div class="tiroir__sep"></div>
-        <a class="tiroir__petit" href="${lienRayon('tout')}">Toute la boutique</a>
+        ${EDITO ? '<a class="tiroir__petit" href="/proposition/">La proposition de refonte</a>' : ''}
         <a class="tiroir__petit" href="/la-boutique/">Notre boutique</a>
         <a class="tiroir__petit" href="/livraison/">Livraison et retours</a>
         <a class="tiroir__petit" href="/contact/">Nous contacter</a>
@@ -288,7 +304,7 @@ export function chercher (q) {
 function peindreRecherche () {
   const q = champ.value.trim()
   if (q.length < 2) {
-    res.innerHTML = `<p class="recherche__aide">${PIECES.length ? 'Les nouveautés du moment :' : 'La boutique prépare ses premières pièces.'}</p><ul class="grille">${NOUVEAUTES.slice(0, 4).map(carte).join('')}</ul>`
+    res.innerHTML = `<p class="recherche__aide">Les nouveautés du moment :</p><ul class="grille">${NOUVEAUTES.slice(0, 4).map(carte).join('')}</ul>`
     return
   }
   const l = chercher(q)

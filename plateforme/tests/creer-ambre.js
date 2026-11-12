@@ -76,7 +76,7 @@ console.log('Connectée à l’administration d’Ambre & Strass.')
 
 const SEULEMENT_VENTES = process.argv.includes('--ventes')
 if (!SEULEMENT_VENTES) {
-await appliquerIdentite(appel)
+await appliquerIdentite(appel, { catalogue: false })
 console.log('Identité, textes et images de la page d’accueil enregistrés.')
 
 const idsCol = {}

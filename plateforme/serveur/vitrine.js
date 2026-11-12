@@ -3,16 +3,18 @@
 
 // Catégories de la plateforme. « objet » = présenté sans cintre (accessoires).
 export const CATEGORIES = [
-  { slug: 'blouses-chemisiers', nom: 'Blouses et chemisiers', groupe: 'vetements', presentation: 'cintre' },
-  { slug: 'pulls-sweats', nom: 'Pulls et sweats', groupe: 'vetements', presentation: 'cintre' },
-  { slug: 'tops-tshirts', nom: 'Tops et t-shirts', groupe: 'vetements', presentation: 'cintre' },
-  { slug: 'vestes-manteaux', nom: 'Vestes et manteaux', groupe: 'vetements', presentation: 'cintre' },
-  { slug: 'pantalons-shorts', nom: 'Pantalons et shorts', groupe: 'vetements', presentation: 'cintre' },
-  { slug: 'robes-jupes', nom: 'Robes et jupes', groupe: 'vetements', presentation: 'cintre' },
-  { slug: 'combinaisons-ensembles', nom: 'Combinaisons et ensembles', groupe: 'vetements', presentation: 'cintre' },
-  { slug: 'bijoux', nom: 'Bijoux', groupe: 'accessoires', presentation: 'objet' },
-  { slug: 'sacs', nom: 'Sacs', groupe: 'accessoires', presentation: 'objet' },
-  { slug: 'chaussures', nom: 'Chaussures', groupe: 'accessoires', presentation: 'objet' }
+  { slug: 'blouses-chemisiers', nom: 'Blouses et chemisiers', groupe: 'vetements', rubrique: 'Hauts', presentation: 'cintre' },
+  { slug: 'gilets', nom: 'Gilets', groupe: 'vetements', rubrique: 'Hauts', presentation: 'cintre' },
+  { slug: 'pulls-sweats', nom: 'Pulls et sweats', groupe: 'vetements', rubrique: 'Hauts', presentation: 'cintre' },
+  { slug: 'tops-tshirts', nom: 'Tops et t-shirts', groupe: 'vetements', rubrique: 'Hauts', presentation: 'cintre' },
+  { slug: 'vestes-manteaux', nom: 'Vestes et manteaux', groupe: 'vetements', rubrique: 'Vestes et manteaux', presentation: 'cintre' },
+  { slug: 'pantalons-shorts', nom: 'Pantalons et shorts', groupe: 'vetements', rubrique: 'Bas', presentation: 'cintre' },
+  { slug: 'robes-jupes', nom: 'Robes et jupes', groupe: 'vetements', rubrique: 'Robes et ensembles', presentation: 'cintre' },
+  { slug: 'combinaisons-ensembles', nom: 'Combinaisons et ensembles', groupe: 'vetements', rubrique: 'Robes et ensembles', presentation: 'cintre' },
+  { slug: 'bijoux', nom: 'Bijoux', groupe: 'accessoires', rubrique: 'Accessoires', presentation: 'objet' },
+  { slug: 'sacs', nom: 'Sacs', groupe: 'accessoires', rubrique: 'Accessoires', presentation: 'objet' },
+  { slug: 'echarpes-foulards', nom: 'Écharpes et foulards', groupe: 'accessoires', rubrique: 'Accessoires', presentation: 'objet' },
+  { slug: 'chaussures', nom: 'Chaussures', groupe: 'accessoires', rubrique: 'Chaussures', presentation: 'objet' }
 ]
 export const estCategorie = (s) => CATEGORIES.some((c) => c.slug === s)
 export const surCintre = (s) => (CATEGORIES.find((c) => c.slug === s)?.presentation ?? 'cintre') === 'cintre'

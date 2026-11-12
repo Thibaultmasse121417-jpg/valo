@@ -1,8 +1,8 @@
 /* Pages de service : la boutique, livraison, retours, contact, questions fréquentes, mentions légales.
    Tarifs, adresse et horaires viennent des réglages de la boutique : rien n'est écrit en double. */
-import { $, esc, euros, B, C, PAIEMENT, reveler } from './coquille.js'
+import { $, esc, euros, B, C, PAIEMENT, reveler, PIECES, RAYONS, COLLECTIONS, lienProduit, lienRayon } from './coquille.js'
 import { api } from './commun.js'
-import { IMAGES, JOURS_RETOUR, tarifs, faq } from './textes.js'
+import { IMAGES, JOURS_RETOUR, tarifs, faq, PROPOSITION } from './textes.js'
 
 const pr = C.presentation
 const cle = document.body.dataset.info
@@ -15,7 +15,47 @@ const coordonnees = () => [
   pr.email && ['E-mail', `<a href="mailto:${esc(pr.email)}">${esc(pr.email)}</a>`]
 ].filter(Boolean).map(([t, v]) => `<div><dt>${t}</dt><dd>${v}</dd></div>`).join('')
 
+const liste = (l) => `<ul class="propo__liste">${l.map(([t, d]) => `<li><b>${t}</b><span>${d}</span></li>`).join('')}</ul>`
+const exemple = PIECES.find((p) => p.reference === 'ROBE-SEQ') || PIECES[0]
+
 const PAGES = {
+  proposition: () => ({
+    titre: 'La proposition de refonte',
+    html: `<header class="wrap page-tete propo__tete"><p class="surtitre">Proposition de refonte non officielle</p>
+        <h1>Une nouvelle boutique en ligne pour ${esc(PROPOSITION.client)}</h1>
+        <p>Cette maquette montre ce que pourrait devenir votre site : la même boutique, les mêmes rayons et les mêmes services, avec une présentation digne de vos collections. Elle a été réalisée par ${esc(PROPOSITION.studio)} sans lien officiel avec ${esc(PROPOSITION.client)}.</p>
+        <p class="propo__cta"><a class="btn" href="/">Visiter la boutique</a>${exemple ? `<a class="btn btn--ligne" href="${lienProduit(exemple)}">Voir une fiche produit</a>` : ''}</p>
+      </header>
+      <figure class="wrap bande-photo" data-revele><img src="${IMAGES.lookbook}" alt="" width="1400" height="788"></figure>
+      <div class="wrap page-corps propo">
+        <section><h2>Ce que vous visitez</h2>
+          <p>« ${esc(B.nom)} » est une boutique fictive créée pour la démonstration : ${PIECES.length} pièces réparties dans ${RAYONS.length} rayons et ${COLLECTIONS.length} sélections, avec leurs photos, prix, tailles, compositions et stocks. Pour votre site, nous reprendrions votre nom, votre logo, vos photos et vos produits.</p></section>
+        <section><h2>Ce qui est repris de votre boutique</h2>${liste([
+          ['Vos rayons', 'Hauts (blouses, chemisiers, gilets, pulls, tops), vestes et manteaux, pantalons et shorts, robes, jupes et combinaisons, accessoires, chaussures.'],
+          ['Vos sélections', 'Nouveautés, tenues de fêtes, retour en stock, moins de 25 €, promotions, tous nos produits.'],
+          ['Vos services', 'Retrait gratuit en boutique à Amiens, point relais en France et en Belgique, livraison à domicile, 14 jours pour changer d’avis.'],
+          ['Vos fiches produits', 'Composition, mesures, taille portée par la mannequin, précommandes avec date d’expédition.'],
+          ['Votre relation client', 'Newsletter, questions fréquentes, formulaire de contact, horaires de la boutique.']
+        ])}</section>
+        <section><h2>Ce que la refonte apporte</h2>${liste([
+          ['Une vraie direction artistique', 'Typographies de mode, palette ivoire, beige et champagne, photos homogènes : la boutique en ligne a le niveau de vos collections.'],
+          ['Des photos qui font vendre', 'Chaque pièce sur fond uniforme, des photos portées, et des repères sur les images de collection qui mènent directement à la pièce.'],
+          ['Le portant', 'Les nouveautés présentées comme en boutique : on passe sur un vêtement, il tourne ; on clique, il s’ouvre.'],
+          ['Un achat plus rapide', 'Ajout rapide depuis la liste, panier latéral en trois étapes, frais de livraison clairs avant de commander.'],
+          ['Une expérience mobile soignée', 'Menu, recherche, panneaux et barre d’achat pensés pour le pouce, comme une application.'],
+          ['Une recherche et des filtres', 'Recherche instantanée, filtres par rayon, taille et disponibilité, tri par prix ou meilleures ventes.'],
+          ['Une gestion simple', 'Ajout d’un vêtement à partir d’une seule photo : le fond est retiré automatiquement, le vêtement apparaît sur le portant.']
+        ])}</section>
+        <section><h2>Ce qui est simulé dans cette maquette</h2>${liste([
+          ['Le paiement', 'Aucune carte n’est demandée ni débitée. Sur votre site, le paiement par carte se ferait via Stripe, sur votre compte.'],
+          ['Les commandes', 'Elles réservent le stock de démonstration puis sont annulées ou validées sans envoi réel.'],
+          ['Les e-mails', 'Aucun e-mail n’est envoyé aux clientes depuis cette maquette.']
+        ])}</section>
+        <section><h2>Parcourir la maquette</h2><p class="propo__liens">
+          <a class="chip" href="${lienRayon('nouveautes')}">Nouveautés</a><a class="chip" href="${lienRayon('vetements')}">Vêtements</a><a class="chip" href="${lienRayon('accessoires')}">Accessoires</a><a class="chip" href="${lienRayon('petits-prix')}">Moins de 25 €</a><a class="chip" href="/livraison/">Livraison</a><a class="chip" href="/faq/">Questions fréquentes</a></p></section>
+      </div>`
+  }),
+
   'la-boutique': () => ({
     titre: 'Notre boutique',
     html: `${tete('Notre boutique', B.slogan)}
@@ -84,7 +124,7 @@ const PAGES = {
     titre: 'Mentions légales et conditions de vente',
     html: `${tete('Mentions légales et conditions de vente')}
       <div class="wrap page-corps">
-        <section><h2>Site de démonstration</h2><p>Ce site est une démonstration de refonte réalisée par Estalia Studio. ${B.nom} est une boutique fictive : les produits, les prix et les commandes servent à montrer le fonctionnement du site. ${B.paiement === 'stripe' ? '' : 'Aucun paiement réel n’est encaissé.'}</p></section>
+        <section><h2>Proposition de refonte</h2><p>Ce site est une maquette de refonte réalisée par ${esc(PROPOSITION.studio)} à l’attention de ${esc(PROPOSITION.client)}, sans lien officiel avec cette boutique. ${esc(B.nom)} est une boutique fictive : les produits, les prix et les commandes servent à montrer le fonctionnement du site. ${B.paiement === 'stripe' ? '' : 'Aucun paiement réel n’est encaissé et aucune commande n’est expédiée.'}</p></section>
         <section><h2>Éditeur et hébergement</h2><p>Conception et réalisation : Estalia Studio. Hébergement : Render Services, Inc., San Francisco, États-Unis.</p></section>
         <section><h2>Commandes et prix</h2><p>Les prix sont indiqués en euros, toutes taxes comprises. Les frais de livraison sont affichés avant la validation de la commande. Les articles sont réservés pendant 30 minutes pendant le paiement.</p></section>
         <section><h2>Droit de rétractation</h2><p>Conformément au Code de la consommation, vous disposez de ${JOURS_RETOUR} jours à compter de la réception pour retourner un article, selon les conditions de la page <a href="/retours/">Retours et échanges</a>.</p></section>
