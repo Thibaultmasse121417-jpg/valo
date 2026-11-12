@@ -23,4 +23,4 @@ create or replace view ventes_produits with (security_invoker = true) as
   from lignes_commande l join commandes c on c.id = l.commande_id
   where c.statut in ('payee', 'preparee', 'expediee', 'retiree') and l.produit_id is not null
   group by l.boutique_id, l.produit_id;
-grant select on ventes_produits to portant_app;
+do $$ begin if exists (select 1 from pg_roles where rolname = 'portant_app') then grant select on ventes_produits to portant_app; end if; end $$;

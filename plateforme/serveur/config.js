@@ -20,7 +20,11 @@ export const config = {
   // Connexion de l'application (rôle portant_app, soumis à l'isolation par boutique).
   baseApp: e.DATABASE_URL || 'postgres://portant_app@localhost:5432/portant',
   // Connexion propriétaire, pour les migrations et la création des boutiques.
-  baseAdmin: e.DATABASE_URL_ADMIN || 'postgres://postgres@localhost:5432/portant',
+  baseAdmin: e.DATABASE_URL_ADMIN || e.DATABASE_URL || 'postgres://postgres@localhost:5432/portant',
+  // Boutique affichée quand l'adresse n'est reliée à aucune (ex. ma-plateforme.onrender.com).
+  boutiqueParDefaut: e.BOUTIQUE_PAR_DEFAUT || '',
+  // Connexion chiffrée vers une base hébergée.
+  ssl: /sslmode=require|render\.com|neon\.tech/.test(e.DATABASE_URL || '') ? { rejectUnauthorized: false } : undefined,
   stockage: resolve(RACINE, e.STOCKAGE_DIR || 'stockage'),
   modele: resolve(RACINE, e.MODELE_DETOURAGE || 'modeles/silueta.onnx'),
   web: resolve(RACINE, 'web/dist'),

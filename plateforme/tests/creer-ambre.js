@@ -70,7 +70,7 @@ const PRODUITS = [
   ['BOTT-DAIM', 'Bottines en daim à talon', 'Bottines', 'chaussures', 79, null, ['36', '37', '38', '39', '40', '41'], ['hiver'], false, false, 'Daim taupe, talon carré, zip sur le côté.', [['Taupe', '#8c7765', '27.jpg']]]
 ]
 
-await appel('POST', '/api/admin/connexion', { email: 'gerante@ambre-strass.fr', mdp: 'motdepasse-ambre' })
+await appel('POST', '/api/admin/connexion', { email: 'gerante@ambre-strass.fr', mdp: process.env.DEMO_MDP || 'motdepasse-ambre' })
 console.log('Connectée à l’administration d’Ambre & Strass.')
 
 const SEULEMENT_VENTES = process.argv.includes('--ventes')

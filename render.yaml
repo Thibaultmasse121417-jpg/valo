@@ -1,0 +1,56 @@
+# Déploiement de la plateforme « portant » sur Render (Blueprint).
+# Render > New > Blueprint > ce dépôt : crée la base PostgreSQL et le service web.
+# Au premier démarrage, la boutique de démonstration Ambre & Strass est créée et remplie
+# automatiquement (DEMO_AMBRE=1). Le mot de passe de l'administration est la variable DEMO_MDP,
+# visible dans Render > ambre-strass > Environment.
+
+services:
+  - type: web
+    name: ambre-strass
+    runtime: node
+    rootDir: plateforme
+    region: frankfurt
+    # Standard (2 Go) : le détourage par IA monte à ~550 Mo de mémoire, trop pour Starter (512 Mo).
+    plan: standard
+    buildCommand: npm run render:build
+    startCommand: npm run render:start
+    healthCheckPath: /api/boutique
+    # Les photos des boutiques (originaux, détourages, images du portant) sont gardées ici.
+    disk:
+      name: photos
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: MALLOC_ARENA_MAX
+        value: "2"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: portant-db
+          property: connectionString
+      - key: STOCKAGE_DIR
+        value: /var/data/stockage
+      # Boutique affichée sur l'adresse ….onrender.com (les autres boutiques ont leur propre domaine).
+      - key: BOUTIQUE_PAR_DEFAUT
+        value: ambre
+      - key: DEMO_AMBRE
+        value: "1"
+      - key: DEMO_MDP
+        generateValue: true
+      # Paiement simulé tant que Stripe n'est pas relié (retirer pour une vraie boutique).
+      - key: PAIEMENT_TEST
+        value: "1"
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+
+databases:
+  - name: portant-db
+    region: frankfurt
+    databaseName: portant
+    postgresMajorVersion: "16"
+    plan: free

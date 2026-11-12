@@ -28,6 +28,7 @@ export async function boutiqueDeRequete (c) {
     if (slug) b = await chercher(`s:${slug}`, 'select * from boutiques where slug = $1 and actif', slug)
     if (b && c.req.query('boutique')) c.header('set-cookie', `boutique_dev=${b.slug}; Path=/; SameSite=Lax`, { append: true })
   }
+  if (!b && config.boutiqueParDefaut) b = await chercher(`s:${config.boutiqueParDefaut}`, 'select * from boutiques where slug = $1 and actif', config.boutiqueParDefaut)
   return b
 }
 

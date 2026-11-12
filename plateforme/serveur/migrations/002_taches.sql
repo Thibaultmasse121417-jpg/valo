@@ -2,7 +2,7 @@
 -- Elles s'exécutent avec les droits du propriétaire (security definer) mais ne renvoient
 -- que des identifiants : le travail lui-même se fait ensuite boutique par boutique.
 
-revoke all on _migrations from portant_app;
+do $$ begin if exists (select 1 from pg_roles where rolname = 'portant_app') then revoke all on _migrations from portant_app; end if; end $$;
 
 -- Réserve la prochaine photo à détourer (une seule à la fois par appel, sans conflit).
 create or replace function photo_suivante() returns table (id uuid, boutique_id uuid)
@@ -38,4 +38,4 @@ begin
 end $$;
 
 revoke all on function photo_suivante(), photos_relancer(), expirer_commandes() from public;
-grant execute on function photo_suivante(), photos_relancer(), expirer_commandes() to portant_app;
+do $$ begin if exists (select 1 from pg_roles where rolname = 'portant_app') then grant execute on function photo_suivante(), photos_relancer(), expirer_commandes() to portant_app; end if; end $$;

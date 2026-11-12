@@ -11,6 +11,8 @@
     "boutique:creer": "node serveur/outils/creer-boutique.js",
     "build": "vite build",
     "start": "node serveur/index.js",
+    "render:build": "ONNXRUNTIME_NODE_INSTALL_CUDA=skip npm ci --include=dev && vite build",
+    "render:start": "node serveur/migrer.js && node serveur/index.js",
     "dev": "vite build && node serveur/index.js",
     "test:e2e": "node tests/parcours.e2e.js"
   },

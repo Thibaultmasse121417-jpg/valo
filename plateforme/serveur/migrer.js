@@ -4,7 +4,7 @@ import { readdirSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { config, RACINE } from './config.js'
 
-const c = new pg.Client({ connectionString: config.baseAdmin })
+const c = new pg.Client({ connectionString: config.baseAdmin, ssl: config.ssl })
 await c.connect()
 await c.query('create table if not exists _migrations (nom text primary key, appliquee_at timestamptz not null default now())')
 const faites = new Set((await c.query('select nom from _migrations')).rows.map((r) => r.nom))

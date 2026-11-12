@@ -21,10 +21,11 @@ if (!v.slug || !v.nom || !v.email || !v.mdp) {
 }
 if (v.mdp.length < 10) { console.error('Mot de passe trop court (10 caractères minimum).'); process.exit(1) }
 
-const c = new pg.Client({ connectionString: config.baseAdmin })
+const c = new pg.Client({ connectionString: config.baseAdmin, ssl: config.ssl })
 await c.connect()
 try {
   await c.query('begin')
+  await c.query("select set_config('app.taches', 'oui', true)") // création : accès ouvert le temps de la transaction
   const { rows: [b] } = await c.query('insert into boutiques (slug, nom, slogan) values ($1, $2, $3) returning id', [v.slug, v.nom, v.slogan])
   for (const d of v.domaine) await c.query('insert into domaines (domaine, boutique_id) values ($1, $2)', [d.toLowerCase(), b.id])
   await c.query('insert into utilisateurs (boutique_id, email, mot_de_passe) values ($1, $2, $3)', [b.id, v.email.toLowerCase(), await hacher(v.mdp)])

@@ -6,6 +6,9 @@
    Modèle : silueta (famille U²-Net, licence Apache 2.0) avec onnxruntime-node. */
 import sharp from 'sharp'
 import * as ort from 'onnxruntime-node'
+
+sharp.cache(false)
+sharp.concurrency(1)
 import { config } from './config.js'
 
 export const SORTIE = { l: 660, h: 876 }
@@ -14,16 +17,17 @@ const CROCHET_HAUT = 13
 
 let session = null
 async function modele () {
-  if (!session) session = await ort.InferenceSession.create(config.modele, { graphOptimizationLevel: 'all', intraOpNumThreads: 2 })
+  // Réglages sobres en mémoire (hébergement à 512 Mo) : pas d'arène pré-allouée, un seul fil.
+  if (!session) session = await ort.InferenceSession.create(config.modele, { graphOptimizationLevel: 'all', intraOpNumThreads: 1, interOpNumThreads: 1, enableCpuMemArena: false, enableMemPattern: false })
   return session
 }
 
-/* Photo envoyée → JPEG orienté, 2000 px au plus. Refuse ce qui n'est pas une image. */
+/* Photo envoyée → JPEG orienté, 1500 px au plus (assez pour le portant et la retouche, sobre en mémoire). */
 export async function normaliserOriginal (buffer) {
   const img = sharp(buffer, { failOn: 'error', limitInputPixels: 60e6 }).rotate()
   const meta = await img.metadata()
   if (!meta.width || !meta.height) throw new Error('Image illisible')
-  const sortie = await img.resize({ width: 2000, height: 2000, fit: 'inside', withoutEnlargement: true })
+  const sortie = await img.resize({ width: 1500, height: 1500, fit: 'inside', withoutEnlargement: true })
     .flatten({ background: '#ffffff' }).jpeg({ quality: 90, mozjpeg: true }).toBuffer({ resolveWithObject: true })
   return { buffer: sortie.data, largeur: sortie.info.width, hauteur: sortie.info.height }
 }

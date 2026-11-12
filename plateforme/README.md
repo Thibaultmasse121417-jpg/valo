@@ -83,6 +83,17 @@ En local, une boutique répond sur `http://<slug>.localhost:8787` (par exemple `
 - **Domaines des boutiques** : le commerçant fait pointer son domaine (CNAME ou A) vers le serveur. Un proxy avec HTTPS automatique (Caddy, par exemple) délivre les certificats. Puis on ajoute le domaine : `insert into domaines (domaine, boutique_id) values ('alba.fr', '<id>')`.
 - **Production** : `NODE_ENV=production`. Le paiement de test et l'adresse `?boutique=` sont alors désactivés.
 
+## Mise en ligne sur Render
+
+Le fichier `render.yaml` (à la racine du dépôt) décrit tout : service web (offre Standard, car le détourage utilise jusqu'à environ 550 Mo de mémoire), disque de 1 Go pour les photos, base PostgreSQL 16.
+Render > **New** > **Blueprint** > choisir ce dépôt et la branche, puis **Apply**. Au premier démarrage :
+- les migrations sont appliquées ;
+- la boutique Ambre & Strass est créée et remplie par l'API d'administration (`DEMO_AMBRE=1`, environ 1 minute).
+
+Le mot de passe de l'administration (`gerante@ambre-strass.fr`) est la variable `DEMO_MDP`, générée par Render.
+
+La plateforme fonctionne aussi quand le compte de la base n'est pas super-utilisateur (cas de Render). L'application utilise alors le compte propriétaire, lui aussi soumis à l'isolation (FORCE ROW LEVEL SECURITY). Seules les tâches de fond (file de détourage, expiration des commandes) et la création de boutique ouvrent un accès global, le temps d'une transaction.
+
 ## Paiement (Stripe Connect)
 
 1. Sur le compte Stripe de la plateforme : activer Connect, renseigner `STRIPE_SECRET_KEY` (et éventuellement `STRIPE_COMMISSION_POURCENT`).

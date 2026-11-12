@@ -14,6 +14,7 @@ import { lire, estPublic } from './stockage.js'
 import { demarrerFile } from './file.js'
 import { stripe } from './paiement.js'
 import { marquerPayee, annulerCommande } from './commandes.js'
+import { preparerDemo } from './demo.js'
 
 const app = new Hono()
 
@@ -94,4 +95,5 @@ pool.query('select expirer_commandes()').catch(() => {})
 
 serve({ fetch: app.fetch, port: config.port }, (i) => {
   console.log(`Plateforme portant : http://localhost:${i.port}  (paiement ${stripe ? 'Stripe' : config.paiementTest ? 'simulé' : 'désactivé'})`)
+  preparerDemo().catch((e) => console.error('[démo]', e.message))
 })

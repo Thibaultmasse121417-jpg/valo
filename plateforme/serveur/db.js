@@ -5,7 +5,7 @@ import { config } from './config.js'
 
 pg.types.setTypeParser(20, (v) => Number(v)) // bigint → nombre (numéros de commande)
 
-export const pool = new pg.Pool({ connectionString: config.baseApp, max: 10 })
+export const pool = new pg.Pool({ connectionString: config.baseApp, ssl: config.ssl, max: 10 })
 
 export async function avecBoutique (boutiqueId, fn) {
   if (!boutiqueId) throw new Error('boutique manquante')

@@ -185,12 +185,16 @@ alter table domaines force row level security;
 create policy domaines_lecture on domaines for select using (true);
 
 -- Rôle de l'application : aucun contournement de la sécurité par ligne.
+-- Sur une base hébergée (Render, Neon…) le compte n'a souvent pas le droit de créer un rôle :
+-- l'application utilise alors le compte propriétaire, lui aussi soumis à l'isolation (FORCE).
 do $$ begin
   if not exists (select 1 from pg_roles where rolname = 'portant_app') then
     create role portant_app login nosuperuser nobypassrls; -- mot de passe : alter role portant_app password '…'
   end if;
+  grant usage on schema public to portant_app;
+  grant select, insert, update, delete on all tables in schema public to portant_app;
+  grant usage, select on all sequences in schema public to portant_app;
+  revoke insert, delete on boutiques, domaines from portant_app;
+exception when insufficient_privilege then
+  raise notice 'Rôle portant_app non créé (droits insuffisants) : l''application utilisera le compte propriétaire.';
 end $$;
-grant usage on schema public to portant_app;
-grant select, insert, update, delete on all tables in schema public to portant_app;
-grant usage, select on all sequences in schema public to portant_app;
-revoke insert, delete on boutiques, domaines from portant_app;
