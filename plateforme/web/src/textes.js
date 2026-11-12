@@ -6,9 +6,11 @@ import imgAccessoires from './img/accessoires.webp'
 import imgChaussures from './img/chaussures.webp'
 import imgLookbook from './img/lookbook.webp'
 import imgEssentiels from './img/essentiels.webp'
+import imgComyxHeros from './img/comyx-heros.webp'
+import imgComyxBoutique from './img/comyx-boutique.webp'
 import { euros } from './commun.js'
 
-export const IMAGES = { fetes: imgFetes, vetements: imgVetements, accessoires: imgAccessoires, chaussures: imgChaussures, lookbook: imgLookbook, essentiels: imgEssentiels }
+export const IMAGES = { comyxHeros: imgComyxHeros, comyxBoutique: imgComyxBoutique, fetes: imgFetes, vetements: imgVetements, accessoires: imgAccessoires, chaussures: imgChaussures, lookbook: imgLookbook, essentiels: imgEssentiels }
 export const JOURS_RETOUR = 14
 export const PETITS_PRIX = 2500
 
@@ -75,5 +77,7 @@ export const PROPOSITION = {
   client: 'Comyx Prestige',
   studio: 'Estalia Studio',
   bandeau: 'Proposition de refonte non officielle pour Comyx Prestige : boutique fictive, commandes et paiements simulés.',
-  court: 'Maquette non officielle pour Comyx Prestige'
+  court: 'Maquette non officielle pour Comyx Prestige',
+  apercu: 'Aperçu privé : proposition de refonte non officielle réalisée par Estalia Studio pour Comyx Prestige. Produits d’exemple, commandes et paiements simulés.',
+  apercuCourt: 'Aperçu privé, proposition non officielle'
 }

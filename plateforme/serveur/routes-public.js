@@ -2,6 +2,7 @@
 import { Hono } from 'hono'
 import { avecBoutique } from './db.js'
 import { boutiquePublique } from './boutique.js'
+import { habillerComyx } from './apercu.js'
 import { lireProduits } from './catalogue.js'
 import { creerCommande, marquerPayee, annulerCommande, lireCommande, ErreurClient } from './commandes.js'
 import { modePaiement, sessionStripe, verifierSessionStripe, stripe } from './paiement.js'
@@ -14,7 +15,11 @@ const origine = (c) => {
   return `${proto}://${c.req.header('host')}`
 }
 
-publique.get('/boutique', (c) => c.json(boutiquePublique(c.get('boutique'))))
+publique.get('/boutique', (c) => {
+  c.header('cache-control', 'private, no-store') // la réponse dépend de l'aperçu privé
+  const pub = boutiquePublique(c.get('boutique'))
+  return c.json(c.get('apercu') ? habillerComyx(pub) : pub)
+})
 
 publique.get('/catalogue', async (c) => {
   const b = c.get('boutique')

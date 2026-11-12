@@ -29,7 +29,7 @@ const PAGES = {
       <figure class="wrap bande-photo" data-revele><img src="${IMAGES.lookbook}" alt="" width="1400" height="788"></figure>
       <div class="wrap page-corps propo">
         <section><h2>Ce que vous visitez</h2>
-          <p>« ${esc(B.nom)} » est une boutique fictive créée pour la démonstration : ${PIECES.length} pièces réparties dans ${RAYONS.length} rayons et ${COLLECTIONS.length} sélections, avec leurs photos, prix, tailles, compositions et stocks. Pour votre site, nous reprendrions votre nom, votre logo, vos photos et vos produits.</p></section>
+          <p>${B.apercu ? 'Votre boutique, avec un catalogue d’exemple' : `« ${esc(B.nom)} » est une boutique fictive créée pour la démonstration`} : ${PIECES.length} pièces réparties dans ${RAYONS.length} rayons et ${COLLECTIONS.length} sélections, avec leurs photos, prix, tailles, compositions et stocks. ${B.apercu ? 'Les pièces, les photos de produits et les prix sont des exemples : sur votre site, ce sont vos produits, vos photos et vos prix qui s’afficheraient, avec votre stock réel.' : 'Pour votre site, nous reprendrions votre nom, votre logo, vos photos et vos produits.'}</p></section>
         <section><h2>Ce qui est repris de votre boutique</h2>${liste([
           ['Vos rayons', 'Hauts (blouses, chemisiers, gilets, pulls, tops), vestes et manteaux, pantalons et shorts, robes, jupes et combinaisons, accessoires, chaussures.'],
           ['Vos sélections', 'Nouveautés, tenues de fêtes, retour en stock, moins de 25 €, promotions, tous nos produits.'],
@@ -124,7 +124,7 @@ const PAGES = {
     titre: 'Mentions légales et conditions de vente',
     html: `${tete('Mentions légales et conditions de vente')}
       <div class="wrap page-corps">
-        <section><h2>Proposition de refonte</h2><p>Ce site est une maquette de refonte réalisée par ${esc(PROPOSITION.studio)} à l’attention de ${esc(PROPOSITION.client)}, sans lien officiel avec cette boutique. ${esc(B.nom)} est une boutique fictive : les produits, les prix et les commandes servent à montrer le fonctionnement du site. ${B.paiement === 'stripe' ? '' : 'Aucun paiement réel n’est encaissé et aucune commande n’est expédiée.'}</p></section>
+        <section><h2>Proposition de refonte</h2><p>Ce site est une maquette de refonte réalisée par ${esc(PROPOSITION.studio)} à l’attention de ${esc(PROPOSITION.client)}, sans lien officiel avec cette boutique. ${B.apercu ? 'Les produits, les prix et les commandes sont des exemples qui servent à montrer le fonctionnement du site.' : `${esc(B.nom)} est une boutique fictive : les produits, les prix et les commandes servent à montrer le fonctionnement du site.`} ${B.paiement === 'stripe' ? '' : 'Aucun paiement réel n’est encaissé et aucune commande n’est expédiée.'}</p></section>
         <section><h2>Éditeur et hébergement</h2><p>Conception et réalisation : Estalia Studio. Hébergement : Render Services, Inc., San Francisco, États-Unis.</p></section>
         <section><h2>Commandes et prix</h2><p>Les prix sont indiqués en euros, toutes taxes comprises. Les frais de livraison sont affichés avant la validation de la commande. Les articles sont réservés pendant 30 minutes pendant le paiement.</p></section>
         <section><h2>Droit de rétractation</h2><p>Conformément au Code de la consommation, vous disposez de ${JOURS_RETOUR} jours à compter de la réception pour retourner un article, selon les conditions de la page <a href="/retours/">Retours et échanges</a>.</p></section>

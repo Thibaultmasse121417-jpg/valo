@@ -22,7 +22,9 @@ export const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
 export const [B, CAT] = await Promise.all([api('/api/boutique'), api('/api/catalogue')])
 export const PIECES = CAT.produits
 // Photos portées, repères et tenues : contenu éditorial propre à la boutique de démonstration
-export const EDITO = B.nom === 'Ambre & Strass'
+export const EDITO = !!(B.demo || B.apercu)
+// Aperçu privé Comyx Prestige : photographies de la proposition (mur de briques de la boutique)
+if (B.apercu) { B.banniere = IMAGES.comyxHeros; B.presentation_image = IMAGES.comyxBoutique }
 export const porteDe = (p) => (EDITO && PORTE[p.reference]) || null
 const survol = matchMedia('(hover: hover) and (pointer: fine)').matches
 export const C = B.contenus
@@ -125,7 +127,10 @@ const ICONES = {
   croix: '<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.4"/></svg>'
 }
 export { ICONES }
-const logoHtml = B.logo ? `<img src="${esc(B.logo)}" alt="${esc(B.nom)}">` : esc(B.nom).replace(/ &amp; /, ' <em class="logo__et">&amp;</em> ')
+// Logotype : « Comyx » en Bodoni, « Prestige » en italique champagne (aperçu privé) ; sinon l'esperluette signature
+const logoHtml = B.logo ? `<img src="${esc(B.logo)}" alt="${esc(B.nom)}">`
+  : B.apercu ? '<span class="logo__mot">Comyx</span> <em class="logo__et logo__et--mot">Prestige</em>'
+    : esc(B.nom).replace(/ &amp; /, ' <em class="logo__et">&amp;</em> ')
 
 // Paiement : on ne dit que ce qui est vrai.
 export const PAIEMENT = {
@@ -174,7 +179,7 @@ const courant = (cat) => page === 'catalogue' && new URLSearchParams(location.se
 
 $('[data-haut]').outerHTML = `
   <a class="skip" href="#contenu">Aller au contenu</a>
-  ${EDITO ? `<div class="proposition" role="note"><p><span class="proposition__long">${esc(PROPOSITION.bandeau)}</span><span class="proposition__court">${esc(PROPOSITION.court)}</span> <a href="/proposition/">Découvrir la proposition</a></p></div>` : ''}
+  ${EDITO ? `<div class="proposition" role="note"><p><span class="proposition__long">${esc(B.apercu ? PROPOSITION.apercu : PROPOSITION.bandeau)}</span><span class="proposition__court">${esc(B.apercu ? PROPOSITION.apercuCourt : PROPOSITION.court)}</span> <a href="/proposition/">Découvrir la proposition</a></p></div>` : ''}
   <div class="info" role="region" aria-label="Informations"><p data-annonce>${esc(annonces[0])}</p></div>
   <header class="haut" data-haut-barre>
     <div class="haut__in">
@@ -355,7 +360,7 @@ $('[data-bas]').outerHTML = `
           <p><a class="pied__lien" href="/la-boutique/">Venir en boutique</a></p>
         </div>
       </div>
-      <p class="pied__bas"><span>© ${new Date().getFullYear()} ${esc(B.nom)}</span><a href="/mentions-legales/">Mentions légales et conditions de vente</a><span>Site de démonstration réalisé par Estalia Studio</span></p>
+      <p class="pied__bas"><span>© ${new Date().getFullYear()} ${esc(B.nom)}</span><a href="/mentions-legales/">Mentions légales et conditions de vente</a><span>${B.apercu ? 'Proposition de refonte réalisée' : 'Site de démonstration réalisé'} par Estalia Studio</span></p>
     </div>
   </footer>
 

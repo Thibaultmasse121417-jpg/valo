@@ -40,7 +40,7 @@ export const IDENTITE = {
     ].join('\n'),
     bandeau_livraison: ''
   },
-  livraison_centimes: 690, livraison_offerte_centimes: 6000, relais_centimes: 490,
+  livraison_centimes: 800, livraison_offerte_centimes: 6000, relais_centimes: 500,
   retrait_adresse: 'Boutique Ambre & Strass, centre-ville d’Amiens, du mardi au samedi de 10 h à 19 h', paiement_mode: 'test'
 }
 

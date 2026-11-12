@@ -18,6 +18,7 @@ $('[data-ban-titre]').textContent = C.banniere.titre || B.nom
 $('[data-ban-texte]').textContent = C.banniere.texte
 $('[data-ban-texte]').hidden = !C.banniere.texte
 $('[data-ban-bouton]').textContent = C.banniere.bouton || 'Découvrir la collection'
+if (B.apercu) $('[data-banniere]').classList.add('heros--sombre') // photo de briques : texte clair
 if (B.banniere) $('[data-ban-img]').innerHTML = `<img src="${esc(B.banniere)}" alt="" fetchpriority="high" width="2000" height="1120">`
 else { $('[data-ban-img]').remove(); $('[data-banniere]').classList.add('heros--uni') }
 

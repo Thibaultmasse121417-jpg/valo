@@ -166,6 +166,25 @@ for (const [nom, options] of [['ordinateur', { viewport: { width: 1440, height: 
   await p.evaluate(() => localStorage.clear())
 }
 
+// Aperçu privé Comyx Prestige : seulement avec la bonne clé, toujours marqué comme proposition
+if (process.env.APERCU_COMYX) {
+  const ctx = await nav.newContext({ viewport: { width: 1440, height: 900 } }); const p = await ctx.newPage(); surveiller(p, 'aperçu')
+  await p.goto(`${URL_B}/?apercu=mauvaise-cle`); await p.waitForSelector('[data-logo]')
+  assert.ok(!(await p.textContent('[data-logo]')).includes('Comyx'), 'mauvaise clé : pas d’aperçu')
+  await p.goto(`${URL_B}/?apercu=${encodeURIComponent(process.env.APERCU_COMYX)}`); await p.waitForSelector('.piece__btn')
+  assert.ok(!p.url().includes('apercu='), 'la clé disparaît de l’adresse')
+  assert.match(await p.textContent('[data-logo]'), /Comyx\s*Prestige/)
+  assert.match(await p.textContent('.proposition'), /proposition de refonte non officielle/i)
+  assert.match(await p.textContent('[data-maison-infos]'), /Henri Barbusse/)
+  await p.goto(`${URL_B}/proposition/`); await p.waitForSelector('main h1')
+  assert.match(await p.textContent('main h1'), /Comyx Prestige/)
+  const autre = await (await nav.newContext()).newPage()
+  await autre.goto(`${URL_B}/`); await autre.waitForSelector('[data-logo]')
+  assert.ok(!(await autre.textContent('[data-logo]')).includes('Comyx'), 'sans clé : démonstration publique')
+  etape('aperçu privé Comyx Prestige : clé requise, bandeau « proposition non officielle », adresse et page proposition')
+  await ctx.close()
+}
+
 // Page produit inconnue : état soigné
 const p = await (await nav.newContext()).newPage(); surveiller(p, 'introuvable')
 await p.goto(`${URL_B}/produit/?ref=INEXISTANTE`)

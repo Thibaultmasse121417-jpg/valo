@@ -897,3 +897,16 @@ a.chip { text-decoration: none; display: inline-flex; align-items: center; }
   .proposition__court { display: inline; }
   .info p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 }
+
+/* Logotype de la proposition Comyx Prestige */
+.logo__mot { letter-spacing: .01em; }
+.logo__et--mot { margin: 0 0 0 .08em; font-size: .92em; }
+
+/* Héros sur photo sombre (mur de briques de la proposition Comyx Prestige) */
+@media (min-width: 721px) {
+  .heros--sombre .heros__img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgb(var(--ombre-rvb) / .62), rgb(var(--ombre-rvb) / .25) 45%, transparent 70%); }
+  .heros--sombre .heros__txt { color: var(--c-surface); }
+  .heros--sombre .heros__sur, .heros--sombre .heros__p { color: color-mix(in srgb, var(--c-surface) 86%, transparent); }
+  .heros--sombre .btn { background: var(--c-surface); color: var(--c-texte); border-color: var(--c-surface); }
+  .heros--sombre .lien { color: var(--c-surface); }
+}

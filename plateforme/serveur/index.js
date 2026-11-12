@@ -8,6 +8,7 @@ import { resolve, extname, normalize, sep } from 'node:path'
 import { config } from './config.js'
 import { pool } from './db.js'
 import { boutiqueDeRequete } from './boutique.js'
+import { apercu } from './apercu.js'
 import { publique } from './routes-public.js'
 import { admin } from './routes-admin.js'
 import { lire, estPublic } from './stockage.js'
@@ -27,6 +28,7 @@ app.use('*', async (c, next) => {
   await next()
   c.header('x-content-type-options', 'nosniff')
   c.header('referrer-policy', 'strict-origin-when-cross-origin')
+  c.header('x-robots-tag', 'noindex, nofollow') // maquette de démonstration : jamais dans les moteurs de recherche
   if (c.req.path.startsWith('/admin')) c.header('x-frame-options', 'DENY')
 })
 
@@ -56,6 +58,9 @@ app.use('*', async (c, next) => {
   c.set('boutique', b)
   return next()
 })
+
+// Aperçu privé de la proposition pour Comyx Prestige (lien secret)
+app.use('*', apercu)
 
 app.use('/api/admin/*', bodyLimit({ maxSize: 160 * 1024 * 1024, onError: (c) => c.json({ erreur: 'Envoi trop lourd.' }, 413) }))
 app.use('/api/commandes', bodyLimit({ maxSize: 64 * 1024 }))

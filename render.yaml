@@ -40,6 +40,9 @@ services:
         value: "1"
       - key: DEMO_MDP
         generateValue: true
+      # Clé du lien d'aperçu privé de la proposition Comyx Prestige : https://…onrender.com/?apercu=<valeur>
+      - key: APERCU_COMYX
+        generateValue: true
       # Paiement simulé tant que Stripe n'est pas relié (retirer pour une vraie boutique).
       - key: PAIEMENT_TEST
         value: "1"

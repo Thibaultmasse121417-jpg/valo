@@ -40,5 +40,6 @@ export const boutiquePublique = (b) => ({
   livraison_centimes: b.livraison_centimes, livraison_offerte_centimes: b.livraison_offerte_centimes,
   retrait: b.retrait_adresse ? { adresse: b.retrait_adresse } : null,
   relais: b.relais_centimes != null ? { prix_centimes: b.relais_centimes } : null,
+  demo: b.slug === 'ambre', // contenus éditoriaux de la démonstration (photos portées, repères, tenues)
   paiement: modePaiement(b) // 'stripe' (réel), 'test' (simulé, aucun débit) ou null (indisponible)
 })
