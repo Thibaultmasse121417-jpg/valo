@@ -47,3 +47,15 @@ if (!reduce) {
   }, { rootMargin: '0px 0px -8% 0px' })
   els.forEach((el) => io.observe(el))
 }
+
+// Film promotionnel : lecture quand la section est visible, bouton pause
+const film = document.querySelector('[data-film]')
+const filmBtn = document.querySelector('[data-film-toggle]')
+if (film && filmBtn) {
+  const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches
+  let filmPause = reduit
+  const maj = () => { filmBtn.classList.toggle('is-paused', film.paused); filmBtn.setAttribute('aria-label', film.paused ? 'Lire la vidéo' : 'Mettre la vidéo en pause') }
+  film.addEventListener('play', maj); film.addEventListener('pause', maj); maj()
+  filmBtn.addEventListener('click', () => { if (film.paused) { filmPause = false; film.play().catch(() => {}) } else { filmPause = true; film.pause() } })
+  new IntersectionObserver(([e]) => { if (e.isIntersecting && !filmPause) film.play().catch(() => {}); else film.pause() }, { threshold: 0.3 }).observe(film)
+}

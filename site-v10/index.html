@@ -19,6 +19,7 @@
         <li><a href="#demo">La démo</a></li>
         <li><a href="#inclus">Ce qui est inclus</a></li>
         <li><a href="#atelier">L’Atelier</a></li>
+        <li><a href="#video">Vidéo</a></li>
         <li><a href="#methode">Méthode</a></li>
         <li><a href="#tarifs">Tarifs</a></li>
         <li><a href="#questions">Questions</a></li>
@@ -128,6 +129,44 @@
       </div>
     </section>
 
+    <!-- 4 bis. Vidéo promotionnelle -->
+    <section class="film" id="video" aria-labelledby="film-t">
+      <div class="wrap film__grid">
+        <figure class="film__phone">
+          <div class="film__ecran">
+            <video data-film muted loop playsinline preload="metadata" poster="./media/demo/film.jpg" aria-label="Extrait de film promotionnel pour la boutique de démonstration Alba : une robe à sequins, une blouse en satin, un sac en velours, des escarpins, puis la boutique.">
+              <source src="./media/demo/film.mp4" type="video/mp4">
+            </video>
+            <button class="film__lecture" type="button" data-film-toggle aria-label="Mettre la vidéo en pause">
+              <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path class="i-pause" d="M3 2h3v10H3zM8 2h3v10H8z" fill="currentColor"/><path class="i-play" d="M3 1.5l9 5.5-9 5.5z" fill="currentColor"/></svg>
+            </button>
+          </div>
+          <figcaption>Extrait réalisé pour notre boutique de démonstration «&nbsp;Alba&nbsp;».</figcaption>
+        </figure>
+        <div class="film__txt">
+          <p class="kicker">Vidéo promotionnelle</p>
+          <h2 id="film-t">Un film de 40 secondes pour faire venir vos clientes.</h2>
+          <p class="film__lead">Pour Instagram, TikTok et votre site&nbsp;: vos pièces mises en scène comme dans une campagne de mode, avec vos textes, votre adresse et votre musique. Sans tournage&nbsp;: nous partons des photos que vous avez déjà.</p>
+          <ul class="film__formats" role="list">
+            <li><b>40&nbsp;s</b><span>Format vertical 9:16, pour les Reels, les Stories et TikTok</span></li>
+            <li><b>15&nbsp;s</b><span>Version courte pour la publicité Instagram et Facebook</span></li>
+            <li><b>16:9</b><span>Version horizontale pour l’accueil de votre site</span></li>
+          </ul>
+          <ol class="film__etapes" role="list">
+            <li><b>Vous nous indiquez votre site ou votre Instagram.</b> Nous y choisissons vos plus belles photos de pièces et de boutique.</li>
+            <li><b>Les photos prennent vie.</b> Chaque plan est animé en mouvement de caméra lent, sans changer vos produits.</li>
+            <li><b>Montage, textes et musique.</b> Votre nom, vos collections, votre adresse et vos horaires, sur une musique libre de droits.</li>
+            <li><b>Vous validez, nous livrons les trois formats.</b> Prêts à publier.</li>
+          </ol>
+          <div class="film__offre">
+            <p class="film__prix"><b>490&nbsp;€</b><span>le pack complet, prix fixe</span></p>
+            <a class="btn btn--red" href="#contact" data-plan="Vidéo promotionnelle (490 €)">Commander une vidéo</a>
+          </div>
+          <p class="film__note">Les plans sont animés par intelligence artificielle à partir de vos propres photos&nbsp;: vos produits restent tels qu’ils sont.</p>
+        </div>
+      </div>
+    </section>
+
     <!-- 5. Méthode -->
     <section class="methode" id="methode" aria-labelledby="methode-t">
       <div class="wrap">
@@ -190,7 +229,7 @@
             <a class="btn btn--line" href="#contact" data-plan="Maison (sur devis)">Parler de mon projet</a>
           </article>
         </div>
-        <p class="note">En option&nbsp;: suivi et mises à jour à 59&nbsp;€ par mois. Hébergement offert la première année. Aucun coût par pièce ajoutée.</p>
+        <p class="note">En option&nbsp;: suivi et mises à jour à 59&nbsp;€ par mois. Hébergement offert la première année. Aucun coût par pièce ajoutée. <a href="#video">Vidéo promotionnelle&nbsp;: 490&nbsp;€</a>.</p>
       </div>
     </section>
 
