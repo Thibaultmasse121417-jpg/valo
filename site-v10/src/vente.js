@@ -70,3 +70,42 @@ if (dlg) {
   dlg.addEventListener('click', (e) => { if (e.target === dlg) fermer() })
   dlg.addEventListener('close', () => v.pause())
 }
+
+// Vitrine « votre photo → votre vidéo » : les pièces s'enchaînent comme un fil vertical
+const vit = document.querySelector('[data-vitrine]')
+if (vit) {
+  const PIECES = [
+    { nom: 'Robe sequins', video: './media/demo/video-robe.mp4', poster: './media/demo/video-robe.jpg', photo: './media/demo/piece-robe.jpg', alt: 'Photo d’origine : robe longue à sequins bronze sur un cintre.',
+      prompt: 'Une femme porte exactement la robe de la photo : fines bretelles, décolleté en V, sequins bronze. Plan en pied : elle traverse une boutique au portant doré, le soir. Gros plan : les sequins qui brillent. Plan moyen : elle regarde par-dessus son épaule.' },
+    { nom: 'Blazer bijoux', video: './media/demo/video-blazer.mp4', poster: './media/demo/video-blazer.jpg', photo: './media/demo/piece-blazer.jpg', alt: 'Photo d’origine : blazer croisé noir à boutons bijoux sur un cintre.',
+      prompt: 'Une femme porte exactement le blazer de la photo : même coupe, mêmes revers, six boutons bijoux. Plan en pied dans un studio ivoire : elle ajuste le revers et avance. Gros plan : les boutons qui scintillent. Profil : elle se tourne vers la caméra. Lumière douce de studio.' },
+    { nom: 'Veste fourrure', video: './media/demo/video-fourrure.mp4', poster: './media/demo/video-fourrure.jpg', photo: './media/demo/piece-fourrure.jpg', alt: 'Photo d’origine : veste courte en fausse fourrure camel sur un cintre.',
+      prompt: 'Une femme porte exactement la veste de la photo : même couleur, même col, mêmes agrafes. Plan large : elle avance dans une rue de Paris à l’heure dorée. Gros plan : le col et les agrafes dans la lumière. Plan moyen : elle tourne la tête et sourit. Tons chauds, film de campagne.' }
+  ]
+  const v = vit.querySelector('[data-vitrine-video]'); const barre = vit.querySelector('[data-vitrine-progres]')
+  const choix = vit.querySelector('[data-vitrine-choix]')
+  choix.innerHTML = PIECES.map((p, i) => `<button type="button" role="tab" aria-selected="false" data-i="${i}">${p.nom}</button>`).join('')
+  let k = 0
+  const montrer = (i, lire = true) => {
+    k = (i + PIECES.length) % PIECES.length; const p = PIECES[k]
+    v.src = p.video; v.poster = p.poster; v.setAttribute('aria-label', `Vidéo portée générée à partir de la photo : ${p.nom}`)
+    vit.querySelector('[data-vitrine-photo]').src = p.photo; vit.querySelector('[data-vitrine-photo]').alt = p.alt
+    vit.querySelector('[data-vitrine-prompt]').textContent = p.prompt
+    for (const b of choix.children) b.setAttribute('aria-selected', String(+b.dataset.i === k))
+    barre.style.width = '0'
+    if (lire && vitVisible && !vitPause) v.play().catch(() => {})
+  }
+  let vitVisible = false; let vitPause = matchMedia('(prefers-reduced-motion: reduce)').matches
+  choix.addEventListener('click', (e) => { const b = e.target.closest('[data-i]'); if (b) { vitPause = false; montrer(+b.dataset.i) } })
+  v.addEventListener('ended', () => montrer(k + 1))
+  v.addEventListener('timeupdate', () => { if (v.duration) barre.style.width = `${(v.currentTime / v.duration) * 100}%` })
+  let x0 = null
+  v.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX }, { passive: true })
+  v.addEventListener('touchend', (e) => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 50) montrer(k + (dx < 0 ? 1 : -1)) })
+  new IntersectionObserver(([e]) => { vitVisible = e.isIntersecting; if (vitVisible && !vitPause) v.play().catch(() => {}); else v.pause() }, { threshold: 0.3 }).observe(v)
+  const tg = vit.querySelector('[data-vitrine-toggle]')
+  const maj = () => { tg.classList.toggle('is-paused', v.paused); tg.setAttribute('aria-label', v.paused ? 'Lire la vidéo' : 'Mettre la vidéo en pause') }
+  v.addEventListener('play', maj); v.addEventListener('pause', maj); maj()
+  tg.addEventListener('click', () => { if (v.paused) { vitPause = false; v.play().catch(() => {}) } else { vitPause = true; v.pause() } })
+  montrer(0, false)
+}
