@@ -30,3 +30,4 @@ next-env.d.ts
 
 # python (ui-ux-pro-max scripts)
 __pycache__/
+livrables/
