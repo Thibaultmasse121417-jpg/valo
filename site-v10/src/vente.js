@@ -71,16 +71,13 @@ if (dlg) {
   dlg.addEventListener('close', () => v.pause())
 }
 
-// Vitrine « votre photo → votre vidéo » : les pièces s'enchaînent comme un fil vertical
+// Exemples de vidéos promotionnelles : elles s'enchaînent comme un fil vertical
 const vit = document.querySelector('[data-vitrine]')
 if (vit) {
   const PIECES = [
-    { nom: 'Robe sequins', video: './media/demo/video-robe.mp4', poster: './media/demo/video-robe.jpg', photo: './media/demo/piece-robe.jpg', alt: 'Photo d’origine : robe longue à sequins bronze sur un cintre.',
-      prompt: 'Une femme porte exactement la robe de la photo : fines bretelles, décolleté en V, sequins bronze. Plan en pied : elle traverse une boutique au portant doré, le soir. Gros plan : les sequins qui brillent. Plan moyen : elle regarde par-dessus son épaule.' },
-    { nom: 'Blazer bijoux', video: './media/demo/video-blazer.mp4', poster: './media/demo/video-blazer.jpg', photo: './media/demo/piece-blazer.jpg', alt: 'Photo d’origine : blazer croisé noir à boutons bijoux sur un cintre.',
-      prompt: 'Une femme porte exactement le blazer de la photo : même coupe, mêmes revers, six boutons bijoux. Plan en pied dans un studio ivoire : elle ajuste le revers et avance. Gros plan : les boutons qui scintillent. Profil : elle se tourne vers la caméra. Lumière douce de studio.' },
-    { nom: 'Veste fourrure', video: './media/demo/video-fourrure.mp4', poster: './media/demo/video-fourrure.jpg', photo: './media/demo/piece-fourrure.jpg', alt: 'Photo d’origine : veste courte en fausse fourrure camel sur un cintre.',
-      prompt: 'Une femme porte exactement la veste de la photo : même couleur, même col, mêmes agrafes. Plan large : elle avance dans une rue de Paris à l’heure dorée. Gros plan : le col et les agrafes dans la lumière. Plan moyen : elle tourne la tête et sourit. Tons chauds, film de campagne.' }
+    { nom: 'Robe sequins', video: './media/demo/video-robe.mp4', poster: './media/demo/video-robe.jpg' },
+    { nom: 'Blazer bijoux', video: './media/demo/video-blazer.mp4', poster: './media/demo/video-blazer.jpg' },
+    { nom: 'Veste fourrure', video: './media/demo/video-fourrure.mp4', poster: './media/demo/video-fourrure.jpg' }
   ]
   const v = vit.querySelector('[data-vitrine-video]'); const barre = vit.querySelector('[data-vitrine-progres]')
   const choix = vit.querySelector('[data-vitrine-choix]')
@@ -88,9 +85,7 @@ if (vit) {
   let k = 0
   const montrer = (i, lire = true) => {
     k = (i + PIECES.length) % PIECES.length; const p = PIECES[k]
-    v.src = p.video; v.poster = p.poster; v.setAttribute('aria-label', `Vidéo portée générée à partir de la photo : ${p.nom}`)
-    vit.querySelector('[data-vitrine-photo]').src = p.photo; vit.querySelector('[data-vitrine-photo]').alt = p.alt
-    vit.querySelector('[data-vitrine-prompt]').textContent = p.prompt
+    v.src = p.video; v.poster = p.poster; v.setAttribute('aria-label', `Vidéo promotionnelle : ${p.nom}`)
     for (const b of choix.children) b.setAttribute('aria-selected', String(+b.dataset.i === k))
     barre.style.width = '0'
     if (lire && vitVisible && !vitPause) v.play().catch(() => {})
