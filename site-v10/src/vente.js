@@ -59,3 +59,14 @@ if (film && filmBtn) {
   filmBtn.addEventListener('click', () => { if (film.paused) { filmPause = false; film.play().catch(() => {}) } else { filmPause = true; film.pause() } })
   new IntersectionObserver(([e]) => { if (e.isIntersecting && !filmPause) film.play().catch(() => {}); else film.pause() }, { threshold: 0.3 }).observe(film)
 }
+
+// Film de boutique complet, dans une fenêtre
+const dlg = document.querySelector('[data-dialogue-film]')
+if (dlg) {
+  const v = dlg.querySelector('video')
+  document.querySelector('[data-ouvrir-film]').addEventListener('click', () => { dlg.showModal(); v.play().catch(() => {}) })
+  const fermer = () => { v.pause(); dlg.close() }
+  dlg.querySelector('[data-fermer-film]').addEventListener('click', fermer)
+  dlg.addEventListener('click', (e) => { if (e.target === dlg) fermer() })
+  dlg.addEventListener('close', () => v.pause())
+}

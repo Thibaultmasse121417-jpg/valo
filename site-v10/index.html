@@ -137,15 +137,30 @@
           <h2 id="film-t">Vidéos promotionnelles</h2>
           <p class="film__depuis">à partir de 490&nbsp;€</p>
           <p class="film__lead">Vos pièces mises en scène comme une campagne de mode, avec vos textes, votre adresse et vos horaires, coupées pour Instagram, TikTok et votre site. Sans tournage&nbsp;: nous partons des photos que vous avez déjà. Plans animés par intelligence artificielle, vos produits restent tels qu’ils sont.</p>
-          <figure class="film__media">
-            <video data-film muted loop playsinline preload="metadata" poster="./media/demo/film.jpg" aria-label="Extrait de film promotionnel pour la boutique de démonstration Alba : une robe à sequins, une blouse en satin, un sac en velours, des escarpins, puis la boutique.">
-              <source src="./media/demo/film.mp4" type="video/mp4">
-            </video>
-            <button class="film__lecture" type="button" data-film-toggle aria-label="Mettre la vidéo en pause">
-              <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path class="i-pause" d="M3 2h3v10H3zM8 2h3v10H8z" fill="currentColor"/><path class="i-play" d="M3 1.5l9 5.5-9 5.5z" fill="currentColor"/></svg>
-            </button>
-            <figcaption>Extrait réalisé pour notre boutique de démonstration «&nbsp;Alba&nbsp;».</figcaption>
-          </figure>
+          <div class="avant-apres" role="group" aria-label="Exemple : une photo d’article devenue vidéo">
+            <figure class="aa__item">
+              <img src="./media/demo/article.jpg" alt="Photo d’origine : une robe longue à sequins bronze sur un cintre, fond blanc." width="720" height="960" loading="lazy">
+              <figcaption><b>1.</b> La photo de l’article</figcaption>
+            </figure>
+            <span class="aa__fleche" aria-hidden="true"><svg width="28" height="14" viewBox="0 0 28 14"><path d="M0 7h25M20 2l6 5-6 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span>
+            <figure class="aa__item aa__item--video">
+              <video data-film muted loop playsinline preload="metadata" poster="./media/demo/article-video.jpg" aria-label="La même robe animée en vidéo promotionnelle : lumière dorée, sequins qui scintillent, mouvement de caméra.">
+                <source src="./media/demo/article.mp4" type="video/mp4">
+              </video>
+              <button class="film__lecture" type="button" data-film-toggle aria-label="Mettre la vidéo en pause">
+                <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path class="i-pause" d="M3 2h3v10H3zM8 2h3v10H8z" fill="currentColor"/><path class="i-play" d="M3 1.5l9 5.5-9 5.5z" fill="currentColor"/></svg>
+              </button>
+              <figcaption><b>2.</b> La vidéo, réalisée à partir de cette seule photo</figcaption>
+            </figure>
+          </div>
+          <button class="film__extrait" type="button" data-ouvrir-film>
+            <img src="./media/demo/film.jpg" alt="" width="72" height="128">
+            <span><b>Voir un film de boutique complet</b><span>Extrait réalisé pour notre boutique de démonstration «&nbsp;Alba&nbsp;»</span></span>
+          </button>
+          <dialog class="film__dialogue" data-dialogue-film aria-label="Film de boutique Alba">
+            <video data-film-complet controls playsinline preload="none" poster="./media/demo/film.jpg"><source src="./media/demo/film.mp4" type="video/mp4"></video>
+            <button class="film__fermer" type="button" data-fermer-film aria-label="Fermer">✕</button>
+          </dialog>
         </div>
         <div class="film__droite">
           <p class="film__t">Ce que vous recevez</p>
@@ -159,6 +174,16 @@
               <li>Vos textes, adresse et horaires à l’écran</li>
               <li>Musique libre de droits</li>
               <li>Fichiers MP4 prêts à publier</li>
+            </ul>
+          </article>
+          <article class="offre">
+            <div class="offre__tete"><h3>Vidéo produit</h3><p class="offre__prix"><b>Sur devis</b></p></div>
+            <p class="offre__desc">Une courte vidéo par article, faite à partir de la photo que vous avez déjà&nbsp;: idéale pour annoncer une nouveauté.</p>
+            <ul class="offre__liste" role="list">
+              <li>Une vidéo verticale par article</li>
+              <li>Faite à partir d’une seule photo</li>
+              <li>Nom et prix de la pièce à l’écran</li>
+              <li>Prête pour les Stories et les Reels</li>
             </ul>
           </article>
           <article class="offre">
