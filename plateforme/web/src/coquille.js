@@ -14,7 +14,7 @@ import '@fontsource/dm-serif-display/400.css'
 import '@fontsource/dm-serif-display/400-italic.css'
 import './style.css'
 import { $, $$, esc, euros, api, appliquerTheme } from './commun.js'
-import { IMAGES, PETITS_PRIX, PORTE, REPERES, PROPOSITION } from './textes.js'
+import { IMAGES, PETITS_PRIX, PORTE, REPERES, PROPOSITION, VIDEOS } from './textes.js'
 
 export { $, $$, esc, euros }
 export const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -26,6 +26,34 @@ export const EDITO = !!(B.demo || B.apercu)
 // Aperçu privé Comyx Prestige : photographies de la proposition (mur de briques de la boutique)
 if (B.apercu) { B.banniere = IMAGES.comyxHeros; B.presentation_image = IMAGES.comyxBoutique }
 export const porteDe = (p) => (EDITO && PORTE[p.reference]) || null
+export const videoDe = (p) => (EDITO && VIDEOS[p.reference]) || null
+const ICONE_LIRE = '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.2l8 4.8-8 4.8z" fill="currentColor"/></svg>'
+
+/* Vidéo promotionnelle d'une pièce : s'ouvre dans une fenêtre au clic sur la vignette */
+let fenVideo = null
+export function ouvrirVideo (ref) {
+  const p = PIECES.find((x) => x.reference === ref); const v = p && videoDe(p); if (!v) return
+  if (!fenVideo) {
+    fenVideo = document.createElement('dialog')
+    fenVideo.className = 'fen-video'
+    fenVideo.innerHTML = '<video playsinline controls preload="auto"></video><button type="button" class="fen-video__fermer" aria-label="Fermer la vidéo"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.6"/></svg></button><a class="fen-video__lien"></a>'
+    document.body.append(fenVideo)
+    const fermer = () => fenVideo.close()
+    fenVideo.querySelector('.fen-video__fermer').addEventListener('click', fermer)
+    fenVideo.addEventListener('click', (e) => { if (e.target === fenVideo) fermer() })
+    fenVideo.addEventListener('close', () => { const vid = fenVideo.querySelector('video'); vid.pause(); document.documentElement.style.overflow = '' })
+  }
+  const vid = fenVideo.querySelector('video')
+  vid.src = v.src; vid.poster = v.poster; vid.muted = true; vid.loop = true
+  vid.setAttribute('aria-label', `Vidéo de la pièce : ${p.nom}`)
+  const lien = fenVideo.querySelector('.fen-video__lien')
+  lien.href = lienProduit(p); lien.innerHTML = `<b>${esc(p.nom)}</b><span>${prixHtml(p)}</span>`
+  lien.hidden = location.pathname.startsWith('/produit')
+  fenVideo.showModal(); document.documentElement.style.overflow = 'hidden'
+  vid.currentTime = 0; vid.play().catch(() => {})
+}
+document.addEventListener('click', (e) => { const b = e.target.closest('[data-video]'); if (b) { e.preventDefault(); ouvrirVideo(b.dataset.video) } })
+document.addEventListener('keydown', (e) => { const b = e.target.closest?.('[data-video]'); if (b && b.tagName !== 'BUTTON' && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); ouvrirVideo(b.dataset.video) } })
 const survol = matchMedia('(hover: hover) and (pointer: fine)').matches
 export const C = B.contenus
 export const NOMS_CAT = Object.fromEntries(B.categories.map((c) => [c.slug, c.nom]))
@@ -86,6 +114,7 @@ export function carte (p) {
         ${p.couleurs.length > 1 ? `<span class="carte__couleurs" aria-label="${p.couleurs.length} couleurs">${p.couleurs.map((c) => `<i style="--c:${esc(c.hex)}" title="${esc(c.nom)}"></i>`).join('')}</span>` : ''}
       </span>
     </a>
+    ${videoDe(p) ? `<button type="button" class="carte__video" data-video="${esc(p.reference)}" aria-label="Voir la vidéo : ${esc(p.nom)}">${ICONE_LIRE}<span>Vidéo</span></button>` : ''}
     ${off ? '' : `<button type="button" class="carte__plus" data-ajout-rapide="${esc(p.reference)}" aria-label="Ajout rapide : ${esc(p.nom)}"><span>Ajout rapide</span><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.4"/></svg></button>`}
   </li>`
 }

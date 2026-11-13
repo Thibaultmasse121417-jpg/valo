@@ -1,6 +1,6 @@
 /* Fiche produit : galerie (face, dos, détails), zoom, couleurs, tailles, guide des tailles,
    disponibilité réelle, quantité, ajout au panier, description, composition, suggestions. */
-import { $, $$, esc, euros, B, C, PIECES, NOMS_CAT, RAYONS, remise, prixHtml, carte, lienRayon, ajouter, dansPanier, piegerFocus, reduce, dateFr, prix, epuise, porteDe, EDITO } from './coquille.js'
+import { $, $$, esc, euros, B, C, PIECES, NOMS_CAT, RAYONS, remise, prixHtml, carte, lienRayon, ajouter, dansPanier, piegerFocus, reduce, dateFr, prix, epuise, porteDe, videoDe, EDITO } from './coquille.js'
 import { JOURS_RETOUR, tarifs, IMAGES, TENUES } from './textes.js'
 
 const ref = new URLSearchParams(location.search).get('ref') || ''
@@ -68,9 +68,18 @@ function monter (p) {
     g.innerHTML = v.map((x, i) => `<figure class="galerie__vue${x.porte ? ' galerie__vue--porte' : ''}" data-vue="${i}"${x.porte ? ` style="--pos:${x.porte}"` : ''} role="button" tabindex="0" aria-label="Agrandir la photo : ${esc(x.nom)}">
       <img src="${esc(x.src)}" alt="${esc(p.nom)}, ${esc(col.nom)}, ${esc(x.nom.toLowerCase())}" width="660" height="876" ${i ? 'loading="lazy"' : 'fetchpriority="high"'}>
       ${v.length > 1 ? `<figcaption>${esc(x.nom)}</figcaption>` : ''}</figure>`).join('')
+    const vid = sel.c === 0 && videoDe(p)
+    if (vid) {
+      g.children[0].insertAdjacentHTML('afterend', `<figure class="galerie__vue galerie__vue--video" data-video="${esc(p.reference)}" role="button" tabindex="0" aria-label="Lire la vidéo de la pièce">
+      <video src="${esc(vid.src)}" poster="${esc(vid.poster)}" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <span class="galerie__lire"><svg width="16" height="16" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.2l8 4.8-8 4.8z" fill="currentColor"/></svg>Voir la vidéo</span></figure>`)
+      g.classList.toggle('galerie--paire', g.children.length % 2 === 0)
+      const apercu = g.querySelector('.galerie__vue--video video')
+      if (!reduce) new IntersectionObserver(([e]) => { if (e.isIntersecting) apercu.play().catch(() => {}); else apercu.pause() }, { threshold: 0.4 }).observe(apercu)
+    }
     g.scrollLeft = 0
-    $('[data-galerie-pos]').textContent = v.length > 1 ? `1 / ${v.length}` : ''
-    $('[data-galerie-pos]').hidden = v.length < 2
+    $('[data-galerie-pos]').textContent = g.children.length > 1 ? `1 / ${g.children.length}` : ''
+    $('[data-galerie-pos]').hidden = g.children.length < 2
   }
   function peindre () {
     const col = p.couleurs[sel.c]

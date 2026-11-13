@@ -910,3 +910,22 @@ a.chip { text-decoration: none; display: inline-flex; align-items: center; }
   .heros--sombre .btn { background: var(--c-surface); color: var(--c-texte); border-color: var(--c-surface); }
   .heros--sombre .lien { color: var(--c-surface); }
 }
+
+/* Vidéo promotionnelle d'une pièce : pastille sur la carte, vignette dans la fiche, fenêtre de lecture */
+.carte__video { position: absolute; top: 10px; right: 10px; z-index: 2; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 12px 0 10px; border: 0; border-radius: 999px; background: rgb(20 16 13 / .78); color: #fff; font: inherit; font-size: 12.5px; letter-spacing: .02em; cursor: pointer; transition: transform var(--d-press, 120ms) var(--ease-out), background 200ms ease; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.carte__video::before { content: ""; position: absolute; inset: -6px; }
+.carte__video:active { transform: scale(.96); }
+@media (hover: hover) and (pointer: fine) { .carte__video:hover { background: rgb(20 16 13 / .92); } }
+.galerie__vue--video { cursor: pointer; background: #14100d; }
+.galerie__vue--video video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.galerie__lire { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; background: rgb(255 255 255 / .92); color: #14100d; font-size: 14px; white-space: nowrap; transition: transform 160ms var(--ease-out); }
+.galerie__vue--video:active .galerie__lire { transform: translateX(-50%) scale(.96); }
+.fen-video { padding: 0; border: 0; background: transparent; width: min(420px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: visible; }
+.fen-video::backdrop { background: rgb(12 9 7 / .82); }
+.fen-video[open] { animation: fen-video-in 260ms var(--ease-out); }
+@keyframes fen-video-in { from { opacity: 0; transform: scale(.96); } }
+.fen-video video { display: block; width: 100%; max-height: calc(100dvh - 120px); aspect-ratio: 9 / 16; object-fit: cover; border-radius: 14px; background: #000; }
+.fen-video__fermer { position: absolute; top: 10px; right: 10px; width: 44px; height: 44px; border: 0; border-radius: 50%; display: grid; place-items: center; background: rgb(20 16 13 / .7); color: #fff; cursor: pointer; }
+.fen-video__lien { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; padding: 14px 16px; border-radius: 12px; background: var(--paper, #fff); color: inherit; text-decoration: none; font-size: 14px; }
+.fen-video__lien[hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) { .fen-video[open] { animation: none; } }
