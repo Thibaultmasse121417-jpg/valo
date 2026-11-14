@@ -11,16 +11,25 @@ import imgComyxBoutique from './img/comyx-boutique.webp'
 import filmFourrure from './img/film-fourrure.mp4'
 import filmFourrureGalerie from './img/film-fourrure-galerie.mp4'
 import posFourrure from './img/film-fourrure.webp'
-import posFourrureCampagne from './img/film-fourrure-campagne.webp'
+import fourrureDos from './img/fourrure-dos.webp'
+import fourrureDetail from './img/fourrure-detail.webp'
+import fourrurePortee from './img/fourrure-portee.webp'
+import fourrurePorteeDos from './img/fourrure-portee-dos.webp'
 import { euros } from './commun.js'
 
 export const IMAGES = { comyxHeros: imgComyxHeros, comyxBoutique: imgComyxBoutique, fetes: imgFetes, vetements: imgVetements, accessoires: imgAccessoires, chaussures: imgChaussures, lookbook: imgLookbook, essentiels: imgEssentiels }
-// Film de campagne de la démonstration : un seul article pour l'exemple (direction artistique « une pièce, une lumière, un geste »)
+// Vidéo promotionnelle de la démonstration : un seul article pour l'exemple
 export const VIDEOS = {
-  'VESTE-FOUR': {
-    src: filmFourrure, galerie: filmFourrureGalerie, poster: posFourrure, posterCampagne: posFourrureCampagne,
-    campagne: { titre: 'La veste, en mouvement', texte: 'Fausse fourrure dense, col arrondi, trois crochets en métal. Une pièce courte qui se porte sur une robe fluide comme sur un jean, de la première fraîcheur aux soirs d’hiver.' }
-  }
+  'VESTE-FOUR': { src: filmFourrure, galerie: filmFourrureGalerie, poster: posFourrure }
+}
+// Galerie complète de l'exemple : devant (photo du catalogue), dos, détail, portée de face et de dos ; la vidéo vient en dernier
+export const GALERIE = {
+  'VESTE-FOUR': [
+    { src: fourrureDos, nom: 'Dos' },
+    { src: fourrureDetail, nom: 'Détail du col et des crochets', porte: '50% 40%' },
+    { src: fourrurePortee, nom: 'Portée', porte: '50% 30%' },
+    { src: fourrurePorteeDos, nom: 'Portée, de dos', porte: '50% 30%' }
+  ]
 }
 export const JOURS_RETOUR = 14
 export const PETITS_PRIX = 2500

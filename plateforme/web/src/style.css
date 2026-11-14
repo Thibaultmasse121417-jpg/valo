@@ -930,24 +930,8 @@ a.chip { text-decoration: none; display: inline-flex; align-items: center; }
 .fen-video__lien[hidden] { display: none; }
 @media (prefers-reduced-motion: reduce) { .fen-video[open] { animation: none; } }
 
-/* La campagne : le film de la pièce en grand, sous la fiche (pièces filmées uniquement) */
-.campagne { margin-top: var(--e-section); background: #15110e; color: #f3ece2; padding: clamp(48px, 7vw, 104px) 0; }
-.campagne__in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); gap: clamp(32px, 6vw, 96px); align-items: center; }
-.campagne .surtitre { color: #c9b08a; }
-.campagne h2 { font-size: var(--t-2); color: #f3ece2; margin-top: 10px; }
-.campagne__chapo { margin: 20px 0 0; max-width: 46ch; color: #d8cfc3; font-size: 17px; line-height: 1.6; }
-.campagne__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
-.campagne .btn--clair { background: #f3ece2; color: #15110e; border-color: #f3ece2; }
-.campagne__lien { color: #f3ece2; border-color: rgb(243 236 226 / .5); }
-.campagne__ecran { position: relative; aspect-ratio: 9 / 16; width: min(100%, calc(78vh * 9 / 16)); background: #000; overflow: hidden; justify-self: end; }
-.campagne__ecran video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.campagne__pause { position: absolute; right: 12px; bottom: 12px; width: 44px; height: 44px; border: 0; border-radius: 50%; display: grid; place-items: center; background: rgb(21 17 14 / .6); color: #fff; cursor: pointer; touch-action: manipulation; }
-.campagne__pause .i-play { display: none; }
-.campagne__pause.is-paused .i-play { display: block; }
-.campagne__pause.is-paused .i-pause { display: none; }
-@media (hover: hover) and (pointer: fine) { .campagne__lien:hover { background: rgb(243 236 226 / .08); } }
-@media (max-width: 720px) {
-  .campagne__in { grid-template-columns: 1fr; }
-  .campagne__ecran { justify-self: stretch; width: 100%; order: -1; }
-  .campagne__actions .btn { flex: 1 1 100%; }
-}
+/* Galerie : la vidéo de la pièce, dernier média, sans légende */
+.galerie__vue figcaption { display: none; }
+.galerie__vue--video .galerie__lire { left: auto; right: 14px; top: 14px; bottom: auto; transform: none; width: 40px; height: 40px; padding: 0; justify-content: center; gap: 0; border-radius: 50%; background: rgb(255 255 255 / .85); }
+.galerie__vue--video:active .galerie__lire { transform: scale(.94); }
+.carte__video { padding: 0; width: 34px; justify-content: center; }

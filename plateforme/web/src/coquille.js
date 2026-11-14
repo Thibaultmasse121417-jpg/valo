@@ -114,7 +114,7 @@ export function carte (p) {
         ${p.couleurs.length > 1 ? `<span class="carte__couleurs" aria-label="${p.couleurs.length} couleurs">${p.couleurs.map((c) => `<i style="--c:${esc(c.hex)}" title="${esc(c.nom)}"></i>`).join('')}</span>` : ''}
       </span>
     </a>
-    ${videoDe(p) ? `<button type="button" class="carte__video" data-video="${esc(p.reference)}" aria-label="Voir le film : ${esc(p.nom)}">${ICONE_LIRE}<span>Film</span></button>` : ''}
+    ${videoDe(p) ? `<button type="button" class="carte__video" data-video="${esc(p.reference)}" aria-label="Voir le film : ${esc(p.nom)}">${ICONE_LIRE}</button>` : ''}
     ${off ? '' : `<button type="button" class="carte__plus" data-ajout-rapide="${esc(p.reference)}" aria-label="Ajout rapide : ${esc(p.nom)}"><span>Ajout rapide</span><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.4"/></svg></button>`}
   </li>`
 }
