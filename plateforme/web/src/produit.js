@@ -57,7 +57,7 @@ function monter (p) {
 
   function vues (col) {
     const plus = EDITO && sel.c === 0 && GALERIE[p.reference]
-    if (plus) return [{ src: col.face, nom: 'Devant' }, ...plus]
+    if (plus) return [plus.principale || { src: col.face, nom: 'Devant' }, ...plus.suite]
     const pt = porteDe(p)
     const porte = pt && sel.c === 0 ? [{ src: IMAGES[pt.img], nom: 'Portée', porte: pt.pos }] : []
     return [{ src: col.face, nom: 'Devant' }, ...porte, ...(col.dos ? [{ src: col.dos, nom: 'Dos' }] : []), ...(col.details || []).map((src, i) => ({ src, nom: `Détail ${i + 1}` }))]

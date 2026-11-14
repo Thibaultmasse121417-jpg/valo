@@ -11,10 +11,12 @@ import imgComyxBoutique from './img/comyx-boutique.webp'
 import filmFourrure from './img/film-fourrure.mp4'
 import filmFourrureGalerie from './img/film-fourrure-galerie.mp4'
 import posFourrure from './img/film-fourrure.webp'
-import fourrureDos from './img/fourrure-dos.webp'
-import fourrureDetail from './img/fourrure-detail.webp'
-import fourrurePortee from './img/fourrure-portee.webp'
-import fourrurePorteeDos from './img/fourrure-portee-dos.webp'
+import vfStudio from './img/vf-1-studio.webp'
+import vfFace from './img/vf-2-portee-face.webp'
+import vfProfil from './img/vf-3-profil.webp'
+import vfDos from './img/vf-4-dos.webp'
+import vfTexture from './img/vf-5-texture.webp'
+import vfEditorial from './img/vf-6-editorial.webp'
 import { euros } from './commun.js'
 
 export const IMAGES = { comyxHeros: imgComyxHeros, comyxBoutique: imgComyxBoutique, fetes: imgFetes, vetements: imgVetements, accessoires: imgAccessoires, chaussures: imgChaussures, lookbook: imgLookbook, essentiels: imgEssentiels }
@@ -22,14 +24,19 @@ export const IMAGES = { comyxHeros: imgComyxHeros, comyxBoutique: imgComyxBoutiq
 export const VIDEOS = {
   'VESTE-FOUR': { src: filmFourrure, galerie: filmFourrureGalerie, poster: posFourrure }
 }
-// Galerie complète de l'exemple : devant (photo du catalogue), dos, détail, portée de face et de dos ; la vidéo vient en dernier
+// Série photo de l'exemple (campagne « pierre et lumière dorée ») : studio, portée de face, profil, dos, matière, éditorial ;
+// la vidéo vient en dernier. La première photo remplace celle du catalogue sur la fiche uniquement.
 export const GALERIE = {
-  'VESTE-FOUR': [
-    { src: fourrureDos, nom: 'Dos' },
-    { src: fourrureDetail, nom: 'Détail du col et des crochets', porte: '50% 40%' },
-    { src: fourrurePortee, nom: 'Portée', porte: '50% 30%' },
-    { src: fourrurePorteeDos, nom: 'Portée, de dos', porte: '50% 30%' }
-  ]
+  'VESTE-FOUR': {
+    principale: { src: vfStudio, nom: 'La veste en studio', porte: '50% 50%' },
+    suite: [
+      { src: vfFace, nom: 'Portée, de face', porte: '50% 30%' },
+      { src: vfProfil, nom: 'Portée, de profil', porte: '50% 30%' },
+      { src: vfDos, nom: 'Portée, de dos', porte: '50% 30%' },
+      { src: vfTexture, nom: 'La matière', porte: '50% 50%' },
+      { src: vfEditorial, nom: 'Éditorial', porte: '50% 40%' }
+    ]
+  }
 }
 export const JOURS_RETOUR = 14
 export const PETITS_PRIX = 2500
