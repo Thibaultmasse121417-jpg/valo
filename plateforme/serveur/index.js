@@ -78,7 +78,7 @@ app.get('/medias/*', async (c) => {
 })
 
 // Pages (construites par Vite dans web/dist).
-const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.woff2': 'font/woff2', '.woff': 'font/woff', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg' }
+const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.woff2': 'font/woff2', '.woff': 'font/woff', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.mp4': 'video/mp4' }
 app.get('*', async (c) => {
   let p = c.req.path
   if (p.endsWith('/')) p += 'index.html'
@@ -87,7 +87,18 @@ app.get('*', async (c) => {
   try {
     const corps = await readFile(fichier)
     const immuable = p.startsWith('/assets/')
-    return c.body(corps, 200, { 'content-type': TYPES[extname(fichier)] || 'application/octet-stream', 'cache-control': immuable ? 'public, max-age=31536000, immutable' : 'no-cache' })
+    const entetes = { 'content-type': TYPES[extname(fichier)] || 'application/octet-stream', 'cache-control': immuable ? 'public, max-age=31536000, immutable' : 'no-cache', 'accept-ranges': 'bytes' }
+    // Lecture par morceaux (Range) : Safari sur iPhone l'exige pour lire une vidéo, sinon l'écran reste noir
+    const plage = /^bytes=(\d*)-(\d*)$/.exec(c.req.header('range') || '')
+    if (plage && (plage[1] || plage[2])) {
+      const taille = corps.length
+      let debut = plage[1] ? Number(plage[1]) : taille - Number(plage[2])
+      let fin = plage[1] && plage[2] ? Number(plage[2]) : taille - 1
+      debut = Math.max(0, debut); fin = Math.min(fin, taille - 1)
+      if (debut > fin || debut >= taille) return c.body(null, 416, { 'content-range': `bytes */${taille}` })
+      return c.body(corps.subarray(debut, fin + 1), 206, { ...entetes, 'content-range': `bytes ${debut}-${fin}/${taille}`, 'content-length': String(fin - debut + 1) })
+    }
+    return c.body(corps, 200, entetes)
   } catch {
     if (!extname(p)) return c.redirect(p + '/')
     return c.notFound()
