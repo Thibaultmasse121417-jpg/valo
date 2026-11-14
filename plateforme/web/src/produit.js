@@ -73,11 +73,18 @@ function monter (p) {
     const vid = sel.c === 0 && videoDe(p)
     if (vid) {
       g.insertAdjacentHTML('beforeend', `<figure class="galerie__vue galerie__vue--video" data-video="${esc(p.reference)}" role="button" tabindex="0" aria-label="Lire la vidéo de la pièce en grand">
-      <video src="${esc(vid.galerie || vid.src)}" poster="${esc(vid.poster)}" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <video src="${esc(vid.galerie || vid.src)}" poster="${esc(vid.poster)}" muted loop playsinline autoplay preload="auto" disablepictureinpicture disableremoteplayback aria-hidden="true"></video>
       <span class="galerie__lire" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M1 5V1h4M9 1h4v4M13 9v4H9M5 13H1V9" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></span></figure>`)
       g.classList.toggle('galerie--paire', g.children.length % 2 === 0)
+      // La vidéo démarre seule dès qu'elle arrive à l'écran (dernier média du défilement), muette, en boucle
       const apercu = g.querySelector('.galerie__vue--video video')
-      if (!reduce) new IntersectionObserver(([e]) => { if (e.isIntersecting) apercu.play().catch(() => {}); else apercu.pause() }, { threshold: 0.4 }).observe(apercu)
+      apercu.muted = true; apercu.defaultMuted = true; apercu.playsInline = true; apercu.setAttribute('webkit-playsinline', '')
+      let visible = false
+      const lancer = () => { if (visible && apercu.paused) apercu.play().catch(() => {}) }
+      new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) lancer(); else apercu.pause() }, { root: null, threshold: 0.5 }).observe(apercu)
+      // Certains téléphones refusent la lecture tant qu'on n'a pas touché la page : on relance au premier geste
+      for (const ev of ['touchend', 'pointerup', 'scroll']) g.addEventListener(ev, lancer, { passive: true })
+      document.addEventListener('touchend', lancer, { passive: true, once: true })
     }
     g.scrollLeft = 0
     $('[data-galerie-pos]').textContent = g.children.length > 1 ? `1 / ${g.children.length}` : ''
