@@ -45,7 +45,7 @@ export function ouvrirVideo (ref) {
   }
   const vid = fenVideo.querySelector('video')
   vid.src = v.src; vid.poster = v.poster; vid.muted = true; vid.loop = true
-  vid.setAttribute('aria-label', `Vidéo de la pièce : ${p.nom}`)
+  vid.setAttribute('aria-label', `Film de la pièce : ${p.nom}`)
   const lien = fenVideo.querySelector('.fen-video__lien')
   lien.href = lienProduit(p); lien.innerHTML = `<b>${esc(p.nom)}</b><span>${prixHtml(p)}</span>`
   lien.hidden = location.pathname.startsWith('/produit')
@@ -114,7 +114,7 @@ export function carte (p) {
         ${p.couleurs.length > 1 ? `<span class="carte__couleurs" aria-label="${p.couleurs.length} couleurs">${p.couleurs.map((c) => `<i style="--c:${esc(c.hex)}" title="${esc(c.nom)}"></i>`).join('')}</span>` : ''}
       </span>
     </a>
-    ${videoDe(p) ? `<button type="button" class="carte__video" data-video="${esc(p.reference)}" aria-label="Voir la vidéo : ${esc(p.nom)}">${ICONE_LIRE}<span>Vidéo</span></button>` : ''}
+    ${videoDe(p) ? `<button type="button" class="carte__video" data-video="${esc(p.reference)}" aria-label="Voir le film : ${esc(p.nom)}">${ICONE_LIRE}<span>Film</span></button>` : ''}
     ${off ? '' : `<button type="button" class="carte__plus" data-ajout-rapide="${esc(p.reference)}" aria-label="Ajout rapide : ${esc(p.nom)}"><span>Ajout rapide</span><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.4"/></svg></button>`}
   </li>`
 }

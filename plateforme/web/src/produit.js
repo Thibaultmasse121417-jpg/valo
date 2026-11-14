@@ -70,9 +70,9 @@ function monter (p) {
       ${v.length > 1 ? `<figcaption>${esc(x.nom)}</figcaption>` : ''}</figure>`).join('')
     const vid = sel.c === 0 && videoDe(p)
     if (vid) {
-      g.children[0].insertAdjacentHTML('afterend', `<figure class="galerie__vue galerie__vue--video" data-video="${esc(p.reference)}" role="button" tabindex="0" aria-label="Lire la vidéo de la pièce">
-      <video src="${esc(vid.src)}" poster="${esc(vid.poster)}" muted loop playsinline preload="metadata" aria-hidden="true"></video>
-      <span class="galerie__lire"><svg width="16" height="16" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.2l8 4.8-8 4.8z" fill="currentColor"/></svg>Voir la vidéo</span></figure>`)
+      g.children[0].insertAdjacentHTML('afterend', `<figure class="galerie__vue galerie__vue--video" data-video="${esc(p.reference)}" role="button" tabindex="0" aria-label="Voir le film de la pièce">
+      <video src="${esc(vid.galerie || vid.src)}" poster="${esc(vid.poster)}" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <span class="galerie__lire"><svg width="16" height="16" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.2l8 4.8-8 4.8z" fill="currentColor"/></svg>Le film</span></figure>`)
       g.classList.toggle('galerie--paire', g.children.length % 2 === 0)
       const apercu = g.querySelector('.galerie__vue--video video')
       if (!reduce) new IntersectionObserver(([e]) => { if (e.isIntersecting) apercu.play().catch(() => {}); else apercu.pause() }, { threshold: 0.4 }).observe(apercu)
@@ -181,6 +181,27 @@ function monter (p) {
     $('[data-guide-ouvrir]').addEventListener('click', () => d.showModal())
     $('[data-guide-fermer]').addEventListener('click', () => d.close())
     d.addEventListener('click', (e) => { if (e.target === d) d.close() })
+  }
+
+  /* La campagne : le film en grand, sous la fiche, pour les pièces qui en ont un */
+  const film = videoDe(p)
+  if (film?.campagne) {
+    const bloc = $('[data-bloc-campagne]'); bloc.hidden = false
+    $('[data-campagne-titre]').textContent = film.campagne.titre
+    $('[data-campagne-texte]').textContent = film.campagne.texte
+    const v = $('[data-campagne-video]')
+    v.poster = film.posterCampagne || film.poster; v.setAttribute('aria-label', `Film de la pièce : ${p.nom}`)
+    $('[data-campagne-plein]').dataset.video = p.reference
+    let charge = false
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !charge) { v.src = film.src; charge = true }
+      if (reduce) return
+      if (e.isIntersecting) v.play().catch(() => {}); else v.pause()
+    }, { threshold: 0.35, rootMargin: '200px 0px' }).observe(v)
+    const pause = $('[data-campagne-pause]')
+    const maj = () => { pause.classList.toggle('is-paused', v.paused); pause.setAttribute('aria-label', v.paused ? 'Lire le film' : 'Mettre le film en pause') }
+    v.addEventListener('play', maj); v.addEventListener('pause', maj); maj()
+    pause.addEventListener('click', () => { if (!charge) { v.src = film.src; charge = true } if (v.paused) v.play().catch(() => {}); else v.pause() })
   }
 
   /* Complétez la tenue : les pièces que la boutique associe à celle-ci */

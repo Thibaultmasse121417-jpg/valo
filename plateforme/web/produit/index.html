@@ -48,6 +48,24 @@
       </div>
     </article>
 
+    <section class="campagne" data-bloc-campagne hidden aria-labelledby="campagne-t">
+      <div class="wrap campagne__in">
+        <div class="campagne__texte">
+          <p class="surtitre">La campagne</p>
+          <h2 id="campagne-t" data-campagne-titre></h2>
+          <p class="campagne__chapo" data-campagne-texte></p>
+          <div class="campagne__actions">
+            <button type="button" class="btn btn--clair" data-campagne-plein>Voir le film en grand</button>
+            <a class="btn btn--ligne campagne__lien" href="#tenue-t">Compléter la tenue</a>
+          </div>
+        </div>
+        <div class="campagne__ecran">
+          <video data-campagne-video muted loop playsinline preload="none"></video>
+          <button type="button" class="campagne__pause" data-campagne-pause aria-label="Lire le film"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path class="i-pause" d="M3 2h3v10H3zM8 2h3v10H8z" fill="currentColor"/><path class="i-play" d="M3 1.5l9 5.5-9 5.5z" fill="currentColor"/></svg></button>
+        </div>
+      </div>
+    </section>
+
     <section class="section" data-bloc-tenue hidden aria-labelledby="tenue-t">
       <div class="wrap">
         <div class="tete"><div><p class="surtitre">Conseil de la boutique</p><h2 id="tenue-t">Complétez la tenue</h2></div></div>

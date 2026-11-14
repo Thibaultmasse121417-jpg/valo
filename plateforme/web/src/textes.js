@@ -8,20 +8,19 @@ import imgLookbook from './img/lookbook.webp'
 import imgEssentiels from './img/essentiels.webp'
 import imgComyxHeros from './img/comyx-heros.webp'
 import imgComyxBoutique from './img/comyx-boutique.webp'
-import vidRobe from './img/video-robe.mp4'
-import vidBlazer from './img/video-blazer.mp4'
-import vidFourrure from './img/video-fourrure.mp4'
-import posRobe from './img/video-robe.webp'
-import posBlazer from './img/video-blazer.webp'
-import posFourrure from './img/video-fourrure.webp'
+import filmFourrure from './img/film-fourrure.mp4'
+import filmFourrureGalerie from './img/film-fourrure-galerie.mp4'
+import posFourrure from './img/film-fourrure.webp'
+import posFourrureCampagne from './img/film-fourrure-campagne.webp'
 import { euros } from './commun.js'
 
 export const IMAGES = { comyxHeros: imgComyxHeros, comyxBoutique: imgComyxBoutique, fetes: imgFetes, vetements: imgVetements, accessoires: imgAccessoires, chaussures: imgChaussures, lookbook: imgLookbook, essentiels: imgEssentiels }
-// Vidéos promotionnelles de la démonstration, réalisées à partir de la photo de chaque pièce
+// Film de campagne de la démonstration : un seul article pour l'exemple (direction artistique « une pièce, une lumière, un geste »)
 export const VIDEOS = {
-  'ROBE-SEQ': { src: vidRobe, poster: posRobe },
-  'BLAZER-BIJOU': { src: vidBlazer, poster: posBlazer },
-  'VESTE-FOUR': { src: vidFourrure, poster: posFourrure }
+  'VESTE-FOUR': {
+    src: filmFourrure, galerie: filmFourrureGalerie, poster: posFourrure, posterCampagne: posFourrureCampagne,
+    campagne: { titre: 'La veste, en mouvement', texte: 'Fausse fourrure dense, col arrondi, trois crochets en métal. Une pièce courte qui se porte sur une robe fluide comme sur un jean, de la première fraîcheur aux soirs d’hiver.' }
+  }
 }
 export const JOURS_RETOUR = 14
 export const PETITS_PRIX = 2500
